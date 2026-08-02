@@ -31,7 +31,7 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const inventory = product.inventory[primaryMarket];
 
   const isInStock = !inventory.trackInventory || inventory.stock > 0;
-  const productId = product.id || String(product._id);
+  const productId = String(product._id);
   const inWishlist = isInWishlist(productId, primaryMarket);
 
   const handleWishlistToggle = async (e: React.MouseEvent) => {
@@ -43,9 +43,6 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
       return;
     }
 
-    // Use product.id (composite ID) instead of product._id
-    const productId = product.id || String(product._id);
-    
     console.log('🔍 ProductCard - Adding to wishlist:', {
       productId,
       productName: product.name,

@@ -130,7 +130,7 @@ export async function POST(
     });
 
     // Update rider's average rating
-    const DeliveryPartner = (await import('@/models/DeliveryPartner')).default;
+    const DeliveryPartner = (await import('@/lib/models/DeliveryPartner')).default;
     const stats = await RiderReview.getAverageRating(riderId);
     await DeliveryPartner.findByIdAndUpdate(riderId, {
       averageRating: stats.averageRating,

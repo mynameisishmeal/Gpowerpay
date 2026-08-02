@@ -105,7 +105,7 @@ export const useCartStore = create<CartState>()(
             return {
               items: state.items.map((i) =>
                 i.productId === productId
-                  ? { ...i, quantity: item.maxQuantity }
+                  ? { ...i, quantity: item.maxQuantity! } // Non-null assertion since we checked it exists
                   : i
               ),
             };

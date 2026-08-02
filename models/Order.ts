@@ -100,7 +100,7 @@ const OrderSchema = new Schema<IOrder>({
   customerEmail: { type: String, required: true },
   customerPhone: {
     type: String,
-    required: function() {
+    required: function(this: any): boolean {
       return this.deliveryOption === 'home'; // Only required for home delivery
     },
   },

@@ -65,17 +65,17 @@ export function FundWalletButton({ onSuccess }: { onSuccess?: () => void }) {
     setTimeout(() => {
       PaystackService.initializePayment({
         publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY!,
-        email: session.user.email,
+        email: session.user?.email || '',
         amount: PaystackService.toKobo(amountInNaira),
         reference,
         metadata: {
-          userId: session.user.id,
+          userId: session.user?.id || '',
           type: 'wallet_funding',
           custom_fields: [
             {
               display_name: 'Customer Name',
               variable_name: 'customer_name',
-              value: session.user.name || 'Customer',
+              value: session.user?.name || 'Customer',
             },
           ],
         },

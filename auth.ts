@@ -144,8 +144,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // First try to find in User collection with role='rider'
         const riderUser = await User.findOne({ 
-          email: credentials.email.toLowerCase(),
-          role: 'rider'
+          email: (credentials.email as string).toLowerCase(),
+          role: 'rider' as const
         });
 
         if (riderUser) {
@@ -183,7 +183,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         // Then try Rider collection
-        const rider = await Rider.findOne({ email: credentials.email.toLowerCase() });
+        const rider = await Rider.findOne({ email: (credentials.email as string).toLowerCase() });
 
         if (!rider) {
           console.log('[RIDER AUTH] Rider not found in either collection:', credentials.email);

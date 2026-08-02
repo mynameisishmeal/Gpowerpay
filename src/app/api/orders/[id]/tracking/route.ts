@@ -47,10 +47,10 @@ export async function GET(
 
     // Check if order is trackable (not pending or delivered)
     const trackableStatuses = ['confirmed', 'in_transit', 'out_for_delivery'];
-    if (!trackableStatuses.includes(order.deliveryStatus)) {
+    if (!order.deliveryStatus || !trackableStatuses.includes(order.deliveryStatus)) {
       return NextResponse.json(
         {
-          error: `Order is ${order.deliveryStatus}. Tracking not available.`,
+          error: `Order is ${order.deliveryStatus || 'not available'}. Tracking not available.`,
           canTrack: false,
           deliveryStatus: order.deliveryStatus,
         },

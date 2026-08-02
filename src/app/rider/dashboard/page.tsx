@@ -31,8 +31,12 @@ interface Order {
     landmark?: string;
   };
   items: Array<{
+    productId: string;
     productName: string;
     quantity: number;
+    marketType: string;
+    price: number;
+    subtotal: number;
   }>;
   total: number;
   deliveryStatus: string;

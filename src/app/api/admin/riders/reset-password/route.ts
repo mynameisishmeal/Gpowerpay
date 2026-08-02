@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const session = await auth();
 
     // Only admin can reset passwords
-    if (!session?.user || !['admin', 'sadmin'].includes(session.user.role)) {
+    if (!session?.user?.role || !['admin', 'sadmin'].includes(session.user.role)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

@@ -25,7 +25,7 @@ export interface IUser extends Document {
   lastname?: string;
   phonenumber?: string;
   profilePicture?: string;
-  role: 'sadmin' | 'admin' | 'worker' | 'customer' | 'support';
+  role: 'sadmin' | 'admin' | 'worker' | 'customer' | 'support' | 'rider';
   
   // Gpower CRM fields
   permissions?: {

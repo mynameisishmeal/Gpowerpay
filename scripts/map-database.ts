@@ -61,10 +61,11 @@ async function mapDatabase() {
           
           console.log('Schema:');
           for (const [key, info] of Object.entries(schema)) {
-            const sample = typeof info.sample === 'string' && info.sample.length > 50 
-              ? info.sample.substring(0, 50) + '...'
-              : info.sample;
-            console.log(`   - ${key}: ${info.type} (${JSON.stringify(sample)})`);
+            const infoTyped = info as any; // Type assertion for schema info
+            const sample = typeof infoTyped.sample === 'string' && infoTyped.sample.length > 50 
+              ? infoTyped.sample.substring(0, 50) + '...'
+              : infoTyped.sample;
+            console.log(`   - ${key}: ${infoTyped.type} (${JSON.stringify(sample)})`);
           }
         }
         
@@ -98,19 +99,21 @@ async function mapDatabase() {
     markdown += `---\n\n`;
 
     for (const [collectionName, data] of Object.entries(schemaMap)) {
+      const collectionData = data as any; // Type assertion for collection data
       markdown += `## ${collectionName}\n\n`;
-      markdown += `- **Documents:** ${data.count}\n`;
+      markdown += `- **Documents:** ${collectionData.count}\n`;
       
-      if (Object.keys(data.schema).length > 0) {
+      if (Object.keys(collectionData.schema).length > 0) {
         markdown += `- **Fields:**\n\n`;
         markdown += `| Field | Type | Sample |\n`;
         markdown += `|-------|------|--------|\n`;
         
-        for (const [key, info] of Object.entries(data.schema)) {
-          const sample = typeof info.sample === 'string' && info.sample.length > 40 
-            ? info.sample.substring(0, 40) + '...'
-            : JSON.stringify(info.sample);
-          markdown += `| \`${key}\` | ${info.type} | ${sample} |\n`;
+        for (const [key, info] of Object.entries(collectionData.schema)) {
+          const infoTyped = info as any;
+          const sample = typeof infoTyped.sample === 'string' && infoTyped.sample.length > 40 
+            ? infoTyped.sample.substring(0, 40) + '...'
+            : JSON.stringify(infoTyped.sample);
+          markdown += `| \`${key}\` | ${infoTyped.type} | ${sample} |\n`;
         }
         markdown += `\n`;
       }

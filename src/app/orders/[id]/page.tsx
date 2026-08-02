@@ -539,10 +539,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                       {/* Assigned Rider Info */}
                       <div className="bg-green-50 border border-green-200 rounded-lg p-4">
                         <div className="flex items-center gap-3">
-                          {order.assignedRider.image ? (
+                          {order.assignedRider!.image ? (
                           <img
-                            src={order.assignedRider.image}
-                            alt={order.assignedRider.name}
+                            src={order.assignedRider!.image}
+                            alt={order.assignedRider!.name}
                             className="w-16 h-16 rounded-full object-cover"
                           />
                         ) : (
@@ -554,17 +554,17 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                           <p className="font-semibold text-green-900 mb-1">
                             ✅ Rider Assigned
                           </p>
-                          <p className="font-medium text-gray-900">{order.assignedRider.name}</p>
+                          <p className="font-medium text-gray-900">{order.assignedRider!.name}</p>
                           <div className="flex items-center gap-2 mt-1">
                             <a
-                              href={`tel:${order.assignedRider.phone}`}
+                              href={`tel:${order.assignedRider!.phone}`}
                               className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-700"
                             >
                               <Phone size={14} />
-                              {order.assignedRider.phone}
+                              {order.assignedRider!.phone}
                             </a>
                             <button
-                              onClick={() => copyToClipboard(order.assignedRider.phone, 'Phone number')}
+                              onClick={() => copyToClipboard(order.assignedRider!.phone, 'Phone number')}
                               className="p-1 hover:bg-green-100 rounded transition-colors"
                               title="Copy phone number"
                             >

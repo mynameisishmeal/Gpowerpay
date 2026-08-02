@@ -96,9 +96,10 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
     }
 
     // For other statuses, just confirm
-    const confirmed = await confirm(
-      `Are you sure you want to update status to "${newStatus.replace('_', ' ')}"?`
-    );
+    const confirmed = await confirm({
+      title: 'Update Order Status',
+      message: `Are you sure you want to update status to "${newStatus.replace('_', ' ')}"?`,
+    });
     
     if (!confirmed) return;
 
@@ -319,10 +320,10 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center gap-4">
-                    {order.assignedRider.image ? (
+                    {order.assignedRider!.image ? (
                       <img
-                        src={order.assignedRider.image}
-                        alt={order.assignedRider.name}
+                        src={order.assignedRider!.image}
+                        alt={order.assignedRider!.name}
                         className="w-16 h-16 rounded-full object-cover"
                       />
                     ) : (
@@ -331,11 +332,11 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
                       </div>
                     )}
                     <div>
-                      <p className="font-semibold text-gray-900">{order.assignedRider.name}</p>
+                      <p className="font-semibold text-gray-900">{order.assignedRider!.name}</p>
                       <div className="flex items-center gap-1 text-sm text-gray-600 mt-1">
                         <Phone size={14} />
-                        <a href={`tel:${order.assignedRider.phone}`} className="hover:text-blue-600">
-                          {order.assignedRider.phone}
+                        <a href={`tel:${order.assignedRider!.phone}`} className="hover:text-blue-600">
+                          {order.assignedRider!.phone}
                         </a>
                       </div>
                     </div>
