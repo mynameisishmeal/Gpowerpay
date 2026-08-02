@@ -20,12 +20,15 @@ export function Navbar() {
   const wishlistCount = getCount();
 
   const isAdmin = session?.user?.role === 'sadmin' || session?.user?.role === 'admin';
+  const isRider = session?.user?.role === 'rider';
+  const isCustomer = session && !isAdmin && !isRider; // Regular customer
 
   useEffect(() => {
-    if (session) {
+    // Only fetch wishlist for customers
+    if (isCustomer) {
       fetchWishlist();
     }
-  }, [session]);
+  }, [session, isCustomer]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -60,12 +63,16 @@ export function Navbar() {
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-4 xl:gap-6">
-              <Link
-                href="/products"
-                className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-              >
-                Products
-              </Link>
+              {/* Show Products link only for customers and non-logged in users */}
+              {!isRider && (
+                <Link
+                  href="/products"
+                  className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                >
+                  Products
+                </Link>
+              )}
+              
               {session && (
                 <>
                   {/* Admin Dropdown */}
@@ -99,24 +106,41 @@ export function Navbar() {
                       )}
                     </div>
                   )}
-                  <Link
-                    href="/orders"
-                    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                  >
-                    My Orders
-                  </Link>
-                  <Link
-                    href="/wallet"
-                    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                  >
-                    Wallet
-                  </Link>
-                  <Link
-                    href="/profile"
-                    className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
-                  >
-                    Profile
-                  </Link>
+                  
+                  {/* Rider Dashboard Link */}
+                  {isRider && (
+                    <Link
+                      href="/rider/dashboard"
+                      className="text-white bg-green-600 hover:bg-green-700 px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-2"
+                    >
+                      <Bike size={16} />
+                      Dashboard
+                    </Link>
+                  )}
+                  
+                  {/* Customer-only links */}
+                  {isCustomer && (
+                    <>
+                      <Link
+                        href="/orders"
+                        className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                      >
+                        My Orders
+                      </Link>
+                      <Link
+                        href="/wallet"
+                        className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                      >
+                        Wallet
+                      </Link>
+                      <Link
+                        href="/profile"
+                        className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                      >
+                        Profile
+                      </Link>
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -126,19 +150,25 @@ export function Navbar() {
               {session && (
                 <>
                   <NotificationBell />
-                  <Link href="/wishlist" className="relative">
-                    <Button variant="ghost" size="sm" className="relative">
-                      <Heart size={20} />
-                      {wishlistCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                          {wishlistCount}
-                        </span>
-                      )}
-                    </Button>
-                  </Link>
+                  {/* Wishlist and Cart only for customers */}
+                  {isCustomer && (
+                    <>
+                      <Link href="/wishlist" className="relative">
+                        <Button variant="ghost" size="sm" className="relative">
+                          <Heart size={20} />
+                          {wishlistCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                              {wishlistCount}
+                            </span>
+                          )}
+                        </Button>
+                      </Link>
+                      <CartIcon />
+                    </>
+                  )}
                 </>
               )}
-              <CartIcon />
+              {!session && <CartIcon />}
               <UserStatus />
             </div>
 
@@ -147,19 +177,25 @@ export function Navbar() {
               {session && (
                 <>
                   <NotificationBell />
-                  <Link href="/wishlist">
-                    <Button variant="ghost" size="sm" className="relative">
-                      <Heart size={20} />
-                      {wishlistCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
-                          {wishlistCount}
-                        </span>
-                      )}
-                    </Button>
-                  </Link>
+                  {/* Wishlist and Cart only for customers on mobile */}
+                  {isCustomer && (
+                    <>
+                      <Link href="/wishlist">
+                        <Button variant="ghost" size="sm" className="relative">
+                          <Heart size={20} />
+                          {wishlistCount > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-4 w-4 flex items-center justify-center text-[10px]">
+                              {wishlistCount}
+                            </span>
+                          )}
+                        </Button>
+                      </Link>
+                      <CartIcon />
+                    </>
+                  )}
                 </>
               )}
-              <CartIcon />
+              {!session && <CartIcon />}
               <Button
                 variant="outline"
                 size="sm"
@@ -174,13 +210,17 @@ export function Navbar() {
           {mobileMenuOpen && (
             <div className="lg:hidden py-4 border-t border-gray-200">
               <div className="flex flex-col gap-4">
-                <Link
-                  href="/products"
-                  className="text-gray-700 hover:text-blue-600 font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Products
-                </Link>
+                {/* Products link only for non-riders */}
+                {!isRider && (
+                  <Link
+                    href="/products"
+                    className="text-gray-700 hover:text-blue-600 font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Products
+                  </Link>
+                )}
+                
                 {session && (
                   <>
                     {/* Admin Links for Mobile */}
@@ -204,38 +244,56 @@ export function Navbar() {
                         <div className="border-t border-gray-200 my-2"></div>
                       </>
                     )}
-                    <Link
-                      href="/orders"
-                      className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <ShoppingBag size={20} />
-                      My Orders
-                    </Link>
-                    <Link
-                      href="/wallet"
-                      className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <WalletIcon size={20} />
-                      Wallet
-                    </Link>
-                    <Link
-                      href="/profile"
-                      className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <UserIcon size={20} />
-                      Profile
-                    </Link>
-                    <Link
-                      href="/wishlist"
-                      className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Heart size={20} />
-                      Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
-                    </Link>
+                    
+                    {/* Rider Dashboard for Mobile */}
+                    {isRider && (
+                      <Link
+                        href="/rider/dashboard"
+                        className="text-white bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg font-medium flex items-center gap-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Bike size={20} />
+                        Dashboard
+                      </Link>
+                    )}
+                    
+                    {/* Customer-only links on mobile */}
+                    {isCustomer && (
+                      <>
+                        <Link
+                          href="/orders"
+                          className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <ShoppingBag size={20} />
+                          My Orders
+                        </Link>
+                        <Link
+                          href="/wallet"
+                          className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <WalletIcon size={20} />
+                          Wallet
+                        </Link>
+                        <Link
+                          href="/profile"
+                          className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <UserIcon size={20} />
+                          Profile
+                        </Link>
+                        <Link
+                          href="/wishlist"
+                          className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Heart size={20} />
+                          Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
+                        </Link>
+                      </>
+                    )}
                   </>
                 )}
                 <div className="pt-4 border-t border-gray-200">

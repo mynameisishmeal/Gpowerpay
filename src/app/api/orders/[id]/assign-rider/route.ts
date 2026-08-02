@@ -95,11 +95,33 @@ export async function POST(
       rider.phone
     );
 
-    // TODO: Send notification to admin about rider assignment
-    console.log('📦 Rider Assigned:', {
+    // Send notification to rider about new order assignment
+    const deliveryAddress = order.deliveryOption === 'home' && order.deliveryAddress
+      ? `${order.deliveryAddress.street}, ${order.deliveryAddress.city}, ${order.deliveryAddress.state}`
+      : 'Store Pickup';
+    
+    // Use rider's userId if linked to User account, otherwise use DeliveryPartner _id
+    const riderNotificationId = rider.userId?.toString() || rider._id.toString();
+    
+    await NotificationService.notifyRiderNewOrder(
+      riderNotificationId,
+      rider.email,
+      rider.name,
+      order._id.toString(),
+      order.orderNumber,
+      order.confirmationCode,
+      order.customerName,
+      order.customerPhone,
+      deliveryAddress,
+      order.total
+    );
+
+    console.log('📦 Rider Assigned & Notified:', {
       orderId: order.orderNumber,
       rider: rider.name,
+      riderNotificationId,
       phone: rider.phone,
+      email: rider.email,
       deliveryType: order.deliveryType,
     });
 

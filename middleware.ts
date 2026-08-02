@@ -80,21 +80,30 @@ export async function middleware(request: NextRequest) {
   // Check role-based access
   const userRole = token.role as string;
 
-  // Customer routes
+  // Block riders from customer-only routes
+  const customerOnlyRoutes = ['/profile', '/cart', '/checkout', '/orders', '/wallet', '/wishlist', '/products'];
+  if (customerOnlyRoutes.some(route => pathname.startsWith(route))) {
+    if (userRole === 'rider') {
+      // Redirect riders to their dashboard
+      return NextResponse.redirect(new URL('/rider/dashboard', request.url));
+    }
+  }
+
+  // Customer routes - only allow customers (not admin or rider)
   if (protectedRoutes.customer.some(route => pathname.startsWith(route))) {
-    if (userRole !== 'customer') {
+    if (!['customer', 'worker'].includes(userRole)) {
       return NextResponse.redirect(new URL('/login', request.url));
     }
   }
 
-  // Admin routes - allow both superadmin and support
+  // Admin routes - allow sadmin and admin
   if (protectedRoutes.admin.some(route => pathname.startsWith(route))) {
-    if (userRole !== 'superadmin' && userRole !== 'support') {
+    if (!['sadmin', 'admin', 'support'].includes(userRole)) {
       return NextResponse.redirect(new URL('/admin/login', request.url));
     }
   }
 
-  // Rider routes
+  // Rider routes - only allow riders
   if (protectedRoutes.rider.some(route => pathname.startsWith(route))) {
     if (userRole !== 'rider') {
       return NextResponse.redirect(new URL('/login', request.url));
@@ -102,11 +111,11 @@ export async function middleware(request: NextRequest) {
   }
 
   // Prevent customers from accessing admin/rider routes
-  if (pathname.startsWith('/admin') && userRole === 'customer') {
+  if (pathname.startsWith('/admin') && !['sadmin', 'admin', 'support'].includes(userRole)) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
-  if (pathname.startsWith('/rider') && userRole === 'customer') {
+  if (pathname.startsWith('/rider') && userRole !== 'rider') {
     return NextResponse.redirect(new URL('/', request.url));
   }
 

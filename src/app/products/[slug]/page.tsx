@@ -311,10 +311,6 @@ export default function ProductDetailPage() {
             {/* Features */}
             <div className="border-t pt-6 space-y-3">
               <div className="flex items-center gap-3 text-gray-700">
-                <Truck className="h-5 w-5 text-blue-600" />
-                <span>Free delivery on orders over ₦10,000</span>
-              </div>
-              <div className="flex items-center gap-3 text-gray-700">
                 <Shield className="h-5 w-5 text-blue-600" />
                 <span>Quality guaranteed frozen foods</span>
               </div>

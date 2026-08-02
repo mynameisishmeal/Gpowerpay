@@ -222,4 +222,39 @@ export class NotificationService {
       userName,
     });
   }
+
+  /**
+   * Helper: Notify rider of new order assignment
+   */
+  static async notifyRiderNewOrder(
+    riderId: string,
+    riderEmail: string,
+    riderName: string,
+    orderId: string,
+    orderNumber: string,
+    confirmationCode: string | undefined,
+    customerName: string,
+    customerPhone: string,
+    deliveryAddress: string,
+    totalAmount: number
+  ) {
+    return this.createNotification({
+      userId: riderId,
+      type: 'order_placed', // Using existing type, or create 'rider_order_assigned'
+      title: 'New Delivery Order Assigned',
+      message: `You have been assigned to deliver order #${orderNumber} to ${customerName}. Amount: ₦${totalAmount.toLocaleString()}`,
+      data: { 
+        orderId, 
+        orderNumber, 
+        confirmationCode, 
+        customerName, 
+        customerPhone, 
+        deliveryAddress,
+        totalAmount 
+      },
+      sendEmail: true,
+      userEmail: riderEmail,
+      userName: riderName,
+    });
+  }
 }

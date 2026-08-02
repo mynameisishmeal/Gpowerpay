@@ -56,12 +56,6 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate email verification token
-    const emailVerificationToken = await EmailService.createVerificationToken(
-      'temp', // Will be updated after user creation
-      email.toLowerCase()
-    );
-
     // Create new user
     const newUser = await User.create({
       email: email.toLowerCase(),
@@ -76,14 +70,14 @@ export async function POST(request: NextRequest) {
       isBlocked: false,
     });
 
-    // Update verification token with actual user ID
-    const actualToken = await EmailService.createVerificationToken(
+    // Create verification token with actual user ID
+    const verificationToken = await EmailService.createVerificationToken(
       String(newUser._id),
       newUser.email
     );
 
     // Send verification email
-    await EmailService.sendVerificationEmail(newUser.email, actualToken);
+    await EmailService.sendVerificationEmail(newUser.email, verificationToken);
 
     return NextResponse.json(
       {

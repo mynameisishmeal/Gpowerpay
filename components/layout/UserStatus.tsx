@@ -71,37 +71,53 @@ export function UserStatus() {
     }
   };
 
+  // Get dashboard link based on role
+  const getDashboardLink = (role: string) => {
+    switch (role) {
+      case 'sadmin':
+      case 'admin':
+      case 'support':
+        return '/admin/dashboard';
+      case 'rider':
+        return '/rider/dashboard';
+      default:
+        return '/dashboard';
+    }
+  };
+
   return (
     <div className="flex items-center gap-2">
-      {/* User Info - Compact on small screens */}
-      <div className="flex items-center gap-2 px-2 py-1.5 bg-white border border-gray-200 rounded-lg relative z-10">
-        <div className="flex items-center gap-2">
-          {session.user.image ? (
-            <img
-              src={session.user.image}
-              alt={session.user.name || 'User'}
-              className="w-7 h-7 rounded-full object-cover"
-            />
-          ) : (
-            <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-              <User size={14} className="text-blue-600" />
+      {/* User Info - Compact on small screens - Clickable */}
+      <Link href={getDashboardLink(session.user.role || 'customer')}>
+        <div className="flex items-center gap-2 px-2 py-1.5 bg-white border border-gray-200 rounded-lg relative z-10 hover:bg-gray-50 transition-colors cursor-pointer">
+          <div className="flex items-center gap-2">
+            {session.user.image ? (
+              <img
+                src={session.user.image}
+                alt={session.user.name || 'User'}
+                className="w-7 h-7 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
+                <User size={14} className="text-blue-600" />
+              </div>
+            )}
+            <div className="flex flex-col min-w-0">
+              <span className="text-xs font-medium text-gray-900 truncate max-w-[80px] sm:max-w-[120px]">
+                {session.user.name || session.user.email}
+              </span>
+              <span
+                className={`text-[10px] px-1.5 py-0.5 rounded border inline-flex items-center gap-1 w-fit ${getRoleColor(
+                  session.user.role || 'customer'
+                )}`}
+              >
+                {getRoleIcon(session.user.role || 'customer')}
+                <span className="hidden sm:inline">{session.user.role || 'customer'}</span>
+              </span>
             </div>
-          )}
-          <div className="flex flex-col min-w-0">
-            <span className="text-xs font-medium text-gray-900 truncate max-w-[80px] sm:max-w-[120px]">
-              {session.user.name || session.user.email}
-            </span>
-            <span
-              className={`text-[10px] px-1.5 py-0.5 rounded border inline-flex items-center gap-1 w-fit ${getRoleColor(
-                session.user.role || 'customer'
-              )}`}
-            >
-              {getRoleIcon(session.user.role || 'customer')}
-              <span className="hidden sm:inline">{session.user.role || 'customer'}</span>
-            </span>
           </div>
         </div>
-      </div>
+      </Link>
 
       {/* Sign Out Button - Icon only on mobile */}
       <Button

@@ -53,6 +53,10 @@ export default function DashboardPage() {
     if (status === 'authenticated' && session?.user?.role && ['sadmin', 'admin', 'worker'].includes(session.user.role)) {
       router.push('/admin/dashboard');
     }
+    // Redirect riders to rider dashboard
+    if (status === 'authenticated' && session?.user?.role === 'rider') {
+      router.push('/rider/dashboard');
+    }
   }, [status, session, router]);
 
   useEffect(() => {
