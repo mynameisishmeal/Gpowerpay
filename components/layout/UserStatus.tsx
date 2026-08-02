@@ -2,7 +2,7 @@
 
 import { useSession, signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { User, LogOut, UserCircle, ShieldCheck, Settings } from 'lucide-react';
+import { User, LogOut, UserCircle, ShieldCheck, Settings, CheckCircle2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 /**
@@ -85,6 +85,8 @@ export function UserStatus() {
     }
   };
 
+  const isEmailVerified = (session?.user as any)?.emailVerified;
+
   return (
     <div className="flex items-center gap-2">
       {/* User Info - Compact on small screens - Clickable */}
@@ -103,9 +105,25 @@ export function UserStatus() {
               </div>
             )}
             <div className="flex flex-col min-w-0">
-              <span className="text-xs font-medium text-gray-900 truncate max-w-[80px] sm:max-w-[120px]">
-                {session.user.name || session.user.email}
-              </span>
+              <div className="flex items-center gap-1">
+                <span className="text-xs font-medium text-gray-900 truncate max-w-[80px] sm:max-w-[120px]">
+                  {session.user.name || session.user.email}
+                </span>
+                {/* Email Verification Status Indicator */}
+                {isEmailVerified ? (
+                  <CheckCircle2 
+                    size={12} 
+                    className="text-green-600 flex-shrink-0" 
+                    aria-label="Email verified"
+                  />
+                ) : (
+                  <AlertCircle 
+                    size={12} 
+                    className="text-yellow-600 flex-shrink-0" 
+                    aria-label="Email not verified"
+                  />
+                )}
+              </div>
               <span
                 className={`text-[10px] px-1.5 py-0.5 rounded border inline-flex items-center gap-1 w-fit ${getRoleColor(
                   session.user.role || 'customer'

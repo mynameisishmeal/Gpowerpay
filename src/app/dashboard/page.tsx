@@ -6,11 +6,13 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { 
   User, Wallet, Package, MapPin, 
-  CreditCard, TrendingUp, Clock, CheckCircle 
+  CreditCard, TrendingUp, Clock, CheckCircle,
+  AlertCircle, Mail
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { FundWalletButton } from '@/components/wallet/FundWalletButton';
+import toast from 'react-hot-toast';
 
 /**
  * User Dashboard - Overview of profile, wallet, orders, and addresses
@@ -163,9 +165,61 @@ export default function DashboardPage() {
 
   if (!data) return null;
 
+  const isEmailVerified = (session?.user as any)?.emailVerified;
+
+  const handleResendVerification = async () => {
+    try {
+      const response = await fetch('/api/auth/resend-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: session?.user?.email }),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        toast.success('Verification email sent!');
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to resend verification email');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Email Verification Warning */}
+        {!isEmailVerified && (
+          <Card className="mb-6 border-yellow-200 bg-yellow-50">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-semibold text-yellow-900">Email Not Verified</h3>
+                  <p className="text-sm text-yellow-800 mt-1">
+                    Please verify your email address to unlock all features, including password changes.
+                  </p>
+                  <div className="flex gap-3 mt-3">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleResendVerification}
+                    >
+                      <Mail className="mr-2 h-4 w-4" />
+                      Resend Verification Email
+                    </Button>
+                    <Link href="/settings">
+                      <Button variant="outline" size="sm">
+                        Go to Settings
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">

@@ -62,6 +62,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        // REQUIRE EMAIL VERIFICATION (except for legacy accounts that don't have emailVerified field)
+        if (user.emailVerified === false) {
+          console.log('[AUTH] Email not verified');
+          return null;
+        }
+
         console.log('[AUTH] Login successful for:', user.email);
 
         // Update last login
@@ -113,6 +119,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        // REQUIRE EMAIL VERIFICATION for admins too
+        if (admin.emailVerified === false) {
+          console.log('[ADMIN AUTH] Email not verified');
+          return null;
+        }
+
         admin.lastLogin = new Date();
         await admin.save();
 
@@ -122,6 +134,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: admin.name || `${admin.firstname || ''} ${admin.lastname || ''}`.trim(),
           role: admin.role,
           image: admin.profilePicture,
+          emailVerified: admin.emailVerified || false,
         };
       },
     }),
@@ -168,6 +181,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
+          // REQUIRE EMAIL VERIFICATION for riders
+          if (riderUser.emailVerified === false) {
+            console.log('[RIDER AUTH] Email not verified');
+            return null;
+          }
+
           console.log('[RIDER AUTH] Login successful (User collection)');
 
           riderUser.lastLogin = new Date();
@@ -179,6 +198,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: riderUser.name || `${riderUser.firstname || ''} ${riderUser.lastname || ''}`.trim(),
             role: 'rider',
             image: riderUser.profilePicture,
+            emailVerified: riderUser.emailVerified || false,
           };
         }
 
@@ -219,6 +239,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        // REQUIRE EMAIL VERIFICATION for riders
+        if (rider.emailVerified === false) {
+          console.log('[RIDER AUTH] Email not verified');
+          return null;
+        }
+
         console.log('[RIDER AUTH] Login successful (Rider collection)');
 
         rider.lastActive = new Date();
@@ -230,6 +256,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           name: rider.fullName,
           role: 'rider',
           image: rider.profilePhoto,
+          emailVerified: rider.emailVerified || false,
         };
       },
     }),
