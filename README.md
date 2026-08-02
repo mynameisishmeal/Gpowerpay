@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gpower Pay
+
+**Gpower Pay** is an online store and delivery platform for Gpower Frozen Foods, built with Next.js 16, TypeScript, and MongoDB.
+
+## Features
+
+- 🛒 **E-commerce Store** - Browse and purchase frozen food products
+- 📦 **Order Management** - Track orders from placement to delivery
+- 🚴 **Delivery System** - Rider dashboard with order assignment and confirmation
+- 💰 **Wallet System** - Digital wallet with Paystack payment integration
+- ⭐ **Reviews & Ratings** - Customer reviews for products and riders
+- 👥 **Multi-role Access** - Customer, Admin, Rider, and Support roles
+- 📱 **Responsive Design** - Mobile-friendly interface
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Database:** MongoDB with Mongoose ODM
+- **Authentication:** NextAuth.js v5
+- **Payments:** Paystack
+- **Styling:** Tailwind CSS
+- **State Management:** Zustand
+- **UI Components:** Radix UI, Lucide Icons
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ and npm
+- MongoDB database
+- Paystack account (for payments)
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Set up environment variables (see `.env.local.example`)
+
+4. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create a `.env.local` file with:
 
-## Learn More
+```
+MONGODB_URI=your_mongodb_connection_string
+NEXTAUTH_SECRET=your_nextauth_secret
+NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+├── src/app/              # Next.js App Router pages
+├── components/           # React components
+├── lib/                  # Utilities, services, models
+├── models/               # Mongoose schemas
+├── public/               # Static assets
+└── types/                # TypeScript type definitions
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Key Roles
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Customer** - Browse products, place orders, manage wallet
+- **Admin/Support** - Manage products, orders, users, riders
+- **Rider** - Accept deliveries, confirm orders, manage location
+- **Super Admin** - Full system access
+
+## License
+
+Private - Gpower Frozen Foods
+
+## Support
+
+For support, contact the development team.

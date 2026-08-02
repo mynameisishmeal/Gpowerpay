@@ -44,7 +44,7 @@ export default function Navigation() {
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Package className="h-6 w-6 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">Gpower CRM</span>
+            <span className="text-xl font-bold text-gray-900">Gpower Pay</span>
           </div>
           
           {/* Desktop Navigation */}
