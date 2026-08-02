@@ -15,6 +15,7 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
   const adminDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const { fetchWishlist, getCount } = useWishlistStore();
   const wishlistCount = getCount();
@@ -41,6 +42,25 @@ export function Navbar() {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    if (mobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [mobileMenuOpen]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [session]);
 
   const adminLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -208,7 +228,10 @@ export function Navbar() {
 
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-200">
+            <div 
+              ref={mobileMenuRef}
+              className="lg:hidden py-4 border-t border-gray-200"
+            >
               <div className="flex flex-col gap-4">
                 {/* Products link only for non-riders */}
                 {!isRider && (

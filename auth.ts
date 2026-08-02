@@ -119,11 +119,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // REQUIRE EMAIL VERIFICATION for admins too
-        if (admin.emailVerified === false) {
-          console.log('[ADMIN AUTH] Email not verified');
-          return null;
-        }
+        // NOTE: Email verification check removed for admin login
+        // Admins can login even without verified email
 
         admin.lastLogin = new Date();
         await admin.save();
