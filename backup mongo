@@ -1,0 +1,6 @@
+# MongoDB Connection
+# Standard MongoDB connection (working backup)
+MONGODB_URI=mongodb://tellerco:LzNEYZfY9AyyblTE@ac-esumrbm-shard-00-00.hynpbrc.mongodb.net:27017,ac-esumrbm-shard-00-01.hynpbrc.mongodb.net:27017,ac-esumrbm-shard-00-02.hynpbrc.mongodb.net:27017/mfvpos?ssl=true&replicaSet=atlas-pb8n5v-shard-0&authSource=admin&appName=mynewdb
+
+# Alternative SRV format (if above doesn't work)
+MONGODB_URI_SRV=mongodb+srv://tellerco:LzNEYZfY9AyyblTE@mynewdb.hynpbrc.mongodb.net/mfvpos?retryWrites=true&w=majority

@@ -1,0 +1,51 @@
+/* Mobile-first responsive utilities */
+
+@media (max-width: 640px) {
+  .mobile-nav {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .mobile-table {
+    font-size: 0.875rem;
+  }
+  
+  .mobile-table th,
+  .mobile-table td {
+    padding: 0.5rem;
+  }
+  
+  .mobile-form {
+    grid-template-columns: 1fr;
+  }
+  
+  .mobile-hide {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .tablet-stack {
+    flex-direction: column;
+  }
+  
+  .tablet-full {
+    width: 100%;
+  }
+}
+
+/* Print styles */
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+  
+  .print-full {
+    width: 100%;
+  }
+  
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

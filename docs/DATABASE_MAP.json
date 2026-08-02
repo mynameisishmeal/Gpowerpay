@@ -1,0 +1,2796 @@
+{
+  "database": "mfvpos_test",
+  "generatedAt": "2026-08-01T13:17:59.407Z",
+  "totalCollections": 21,
+  "collections": {
+    " printers": {
+      "documentCount": 1,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "677e3e2f666e89190cafbd28"
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ab@gmail.com"
+          ]
+        },
+        "serviceUUID": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "e7810a71-73ae-499d-8c15-faa9aef0c3f2"
+          ]
+        },
+        "characteristicUUID": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "bef8d6c9-9c21-4c9e-b632-bd58c1009f9f"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "677e3e2f666e89190cafbd28",
+          "email": "ab@gmail.com",
+          "serviceUUID": "e7810a71-73ae-499d-8c15-faa9aef0c3f2",
+          "characteristicUUID": "bef8d6c9-9c21-4c9e-b632-bd58c1009f9f",
+          "__v": 0
+        }
+      ]
+    },
+    "sales": {
+      "documentCount": 42939,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6865cbea6583c26c2c2d78f7",
+            "6865cbea6583c26c2c2d78f8"
+          ]
+        },
+        "productname": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "PANLA PP SMALL",
+            "HAKE"
+          ]
+        },
+        "productprice": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "38000.00",
+            "30000.00"
+          ]
+        },
+        "productquantity": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "2",
+            "1"
+          ]
+        },
+        "producttotal": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "76000.00",
+            "30000.00"
+          ]
+        },
+        "paymentmethod": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "cash",
+            "cash"
+          ]
+        },
+        "saledate": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "3-7-2025",
+            "3-7-2025"
+          ]
+        },
+        "seller": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ish@gpower.com",
+            "ish@gpower.com"
+          ]
+        },
+        "sharedid": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "fce8ioispa940",
+            "fce8ioispa940"
+          ]
+        },
+        "datentime": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+            "Thursday, July 3, 2025 at 12:16:42 AM UTC"
+          ]
+        },
+        "saletype": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Cartons",
+            "Cartons"
+          ]
+        },
+        "regtime": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2025-07-03T00:16:42.441Z",
+            "2025-07-03T00:16:42.443Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6865cbea6583c26c2c2d78f7",
+          "productname": "PANLA PP SMALL",
+          "productprice": "38000.00",
+          "productquantity": "2",
+          "producttotal": "76000.00",
+          "paymentmethod": "cash",
+          "saledate": "3-7-2025",
+          "seller": "ish@gpower.com",
+          "sharedid": "fce8ioispa940",
+          "datentime": "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+          "saletype": "Cartons",
+          "regtime": "2025-07-03T00:16:42.441Z",
+          "__v": 0
+        },
+        {
+          "_id": "6865cbea6583c26c2c2d78f8",
+          "productname": "HAKE",
+          "productprice": "30000.00",
+          "productquantity": "1",
+          "producttotal": "30000.00",
+          "paymentmethod": "cash",
+          "saledate": "3-7-2025",
+          "seller": "ish@gpower.com",
+          "sharedid": "fce8ioispa940",
+          "datentime": "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+          "saletype": "Cartons",
+          "regtime": "2025-07-03T00:16:42.443Z",
+          "__v": 0
+        },
+        {
+          "_id": "6865cbea6583c26c2c2d78f9",
+          "productname": "CRT SHAWA",
+          "productprice": "42000.00",
+          "productquantity": "2",
+          "producttotal": "84000.00",
+          "paymentmethod": "cash",
+          "saledate": "3-7-2025",
+          "seller": "ish@gpower.com",
+          "sharedid": "fce8ioispa940",
+          "datentime": "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+          "saletype": "Cartons",
+          "regtime": "2025-07-03T00:16:42.444Z",
+          "__v": 0
+        }
+      ]
+    },
+    "wallets": {
+      "documentCount": 4,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6a5be796565d4153c8b324",
+            "6a6bbc9531d4d0f9972d42c1"
+          ]
+        },
+        "userId": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6a5b2e96565d4153c8b323",
+            "6a6bbc6e31d4d0f9972d42c0"
+          ]
+        },
+        "balance": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "NGN",
+            "NGN"
+          ]
+        },
+        "isActive": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true,
+            true
+          ]
+        },
+        "transactions": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [],
+            []
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-29T20:00:39.247Z",
+            "2026-07-30T21:05:25.993Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-29T20:00:39.247Z",
+            "2026-07-30T21:05:25.993Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6a6a5be796565d4153c8b324",
+          "userId": "6a6a5b2e96565d4153c8b323",
+          "balance": 0,
+          "currency": "NGN",
+          "isActive": true,
+          "transactions": [],
+          "createdAt": "2026-07-29T20:00:39.247Z",
+          "updatedAt": "2026-07-29T20:00:39.247Z",
+          "__v": 0
+        },
+        {
+          "_id": "6a6bbc9531d4d0f9972d42c1",
+          "userId": "6a6bbc6e31d4d0f9972d42c0",
+          "balance": 0,
+          "currency": "NGN",
+          "isActive": true,
+          "transactions": [],
+          "createdAt": "2026-07-30T21:05:25.993Z",
+          "updatedAt": "2026-07-30T21:05:25.993Z",
+          "__v": 0
+        },
+        {
+          "_id": "6a6bc22283d8bfb40c3cc67d",
+          "userId": "6a6bc20383d8bfb40c3cc67c",
+          "balance": 0,
+          "currency": "NGN",
+          "isActive": true,
+          "transactions": [],
+          "createdAt": "2026-07-30T21:29:06.280Z",
+          "updatedAt": "2026-07-30T21:29:06.280Z",
+          "__v": 0
+        }
+      ]
+    },
+    "settings": {
+      "documentCount": 1,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "69e60b7b4742abb94d4c96a6"
+          ]
+        },
+        "storeName": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "GPOWER FROZERN FOODS "
+          ]
+        },
+        "receiptFooter": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "thank you for your patronage"
+          ]
+        },
+        "lowStockThreshold": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            10
+          ]
+        },
+        "inventoryAlertsEnabled": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "saleAlertsEnabled": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-04-20T11:18:19.837Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-05-14T21:30:07.353Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "receiptDisclaimer": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "No refunds for goods bought in good condition "
+          ]
+        },
+        "storeAddress": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            ""
+          ]
+        },
+        "addressSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "autoCut": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true
+          ]
+        },
+        "footerSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "headerTextSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        },
+        "itemsSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "lineSpacing": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        },
+        "paperWidth": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            58
+          ]
+        },
+        "priceSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "showCustomer": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true
+          ]
+        },
+        "showDateTime": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true
+          ]
+        },
+        "showSeller": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true
+          ]
+        },
+        "storeNameSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        },
+        "totalSize": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "69e60b7b4742abb94d4c96a6",
+          "storeName": "GPOWER FROZERN FOODS ",
+          "receiptFooter": "thank you for your patronage",
+          "lowStockThreshold": 10,
+          "inventoryAlertsEnabled": false,
+          "saleAlertsEnabled": false,
+          "createdAt": "2026-04-20T11:18:19.837Z",
+          "updatedAt": "2026-05-14T21:30:07.353Z",
+          "__v": 0,
+          "receiptDisclaimer": "No refunds for goods bought in good condition ",
+          "storeAddress": "",
+          "addressSize": 0,
+          "autoCut": true,
+          "footerSize": 0,
+          "headerTextSize": 1,
+          "itemsSize": 0,
+          "lineSpacing": 1,
+          "paperWidth": 58,
+          "priceSize": 0,
+          "showCustomer": true,
+          "showDateTime": true,
+          "showSeller": true,
+          "storeNameSize": 1,
+          "totalSize": 1
+        }
+      ]
+    },
+    "businesstypeconfigs": {
+      "documentCount": 5,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6894b35fc5693a6600aa51e0",
+            "6894b360c5693a6600aa51e3"
+          ]
+        },
+        "defaultSettings": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "taxSettings": {
+                "enabled": false,
+                "rate": 0,
+                "inclusive": true
+              },
+              "defaultUnits": [
+                "kg",
+                "cartons",
+                "pieces"
+              ],
+              "paymentMethods": [
+                "cash",
+                "transfer",
+                "card"
+              ],
+              "salesTypes": [
+                "retail",
+                "wholesale"
+              ],
+              "receiptFields": [
+                "weight",
+                "quantity",
+                "cartons"
+              ],
+              "inventoryFields": [
+                "weight",
+                "expiryDate",
+                "batchNumber"
+              ]
+            },
+            {
+              "taxSettings": {
+                "enabled": true,
+                "rate": 7.5,
+                "inclusive": true
+              },
+              "defaultUnits": [
+                "portions",
+                "plates",
+                "drinks"
+              ],
+              "paymentMethods": [
+                "cash",
+                "card",
+                "mobile_money"
+              ],
+              "salesTypes": [
+                "dine_in",
+                "takeaway",
+                "delivery"
+              ],
+              "receiptFields": [
+                "table_number",
+                "service_type"
+              ],
+              "inventoryFields": [
+                "recipe",
+                "allergens"
+              ]
+            }
+          ]
+        },
+        "templates": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "reportTemplates": []
+            },
+            {
+              "reportTemplates": []
+            }
+          ]
+        },
+        "workflows": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "salesFlow": [
+                "select_products",
+                "enter_quantities",
+                "choose_sale_type",
+                "process_payment",
+                "print_receipt"
+              ],
+              "inventoryFlow": [
+                "add_stock",
+                "track_expiry",
+                "monitor_levels",
+                "generate_reports"
+              ],
+              "reportingFlow": [
+                "daily_sales",
+                "inventory_report",
+                "expiry_alerts"
+              ]
+            },
+            {
+              "salesFlow": [
+                "take_order",
+                "kitchen_prep",
+                "serve",
+                "process_payment"
+              ],
+              "inventoryFlow": [
+                "ingredient_tracking",
+                "recipe_costing",
+                "waste_management"
+              ],
+              "reportingFlow": [
+                "menu_performance",
+                "ingredient_usage",
+                "table_turnover"
+              ]
+            }
+          ]
+        },
+        "integrations": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "paymentGateways": [],
+              "accountingSoftware": [],
+              "eCommercePlatforms": []
+            },
+            {
+              "paymentGateways": [],
+              "accountingSoftware": [],
+              "eCommercePlatforms": []
+            }
+          ]
+        },
+        "isActive": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true,
+            true
+          ]
+        },
+        "businessType": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "frozen_foods",
+            "restaurant"
+          ]
+        },
+        "displayName": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Frozen Foods",
+            "Restaurant"
+          ]
+        },
+        "description": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Frozen food distribution and retail",
+            "Restaurant and food service management"
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2025-08-07T14:08:31.816Z",
+            "2025-08-07T14:08:32.537Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2025-08-07T14:08:31.816Z",
+            "2025-08-07T14:08:32.537Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6894b35fc5693a6600aa51e0",
+          "defaultSettings": {
+            "taxSettings": {
+              "enabled": false,
+              "rate": 0,
+              "inclusive": true
+            },
+            "defaultUnits": [
+              "kg",
+              "cartons",
+              "pieces"
+            ],
+            "paymentMethods": [
+              "cash",
+              "transfer",
+              "card"
+            ],
+            "salesTypes": [
+              "retail",
+              "wholesale"
+            ],
+            "receiptFields": [
+              "weight",
+              "quantity",
+              "cartons"
+            ],
+            "inventoryFields": [
+              "weight",
+              "expiryDate",
+              "batchNumber"
+            ]
+          },
+          "templates": {
+            "reportTemplates": []
+          },
+          "workflows": {
+            "salesFlow": [
+              "select_products",
+              "enter_quantities",
+              "choose_sale_type",
+              "process_payment",
+              "print_receipt"
+            ],
+            "inventoryFlow": [
+              "add_stock",
+              "track_expiry",
+              "monitor_levels",
+              "generate_reports"
+            ],
+            "reportingFlow": [
+              "daily_sales",
+              "inventory_report",
+              "expiry_alerts"
+            ]
+          },
+          "integrations": {
+            "paymentGateways": [],
+            "accountingSoftware": [],
+            "eCommercePlatforms": []
+          },
+          "isActive": true,
+          "businessType": "frozen_foods",
+          "displayName": "Frozen Foods",
+          "description": "Frozen food distribution and retail",
+          "createdAt": "2025-08-07T14:08:31.816Z",
+          "updatedAt": "2025-08-07T14:08:31.816Z",
+          "__v": 0
+        },
+        {
+          "_id": "6894b360c5693a6600aa51e3",
+          "defaultSettings": {
+            "taxSettings": {
+              "enabled": true,
+              "rate": 7.5,
+              "inclusive": true
+            },
+            "defaultUnits": [
+              "portions",
+              "plates",
+              "drinks"
+            ],
+            "paymentMethods": [
+              "cash",
+              "card",
+              "mobile_money"
+            ],
+            "salesTypes": [
+              "dine_in",
+              "takeaway",
+              "delivery"
+            ],
+            "receiptFields": [
+              "table_number",
+              "service_type"
+            ],
+            "inventoryFields": [
+              "recipe",
+              "allergens"
+            ]
+          },
+          "templates": {
+            "reportTemplates": []
+          },
+          "workflows": {
+            "salesFlow": [
+              "take_order",
+              "kitchen_prep",
+              "serve",
+              "process_payment"
+            ],
+            "inventoryFlow": [
+              "ingredient_tracking",
+              "recipe_costing",
+              "waste_management"
+            ],
+            "reportingFlow": [
+              "menu_performance",
+              "ingredient_usage",
+              "table_turnover"
+            ]
+          },
+          "integrations": {
+            "paymentGateways": [],
+            "accountingSoftware": [],
+            "eCommercePlatforms": []
+          },
+          "isActive": true,
+          "businessType": "restaurant",
+          "displayName": "Restaurant",
+          "description": "Restaurant and food service management",
+          "createdAt": "2025-08-07T14:08:32.537Z",
+          "updatedAt": "2025-08-07T14:08:32.537Z",
+          "__v": 0
+        },
+        {
+          "_id": "6894b361c5693a6600aa51e6",
+          "defaultSettings": {
+            "taxSettings": {
+              "enabled": true,
+              "rate": 7.5,
+              "inclusive": true
+            },
+            "defaultUnits": [
+              "pieces",
+              "sets",
+              "boxes"
+            ],
+            "paymentMethods": [
+              "cash",
+              "card",
+              "transfer",
+              "mobile_money"
+            ],
+            "salesTypes": [
+              "retail",
+              "wholesale"
+            ],
+            "receiptFields": [
+              "sku",
+              "size",
+              "color"
+            ],
+            "inventoryFields": [
+              "size",
+              "color",
+              "brand"
+            ]
+          },
+          "templates": {
+            "reportTemplates": []
+          },
+          "workflows": {
+            "salesFlow": [
+              "scan_barcode",
+              "apply_discounts",
+              "process_payment",
+              "bag_items"
+            ],
+            "inventoryFlow": [
+              "stock_receiving",
+              "price_tagging",
+              "shelf_management"
+            ],
+            "reportingFlow": [
+              "product_performance",
+              "category_analysis",
+              "supplier_reports"
+            ]
+          },
+          "integrations": {
+            "paymentGateways": [],
+            "accountingSoftware": [],
+            "eCommercePlatforms": []
+          },
+          "isActive": true,
+          "businessType": "retail",
+          "displayName": "General Retail",
+          "description": "General retail and merchandise store",
+          "createdAt": "2025-08-07T14:08:33.190Z",
+          "updatedAt": "2025-08-07T14:08:33.190Z",
+          "__v": 0
+        }
+      ]
+    },
+    "tenants": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "categories": {
+      "documentCount": 1,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a60fc49a01a4fa233f662c2"
+          ]
+        },
+        "name": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Uncategorized"
+          ]
+        },
+        "slug": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "uncategorized"
+          ]
+        },
+        "description": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Products pending categorization"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "active"
+          ]
+        },
+        "productCount": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            21
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-22T17:22:17.816Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-22T17:22:17.816Z"
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6a60fc49a01a4fa233f662c2",
+          "name": "Uncategorized",
+          "slug": "uncategorized",
+          "description": "Products pending categorization",
+          "status": "active",
+          "productCount": 21,
+          "createdAt": "2026-07-22T17:22:17.816Z",
+          "updatedAt": "2026-07-22T17:22:17.816Z"
+        }
+      ]
+    },
+    "products": {
+      "documentCount": 23,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "671b78bd0a81b62b043f1e87",
+            "677d696b1291330a08389a18"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "recovered@gpower.com",
+            "recovered@gpower.com"
+          ]
+        },
+        "password": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "recovered",
+            "recovered"
+          ]
+        },
+        "productname": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Kg Panla",
+            "TITUS KG"
+          ]
+        },
+        "productprice": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            2500,
+            8500
+          ]
+        },
+        "productweight": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1,
+            1
+          ]
+        },
+        "unique_id": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1,
+            2
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "671b78bd0a81b62b043f1e87",
+          "__v": 0,
+          "email": "recovered@gpower.com",
+          "password": "recovered",
+          "productname": "Kg Panla",
+          "productprice": 2500,
+          "productweight": 1,
+          "unique_id": 1
+        },
+        {
+          "_id": "677d696b1291330a08389a18",
+          "__v": 0,
+          "email": "recovered@gpower.com",
+          "password": "recovered",
+          "productname": "TITUS KG",
+          "productprice": 8500,
+          "productweight": 1,
+          "unique_id": 2
+        },
+        {
+          "_id": "67d9a98e7943f12b506ad7a6",
+          "__v": 0,
+          "email": "recovered@gpower.com",
+          "password": "recovered",
+          "productname": "KG KAMPALA",
+          "productprice": 4400,
+          "productweight": 1,
+          "unique_id": 3
+        }
+      ]
+    },
+    "users": {
+      "documentCount": 13,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "671b788c0a81b62b043f1e7d",
+            "686401776a3a871ec0f378e5"
+          ]
+        },
+        "unique_id": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1,
+            2
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ish@gpower.com",
+            "ab@gpower.com"
+          ]
+        },
+        "emailconfirmation": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ish@gpower.com",
+            "ab@gpower.com"
+          ]
+        },
+        "password": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "$2b$10$OzFBNz9FTY0Ii1V0VERyTOjE1OU6u7MFcLlP8iOqNZhtvsuGRq8ba",
+            "MIGHTY1@"
+          ]
+        },
+        "birthday": {
+          "types": [
+            "number",
+            "null"
+          ],
+          "sampleValues": [
+            4,
+            null
+          ]
+        },
+        "birthmonth": {
+          "types": [
+            "number",
+            "null"
+          ],
+          "sampleValues": [
+            5,
+            null
+          ]
+        },
+        "birthyear": {
+          "types": [
+            "number",
+            "null"
+          ],
+          "sampleValues": [
+            2008,
+            null
+          ]
+        },
+        "city": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Lagos",
+            "Lagos"
+          ]
+        },
+        "lastname": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "abraham",
+            "ABRAHAM"
+          ]
+        },
+        "passwordconfirmation": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "@Mexteller0",
+            "MIGHTY1@"
+          ]
+        },
+        "phonenumber": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "8158979285",
+            ""
+          ]
+        },
+        "firstname": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ishmeal",
+            "MIGHTY"
+          ]
+        },
+        "eventorganizer": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "data",
+            "data"
+          ]
+        },
+        "gender": {
+          "types": [
+            "string",
+            "null"
+          ],
+          "sampleValues": [
+            "male",
+            null
+          ]
+        },
+        "countrycode": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "NG",
+            "NG"
+          ]
+        },
+        "country": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "NG",
+            "NG"
+          ]
+        },
+        "ref": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "",
+            ""
+          ]
+        },
+        "utf8": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "✓",
+            "✓"
+          ]
+        },
+        "role": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "sadmin",
+            "admin"
+          ]
+        },
+        "regtime": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2024-10-25T10:53:00.649Z",
+            "2025-07-01T15:40:39.110Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            2,
+            0
+          ]
+        },
+        "addresses": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              {
+                "street": "Flat 383 ikota villa estate",
+                "city": "lagos",
+                "state": "lagos",
+                "landmark": "",
+                "phone": "8158979285",
+                "isDefault": true,
+                "_id": "6a6d1c3bfc49e2503123fc12"
+              }
+            ]
+          ]
+        },
+        "authProvider": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "local"
+          ]
+        },
+        "emailVerified": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "isActive": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            true
+          ]
+        },
+        "isBlocked": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "permissions": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "canManageCustomers": false,
+              "canManageFinance": false,
+              "canManageInventory": false,
+              "canManageUsers": false,
+              "canViewAnalytics": false,
+              "canViewCustomers": false,
+              "canViewFinance": false,
+              "canViewInventory": false
+            },
+            {
+              "canViewInventory": true,
+              "canManageInventory": true,
+              "canViewCustomers": false,
+              "canManageCustomers": false,
+              "canViewFinance": true,
+              "canManageFinance": false,
+              "canViewAnalytics": false,
+              "canManageUsers": false
+            }
+          ]
+        },
+        "phoneVerified": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "walletBalance": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "lastLogin": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-08-01T12:59:41.432Z"
+          ]
+        },
+        "datentime": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Friday, March 13, 2026 at 8:25:15 PM UTC"
+          ]
+        },
+        "policystatus": {
+          "types": [
+            "null"
+          ],
+          "sampleValues": [
+            null
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "671b788c0a81b62b043f1e7d",
+          "unique_id": 1,
+          "email": "ish@gpower.com",
+          "emailconfirmation": "ish@gpower.com",
+          "password": "$2b$10$OzFBNz9FTY0Ii1V0VERyTOjE1OU6u7MFcLlP8iOqNZhtvsuGRq8ba",
+          "birthday": 4,
+          "birthmonth": 5,
+          "birthyear": 2008,
+          "city": "Lagos",
+          "lastname": "abraham",
+          "passwordconfirmation": "@Mexteller0",
+          "phonenumber": "8158979285",
+          "firstname": "ishmeal",
+          "eventorganizer": "data",
+          "gender": "male",
+          "countrycode": "NG",
+          "country": "NG",
+          "ref": "",
+          "utf8": "✓",
+          "role": "sadmin",
+          "regtime": "2024-10-25T10:53:00.649Z",
+          "__v": 2,
+          "addresses": [
+            {
+              "street": "Flat 383 ikota villa estate",
+              "city": "lagos",
+              "state": "lagos",
+              "landmark": "",
+              "phone": "8158979285",
+              "isDefault": true,
+              "_id": "6a6d1c3bfc49e2503123fc12"
+            }
+          ],
+          "authProvider": "local",
+          "emailVerified": false,
+          "isActive": true,
+          "isBlocked": false,
+          "permissions": {
+            "canManageCustomers": false,
+            "canManageFinance": false,
+            "canManageInventory": false,
+            "canManageUsers": false,
+            "canViewAnalytics": false,
+            "canViewCustomers": false,
+            "canViewFinance": false,
+            "canViewInventory": false
+          },
+          "phoneVerified": false,
+          "walletBalance": 0,
+          "lastLogin": "2026-08-01T12:59:41.432Z"
+        },
+        {
+          "_id": "686401776a3a871ec0f378e5",
+          "unique_id": 2,
+          "email": "ab@gpower.com",
+          "emailconfirmation": "ab@gpower.com",
+          "password": "MIGHTY1@",
+          "birthday": null,
+          "birthmonth": null,
+          "birthyear": null,
+          "city": "Lagos",
+          "lastname": "ABRAHAM",
+          "passwordconfirmation": "MIGHTY1@",
+          "phonenumber": "",
+          "firstname": "MIGHTY",
+          "eventorganizer": "data",
+          "countrycode": "NG",
+          "country": "NG",
+          "ref": "",
+          "utf8": "✓",
+          "role": "admin",
+          "regtime": "2025-07-01T15:40:39.110Z",
+          "__v": 0,
+          "datentime": "Friday, March 13, 2026 at 8:25:15 PM UTC",
+          "gender": null,
+          "policystatus": null,
+          "permissions": {
+            "canViewInventory": true,
+            "canManageInventory": true,
+            "canViewCustomers": false,
+            "canManageCustomers": false,
+            "canViewFinance": true,
+            "canManageFinance": false,
+            "canViewAnalytics": false,
+            "canManageUsers": false
+          }
+        },
+        {
+          "_id": "686a778b12b1f45bcc8a8b3c",
+          "unique_id": 3,
+          "email": "m@gmail.com",
+          "emailconfirmation": "m@gmail.com",
+          "password": "Mighty",
+          "birthday": null,
+          "birthmonth": null,
+          "birthyear": null,
+          "city": "Lagos",
+          "lastname": "G",
+          "passwordconfirmation": "Mighty",
+          "phonenumber": "",
+          "firstname": "Mighty",
+          "eventorganizer": "data",
+          "gender": "male",
+          "countrycode": "NG",
+          "country": "NG",
+          "ref": "",
+          "utf8": "✓",
+          "role": "sadmin",
+          "regtime": "2025-07-06T13:18:03.078Z",
+          "__v": 0
+        }
+      ]
+    },
+    "printers": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "sessions": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "adminusers": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "expenses": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "reviews": {
+      "documentCount": 1,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6d0de91fe28badbb42c094"
+          ]
+        },
+        "productId": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "carton-6a6a370ebc7d59b354c98821"
+          ]
+        },
+        "customerId": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "671b788c0a81b62b043f1e7d"
+          ]
+        },
+        "customerName": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ishmeal abraham"
+          ]
+        },
+        "rating": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            5
+          ]
+        },
+        "title": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "hi"
+          ]
+        },
+        "comment": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "this is a great product"
+          ]
+        },
+        "images": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            []
+          ]
+        },
+        "helpful": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        },
+        "notHelpful": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0
+          ]
+        },
+        "helpfulVotes": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              "671b788c0a81b62b043f1e7d",
+              "671b788c0a81b62b043f1e7d"
+            ]
+          ]
+        },
+        "verified": {
+          "types": [
+            "boolean"
+          ],
+          "sampleValues": [
+            false
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "approved"
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-31T21:04:41.196Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-31T21:04:50.822Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            2
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6a6d0de91fe28badbb42c094",
+          "productId": "carton-6a6a370ebc7d59b354c98821",
+          "customerId": "671b788c0a81b62b043f1e7d",
+          "customerName": "ishmeal abraham",
+          "rating": 5,
+          "title": "hi",
+          "comment": "this is a great product",
+          "images": [],
+          "helpful": 1,
+          "notHelpful": 0,
+          "helpfulVotes": [
+            "671b788c0a81b62b043f1e7d",
+            "671b788c0a81b62b043f1e7d"
+          ],
+          "verified": false,
+          "status": "approved",
+          "createdAt": "2026-07-31T21:04:41.196Z",
+          "updatedAt": "2026-07-31T21:04:50.822Z",
+          "__v": 2
+        }
+      ]
+    },
+    "stocks": {
+      "documentCount": 94,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "67e2ccd35fc09114dc4c3c2f",
+            "67e2ce775fc09114dc4c3c4a"
+          ]
+        },
+        "stockname": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "PANLA PP SMALL",
+            "PANLA PRECIOUS"
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ish@gpower.com",
+            "ish@gpower.com"
+          ]
+        },
+        "stockprice": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            56000,
+            53000
+          ]
+        },
+        "stockquantity": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "stockweight": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            10,
+            10
+          ]
+        },
+        "regtime": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2025-03-25T15:33:39.838Z",
+            "2025-03-25T15:40:39.332Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "67e2ccd35fc09114dc4c3c2f",
+          "stockname": "PANLA PP SMALL",
+          "email": "ish@gpower.com",
+          "stockprice": 56000,
+          "stockquantity": 0,
+          "stockweight": 10,
+          "regtime": "2025-03-25T15:33:39.838Z",
+          "__v": 0
+        },
+        {
+          "_id": "67e2ce775fc09114dc4c3c4a",
+          "stockname": "PANLA PRECIOUS",
+          "email": "ish@gpower.com",
+          "stockprice": 53000,
+          "stockquantity": 0,
+          "stockweight": 10,
+          "regtime": "2025-03-25T15:40:39.332Z",
+          "__v": 0
+        },
+        {
+          "_id": "67e7c3e840343a2854138679",
+          "stockname": "CRT OROBO",
+          "email": "ish@gpower.com",
+          "stockprice": 58000,
+          "stockquantity": 115.5,
+          "stockweight": 10,
+          "regtime": "2025-03-29T09:56:56.871Z",
+          "__v": 0
+        }
+      ]
+    },
+    "orders": {
+      "documentCount": 4,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6bc22483d8bfb40c3cc67e",
+            "6a6bc5fbce83a80696fc6871"
+          ]
+        },
+        "orderNumber": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "GPO-1785446948289-V4TV6FPU2",
+            "GPO-1785447931616-YYSPHMQT3"
+          ]
+        },
+        "customerId": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6bc20383d8bfb40c3cc67c",
+            "6a6bc20383d8bfb40c3cc67c"
+          ]
+        },
+        "customerName": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "Judi McConaughey",
+            "Judi McConaughey"
+          ]
+        },
+        "customerEmail": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "judidiezvwl13@gmail.com",
+            "judidiezvwl13@gmail.com"
+          ]
+        },
+        "customerPhone": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "54556565656",
+            "54556565656"
+          ]
+        },
+        "items": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              {
+                "productId": "carton-6a6a370ebc7d59b354c98821",
+                "productName": "Product",
+                "price": 30000,
+                "quantity": 1,
+                "marketType": "carton",
+                "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                "subtotal": 30000
+              }
+            ],
+            [
+              {
+                "productId": "carton-6a6a370ebc7d59b354c98821",
+                "productName": "Product",
+                "price": 30000,
+                "quantity": 1,
+                "marketType": "carton",
+                "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                "subtotal": 30000
+              }
+            ]
+          ]
+        },
+        "subtotal": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            30000,
+            30000
+          ]
+        },
+        "deliveryFee": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            2000,
+            2000
+          ]
+        },
+        "total": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            32000,
+            32000
+          ]
+        },
+        "deliveryOption": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "home",
+            "home"
+          ]
+        },
+        "deliveryAddress": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            {
+              "street": "dfdfd",
+              "city": "fdfd",
+              "state": "Lagos",
+              "landmark": "dghgyt",
+              "phone": "54556565656"
+            },
+            {
+              "street": "dfdfd",
+              "city": "fdfd",
+              "state": "Lagos",
+              "landmark": "dghgyt",
+              "phone": "54556565656"
+            }
+          ]
+        },
+        "deliveryDate": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-30T00:00:00.000Z",
+            "2026-07-30T00:00:00.000Z"
+          ]
+        },
+        "paymentMethod": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "paystack",
+            "paystack"
+          ]
+        },
+        "paymentStatus": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "paid",
+            "paid"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "processing",
+            "processing"
+          ]
+        },
+        "statusHistory": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              {
+                "status": "pending",
+                "timestamp": "2026-07-30T21:29:08.290Z",
+                "note": "Order created",
+                "_id": "6a6bc22483d8bfb40c3cc67f"
+              }
+            ],
+            [
+              {
+                "status": "pending",
+                "timestamp": "2026-07-30T21:45:31.616Z",
+                "note": "Order created",
+                "_id": "6a6bc5fbce83a80696fc6872"
+              }
+            ]
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-30T21:29:08.301Z",
+            "2026-07-30T21:45:31.637Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-30T21:29:10.159Z",
+            "2026-07-30T21:45:32.100Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "paymentReference": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "PAY-GPO-1785446948289-V4TV6FPU2",
+            "PAY-GPO-1785447931616-YYSPHMQT3"
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6a6bc22483d8bfb40c3cc67e",
+          "orderNumber": "GPO-1785446948289-V4TV6FPU2",
+          "customerId": "6a6bc20383d8bfb40c3cc67c",
+          "customerName": "Judi McConaughey",
+          "customerEmail": "judidiezvwl13@gmail.com",
+          "customerPhone": "54556565656",
+          "items": [
+            {
+              "productId": "carton-6a6a370ebc7d59b354c98821",
+              "productName": "Product",
+              "price": 30000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 30000
+            }
+          ],
+          "subtotal": 30000,
+          "deliveryFee": 2000,
+          "total": 32000,
+          "deliveryOption": "home",
+          "deliveryAddress": {
+            "street": "dfdfd",
+            "city": "fdfd",
+            "state": "Lagos",
+            "landmark": "dghgyt",
+            "phone": "54556565656"
+          },
+          "deliveryDate": "2026-07-30T00:00:00.000Z",
+          "paymentMethod": "paystack",
+          "paymentStatus": "paid",
+          "status": "processing",
+          "statusHistory": [
+            {
+              "status": "pending",
+              "timestamp": "2026-07-30T21:29:08.290Z",
+              "note": "Order created",
+              "_id": "6a6bc22483d8bfb40c3cc67f"
+            }
+          ],
+          "createdAt": "2026-07-30T21:29:08.301Z",
+          "updatedAt": "2026-07-30T21:29:10.159Z",
+          "__v": 0,
+          "paymentReference": "PAY-GPO-1785446948289-V4TV6FPU2"
+        },
+        {
+          "_id": "6a6bc5fbce83a80696fc6871",
+          "orderNumber": "GPO-1785447931616-YYSPHMQT3",
+          "customerId": "6a6bc20383d8bfb40c3cc67c",
+          "customerName": "Judi McConaughey",
+          "customerEmail": "judidiezvwl13@gmail.com",
+          "customerPhone": "54556565656",
+          "items": [
+            {
+              "productId": "carton-6a6a370ebc7d59b354c98821",
+              "productName": "Product",
+              "price": 30000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 30000
+            }
+          ],
+          "subtotal": 30000,
+          "deliveryFee": 2000,
+          "total": 32000,
+          "deliveryOption": "home",
+          "deliveryAddress": {
+            "street": "dfdfd",
+            "city": "fdfd",
+            "state": "Lagos",
+            "landmark": "dghgyt",
+            "phone": "54556565656"
+          },
+          "deliveryDate": "2026-07-30T00:00:00.000Z",
+          "paymentMethod": "paystack",
+          "paymentStatus": "paid",
+          "status": "processing",
+          "statusHistory": [
+            {
+              "status": "pending",
+              "timestamp": "2026-07-30T21:45:31.616Z",
+              "note": "Order created",
+              "_id": "6a6bc5fbce83a80696fc6872"
+            }
+          ],
+          "createdAt": "2026-07-30T21:45:31.637Z",
+          "updatedAt": "2026-07-30T21:45:32.100Z",
+          "__v": 0,
+          "paymentReference": "PAY-GPO-1785447931616-YYSPHMQT3"
+        },
+        {
+          "_id": "6a6d1923fc49e2503123fbe2",
+          "orderNumber": "GPO-1785534755487-GG029O0R5",
+          "customerId": "671b788c0a81b62b043f1e7d",
+          "customerName": "ishmeal abraham",
+          "customerEmail": "ish@gpower.com",
+          "customerPhone": "4545454",
+          "items": [
+            {
+              "productId": "kilo-6a6856871bb473690cd4f6e8",
+              "productName": "Product",
+              "price": 40500,
+              "quantity": 2,
+              "marketType": "kilo",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 81000
+            },
+            {
+              "productId": "carton-6a6a36d5bc7d59b354c9881e",
+              "productName": "Product",
+              "price": 52000,
+              "quantity": 2,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 104000
+            },
+            {
+              "productId": "carton-6a0d82d6d4c0c33b109ea63b",
+              "productName": "Product",
+              "price": 53000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 53000
+            },
+            {
+              "productId": "carton-6a6857aa1bb473690cd4f702",
+              "productName": "Product",
+              "price": 40500,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 40500
+            },
+            {
+              "productId": "carton-699c11a9bb1f750004e19067",
+              "productName": "Product",
+              "price": 45000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 45000
+            },
+            {
+              "productId": "carton-69038831342105165cde83f6",
+              "productName": "Product",
+              "price": 53000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 53000
+            },
+            {
+              "productId": "carton-6a6a370ebc7d59b354c98821",
+              "productName": "Product",
+              "price": 30000,
+              "quantity": 1,
+              "marketType": "carton",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "subtotal": 30000
+            }
+          ],
+          "subtotal": 406500,
+          "deliveryFee": 2000,
+          "total": 408500,
+          "deliveryOption": "home",
+          "deliveryAddress": {
+            "street": "rrrtgrg",
+            "city": "cvcvc",
+            "state": "Lagos",
+            "landmark": "dggtrtg",
+            "phone": "4545454"
+          },
+          "deliveryDate": "2026-07-30T00:00:00.000Z",
+          "paymentMethod": "split",
+          "paymentStatus": "paid",
+          "status": "processing",
+          "statusHistory": [
+            {
+              "status": "pending",
+              "timestamp": "2026-07-31T21:52:35.487Z",
+              "note": "Order created",
+              "_id": "6a6d1923fc49e2503123fbe3"
+            }
+          ],
+          "createdAt": "2026-07-31T21:52:35.504Z",
+          "updatedAt": "2026-07-31T21:52:36.647Z",
+          "__v": 0,
+          "paymentReference": "PAY-GPO-1785534755487-GG029O0R5"
+        }
+      ]
+    },
+    "customers": {
+      "documentCount": 121,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "69e6330949e1a62b1a63cd9b",
+            "69e642b35e2ef10c01c23c47"
+          ]
+        },
+        "name": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "IYA AYO",
+            "mummy samuel"
+          ]
+        },
+        "totalPurchases": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            32509500,
+            681750
+          ]
+        },
+        "lastPurchaseDate": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-06-03T16:53:47.651Z",
+            "2026-06-29T13:46:27.033Z"
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-04-20T14:07:05.178Z",
+            "2026-04-20T15:13:55.261Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "address": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            ""
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            ""
+          ]
+        },
+        "phone": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "07039370751"
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "69e6330949e1a62b1a63cd9b",
+          "name": "IYA AYO",
+          "totalPurchases": 32509500,
+          "lastPurchaseDate": "2026-06-03T16:53:47.651Z",
+          "createdAt": "2026-04-20T14:07:05.178Z",
+          "__v": 0,
+          "address": "",
+          "email": "",
+          "phone": "07039370751"
+        },
+        {
+          "_id": "69e642b35e2ef10c01c23c47",
+          "name": "mummy samuel",
+          "totalPurchases": 681750,
+          "lastPurchaseDate": "2026-06-29T13:46:27.033Z",
+          "createdAt": "2026-04-20T15:13:55.261Z",
+          "__v": 0
+        },
+        {
+          "_id": "69e6518c5b10149d7c99b4f9",
+          "name": "iya eleja itedo",
+          "totalPurchases": 60000,
+          "lastPurchaseDate": "2026-04-20T16:17:16.496Z",
+          "createdAt": "2026-04-20T16:17:16.497Z",
+          "__v": 0
+        }
+      ]
+    },
+    "credits": {
+      "documentCount": 589,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "69e6330949e1a62b1a63cda0",
+            "69e6576f02788e000d103200"
+          ]
+        },
+        "customerId": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "69e6330949e1a62b1a63cd9b",
+            "69e6576f02788e000d1031fa"
+          ]
+        },
+        "customerName": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "iya ayo",
+            "ALPHA EPE"
+          ]
+        },
+        "saleId": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "1mtkzyok2ptml",
+            "5ypuo3ona2487"
+          ]
+        },
+        "amount": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            85000,
+            643000
+          ]
+        },
+        "amountPaid": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            85000,
+            643000
+          ]
+        },
+        "amountRemaining": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            0,
+            0
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "paid",
+            "paid"
+          ]
+        },
+        "saleDate": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "20-4-2026",
+            "20-4-2026"
+          ]
+        },
+        "payments": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              {
+                "amount": 85000,
+                "paymentDate": "20-4-2026",
+                "paymentMethod": "cash",
+                "_id": "69e633337ff7873c1564f1cd"
+              }
+            ],
+            [
+              {
+                "amount": 643000,
+                "paymentDate": "22-4-2026",
+                "paymentMethod": "transfer",
+                "_id": "69e88013321473859b71a738"
+              }
+            ]
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-04-20T14:07:05.239Z",
+            "2026-04-20T16:42:23.796Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-04-20T14:07:47.100Z",
+            "2026-04-22T08:00:19.550Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1,
+            1
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "69e6330949e1a62b1a63cda0",
+          "customerId": "69e6330949e1a62b1a63cd9b",
+          "customerName": "iya ayo",
+          "saleId": "1mtkzyok2ptml",
+          "amount": 85000,
+          "amountPaid": 85000,
+          "amountRemaining": 0,
+          "status": "paid",
+          "saleDate": "20-4-2026",
+          "payments": [
+            {
+              "amount": 85000,
+              "paymentDate": "20-4-2026",
+              "paymentMethod": "cash",
+              "_id": "69e633337ff7873c1564f1cd"
+            }
+          ],
+          "createdAt": "2026-04-20T14:07:05.239Z",
+          "updatedAt": "2026-04-20T14:07:47.100Z",
+          "__v": 1
+        },
+        {
+          "_id": "69e6576f02788e000d103200",
+          "customerId": "69e6576f02788e000d1031fa",
+          "customerName": "ALPHA EPE",
+          "saleId": "5ypuo3ona2487",
+          "amount": 643000,
+          "amountPaid": 643000,
+          "amountRemaining": 0,
+          "status": "paid",
+          "saleDate": "20-4-2026",
+          "payments": [
+            {
+              "amount": 643000,
+              "paymentDate": "22-4-2026",
+              "paymentMethod": "transfer",
+              "_id": "69e88013321473859b71a738"
+            }
+          ],
+          "createdAt": "2026-04-20T16:42:23.796Z",
+          "updatedAt": "2026-04-22T08:00:19.550Z",
+          "__v": 1
+        },
+        {
+          "_id": "69e65b968ca09688819aafca",
+          "customerId": "69e65b958ca09688819aafc6",
+          "customerName": "MADAM FUMI",
+          "saleId": "5bx6nr0qd9gqd",
+          "amount": 56000,
+          "amountPaid": 56000,
+          "amountRemaining": 0,
+          "status": "paid",
+          "saleDate": "20-4-2026",
+          "payments": [
+            {
+              "amount": 56000,
+              "paymentDate": "27-4-2026",
+              "paymentMethod": "transfer",
+              "_id": "69ef0d402f0ecd63ef5612cc"
+            }
+          ],
+          "createdAt": "2026-04-20T17:00:06.016Z",
+          "updatedAt": "2026-04-27T07:16:16.228Z",
+          "__v": 1
+        }
+      ]
+    },
+    "wishlists": {
+      "documentCount": 1,
+      "fields": {
+        "_id": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "6a6d26fce6c659c63095ba97"
+          ]
+        },
+        "userId": {
+          "types": [
+            "object"
+          ],
+          "sampleValues": [
+            "671b788c0a81b62b043f1e7d"
+          ]
+        },
+        "customerEmail": {
+          "types": [
+            "string"
+          ],
+          "sampleValues": [
+            "ish@gpower.com"
+          ]
+        },
+        "items": {
+          "types": [
+            "array"
+          ],
+          "sampleValues": [
+            [
+              {
+                "productId": "carton-6a6a370ebc7d59b354c98821",
+                "productName": "10 Finger Sausage",
+                "productSlug": "10-finger-sausage",
+                "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                "price": 30000,
+                "marketType": "carton",
+                "addedAt": "2026-07-31T22:51:40.511Z",
+                "_id": "6a6d26fce6c659c63095ba98"
+              },
+              {
+                "productId": "carton-6a6a36d5bc7d59b354c9881e",
+                "productName": "12 Finger Sausage",
+                "productSlug": "12-finger-sausage",
+                "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+                "price": 52000,
+                "marketType": "carton",
+                "addedAt": "2026-07-31T22:51:53.150Z",
+                "_id": "6a6d2709e6c659c63095ba9a"
+              }
+            ]
+          ]
+        },
+        "createdAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-31T22:51:40.516Z"
+          ]
+        },
+        "updatedAt": {
+          "types": [
+            "date"
+          ],
+          "sampleValues": [
+            "2026-07-31T22:51:53.151Z"
+          ]
+        },
+        "__v": {
+          "types": [
+            "number"
+          ],
+          "sampleValues": [
+            1
+          ]
+        }
+      },
+      "sampleDocuments": [
+        {
+          "_id": "6a6d26fce6c659c63095ba97",
+          "userId": "671b788c0a81b62b043f1e7d",
+          "customerEmail": "ish@gpower.com",
+          "items": [
+            {
+              "productId": "carton-6a6a370ebc7d59b354c98821",
+              "productName": "10 Finger Sausage",
+              "productSlug": "10-finger-sausage",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "price": 30000,
+              "marketType": "carton",
+              "addedAt": "2026-07-31T22:51:40.511Z",
+              "_id": "6a6d26fce6c659c63095ba98"
+            },
+            {
+              "productId": "carton-6a6a36d5bc7d59b354c9881e",
+              "productName": "12 Finger Sausage",
+              "productSlug": "12-finger-sausage",
+              "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+              "price": 52000,
+              "marketType": "carton",
+              "addedAt": "2026-07-31T22:51:53.150Z",
+              "_id": "6a6d2709e6c659c63095ba9a"
+            }
+          ],
+          "createdAt": "2026-07-31T22:51:40.516Z",
+          "updatedAt": "2026-07-31T22:51:53.151Z",
+          "__v": 1
+        }
+      ]
+    },
+    "riders": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    },
+    "verificationtokens": {
+      "documentCount": 0,
+      "fields": {},
+      "sampleDocuments": []
+    }
+  }
+}

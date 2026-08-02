@@ -1,0 +1,1435 @@
+{
+  " printers": {
+    "count": 1,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "email": {
+        "type": "string",
+        "sample": "ab@gmail.com"
+      },
+      "serviceUUID": {
+        "type": "string",
+        "sample": "e7810a71-73ae-499d-8c15-faa9aef0c3f2"
+      },
+      "characteristicUUID": {
+        "type": "string",
+        "sample": "bef8d6c9-9c21-4c9e-b632-bd58c1009f9f"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "677e3e2f666e89190cafbd28",
+        "email": "ab@gmail.com",
+        "serviceUUID": "e7810a71-73ae-499d-8c15-faa9aef0c3f2",
+        "characteristicUUID": "bef8d6c9-9c21-4c9e-b632-bd58c1009f9f",
+        "__v": 0
+      }
+    ]
+  },
+  "sales": {
+    "count": 42939,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "productname": {
+        "type": "string",
+        "sample": "PANLA PP SMALL"
+      },
+      "productprice": {
+        "type": "string",
+        "sample": "38000.00"
+      },
+      "productquantity": {
+        "type": "string",
+        "sample": "2"
+      },
+      "producttotal": {
+        "type": "string",
+        "sample": "76000.00"
+      },
+      "paymentmethod": {
+        "type": "string",
+        "sample": "cash"
+      },
+      "saledate": {
+        "type": "string",
+        "sample": "3-7-2025"
+      },
+      "seller": {
+        "type": "string",
+        "sample": "ish@gpower.com"
+      },
+      "sharedid": {
+        "type": "string",
+        "sample": "fce8ioispa940"
+      },
+      "datentime": {
+        "type": "string",
+        "sample": "Thursday, July 3, 2025 at 12:16:42 AM UTC"
+      },
+      "saletype": {
+        "type": "string",
+        "sample": "Cartons"
+      },
+      "regtime": {
+        "type": "object",
+        "sample": "2025-07-03T00:16:42.441Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6865cbea6583c26c2c2d78f7",
+        "productname": "PANLA PP SMALL",
+        "productprice": "38000.00",
+        "productquantity": "2",
+        "producttotal": "76000.00",
+        "paymentmethod": "cash",
+        "saledate": "3-7-2025",
+        "seller": "ish@gpower.com",
+        "sharedid": "fce8ioispa940",
+        "datentime": "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+        "saletype": "Cartons",
+        "regtime": "2025-07-03T00:16:42.441Z",
+        "__v": 0
+      },
+      {
+        "_id": "6865cbea6583c26c2c2d78f8",
+        "productname": "HAKE",
+        "productprice": "30000.00",
+        "productquantity": "1",
+        "producttotal": "30000.00",
+        "paymentmethod": "cash",
+        "saledate": "3-7-2025",
+        "seller": "ish@gpower.com",
+        "sharedid": "fce8ioispa940",
+        "datentime": "Thursday, July 3, 2025 at 12:16:42 AM UTC",
+        "saletype": "Cartons",
+        "regtime": "2025-07-03T00:16:42.443Z",
+        "__v": 0
+      }
+    ]
+  },
+  "wallets": {
+    "count": 4,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "userId": {
+        "type": "object",
+        "sample": "object"
+      },
+      "balance": {
+        "type": "number",
+        "sample": 0
+      },
+      "currency": {
+        "type": "string",
+        "sample": "NGN"
+      },
+      "isActive": {
+        "type": "boolean",
+        "sample": true
+      },
+      "transactions": {
+        "type": "array",
+        "sample": "[0 items]"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-07-29T20:00:39.247Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-07-29T20:00:39.247Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6a6a5be796565d4153c8b324",
+        "userId": "6a6a5b2e96565d4153c8b323",
+        "balance": 0,
+        "currency": "NGN",
+        "isActive": true,
+        "transactions": [],
+        "createdAt": "2026-07-29T20:00:39.247Z",
+        "updatedAt": "2026-07-29T20:00:39.247Z",
+        "__v": 0
+      },
+      {
+        "_id": "6a6bbc9531d4d0f9972d42c1",
+        "userId": "6a6bbc6e31d4d0f9972d42c0",
+        "balance": 0,
+        "currency": "NGN",
+        "isActive": true,
+        "transactions": [],
+        "createdAt": "2026-07-30T21:05:25.993Z",
+        "updatedAt": "2026-07-30T21:05:25.993Z",
+        "__v": 0
+      }
+    ]
+  },
+  "settings": {
+    "count": 1,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "storeName": {
+        "type": "string",
+        "sample": "GPOWER FROZERN FOODS "
+      },
+      "receiptFooter": {
+        "type": "string",
+        "sample": "thank you for your patronage"
+      },
+      "lowStockThreshold": {
+        "type": "number",
+        "sample": 10
+      },
+      "inventoryAlertsEnabled": {
+        "type": "boolean",
+        "sample": false
+      },
+      "saleAlertsEnabled": {
+        "type": "boolean",
+        "sample": false
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-04-20T11:18:19.837Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-05-14T21:30:07.353Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      },
+      "receiptDisclaimer": {
+        "type": "string",
+        "sample": "No refunds for goods bought in good condition "
+      },
+      "storeAddress": {
+        "type": "string",
+        "sample": ""
+      },
+      "addressSize": {
+        "type": "number",
+        "sample": 0
+      },
+      "autoCut": {
+        "type": "boolean",
+        "sample": true
+      },
+      "footerSize": {
+        "type": "number",
+        "sample": 0
+      },
+      "headerTextSize": {
+        "type": "number",
+        "sample": 1
+      },
+      "itemsSize": {
+        "type": "number",
+        "sample": 0
+      },
+      "lineSpacing": {
+        "type": "number",
+        "sample": 1
+      },
+      "paperWidth": {
+        "type": "number",
+        "sample": 58
+      },
+      "priceSize": {
+        "type": "number",
+        "sample": 0
+      },
+      "showCustomer": {
+        "type": "boolean",
+        "sample": true
+      },
+      "showDateTime": {
+        "type": "boolean",
+        "sample": true
+      },
+      "showSeller": {
+        "type": "boolean",
+        "sample": true
+      },
+      "storeNameSize": {
+        "type": "number",
+        "sample": 1
+      },
+      "totalSize": {
+        "type": "number",
+        "sample": 1
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "69e60b7b4742abb94d4c96a6",
+        "storeName": "GPOWER FROZERN FOODS ",
+        "receiptFooter": "thank you for your patronage",
+        "lowStockThreshold": 10,
+        "inventoryAlertsEnabled": false,
+        "saleAlertsEnabled": false,
+        "createdAt": "2026-04-20T11:18:19.837Z",
+        "updatedAt": "2026-05-14T21:30:07.353Z",
+        "__v": 0,
+        "receiptDisclaimer": "No refunds for goods bought in good condition ",
+        "storeAddress": "",
+        "addressSize": 0,
+        "autoCut": true,
+        "footerSize": 0,
+        "headerTextSize": 1,
+        "itemsSize": 0,
+        "lineSpacing": 1,
+        "paperWidth": 58,
+        "priceSize": 0,
+        "showCustomer": true,
+        "showDateTime": true,
+        "showSeller": true,
+        "storeNameSize": 1,
+        "totalSize": 1
+      }
+    ]
+  },
+  "businesstypeconfigs": {
+    "count": 5,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "defaultSettings": {
+        "type": "object",
+        "sample": "object"
+      },
+      "templates": {
+        "type": "object",
+        "sample": "object"
+      },
+      "workflows": {
+        "type": "object",
+        "sample": "object"
+      },
+      "integrations": {
+        "type": "object",
+        "sample": "object"
+      },
+      "isActive": {
+        "type": "boolean",
+        "sample": true
+      },
+      "businessType": {
+        "type": "string",
+        "sample": "frozen_foods"
+      },
+      "displayName": {
+        "type": "string",
+        "sample": "Frozen Foods"
+      },
+      "description": {
+        "type": "string",
+        "sample": "Frozen food distribution and retail"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2025-08-07T14:08:31.816Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2025-08-07T14:08:31.816Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6894b35fc5693a6600aa51e0",
+        "defaultSettings": {
+          "taxSettings": {
+            "enabled": false,
+            "rate": 0,
+            "inclusive": true
+          },
+          "defaultUnits": [
+            "kg",
+            "cartons",
+            "pieces"
+          ],
+          "paymentMethods": [
+            "cash",
+            "transfer",
+            "card"
+          ],
+          "salesTypes": [
+            "retail",
+            "wholesale"
+          ],
+          "receiptFields": [
+            "weight",
+            "quantity",
+            "cartons"
+          ],
+          "inventoryFields": [
+            "weight",
+            "expiryDate",
+            "batchNumber"
+          ]
+        },
+        "templates": {
+          "reportTemplates": []
+        },
+        "workflows": {
+          "salesFlow": [
+            "select_products",
+            "enter_quantities",
+            "choose_sale_type",
+            "process_payment",
+            "print_receipt"
+          ],
+          "inventoryFlow": [
+            "add_stock",
+            "track_expiry",
+            "monitor_levels",
+            "generate_reports"
+          ],
+          "reportingFlow": [
+            "daily_sales",
+            "inventory_report",
+            "expiry_alerts"
+          ]
+        },
+        "integrations": {
+          "paymentGateways": [],
+          "accountingSoftware": [],
+          "eCommercePlatforms": []
+        },
+        "isActive": true,
+        "businessType": "frozen_foods",
+        "displayName": "Frozen Foods",
+        "description": "Frozen food distribution and retail",
+        "createdAt": "2025-08-07T14:08:31.816Z",
+        "updatedAt": "2025-08-07T14:08:31.816Z",
+        "__v": 0
+      },
+      {
+        "_id": "6894b360c5693a6600aa51e3",
+        "defaultSettings": {
+          "taxSettings": {
+            "enabled": true,
+            "rate": 7.5,
+            "inclusive": true
+          },
+          "defaultUnits": [
+            "portions",
+            "plates",
+            "drinks"
+          ],
+          "paymentMethods": [
+            "cash",
+            "card",
+            "mobile_money"
+          ],
+          "salesTypes": [
+            "dine_in",
+            "takeaway",
+            "delivery"
+          ],
+          "receiptFields": [
+            "table_number",
+            "service_type"
+          ],
+          "inventoryFields": [
+            "recipe",
+            "allergens"
+          ]
+        },
+        "templates": {
+          "reportTemplates": []
+        },
+        "workflows": {
+          "salesFlow": [
+            "take_order",
+            "kitchen_prep",
+            "serve",
+            "process_payment"
+          ],
+          "inventoryFlow": [
+            "ingredient_tracking",
+            "recipe_costing",
+            "waste_management"
+          ],
+          "reportingFlow": [
+            "menu_performance",
+            "ingredient_usage",
+            "table_turnover"
+          ]
+        },
+        "integrations": {
+          "paymentGateways": [],
+          "accountingSoftware": [],
+          "eCommercePlatforms": []
+        },
+        "isActive": true,
+        "businessType": "restaurant",
+        "displayName": "Restaurant",
+        "description": "Restaurant and food service management",
+        "createdAt": "2025-08-07T14:08:32.537Z",
+        "updatedAt": "2025-08-07T14:08:32.537Z",
+        "__v": 0
+      }
+    ]
+  },
+  "tenants": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "categories": {
+    "count": 1,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "name": {
+        "type": "string",
+        "sample": "Uncategorized"
+      },
+      "slug": {
+        "type": "string",
+        "sample": "uncategorized"
+      },
+      "description": {
+        "type": "string",
+        "sample": "Products pending categorization"
+      },
+      "status": {
+        "type": "string",
+        "sample": "active"
+      },
+      "productCount": {
+        "type": "number",
+        "sample": 21
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-07-22T17:22:17.816Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-07-22T17:22:17.816Z"
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6a60fc49a01a4fa233f662c2",
+        "name": "Uncategorized",
+        "slug": "uncategorized",
+        "description": "Products pending categorization",
+        "status": "active",
+        "productCount": 21,
+        "createdAt": "2026-07-22T17:22:17.816Z",
+        "updatedAt": "2026-07-22T17:22:17.816Z"
+      }
+    ]
+  },
+  "products": {
+    "count": 23,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      },
+      "email": {
+        "type": "string",
+        "sample": "recovered@gpower.com"
+      },
+      "password": {
+        "type": "string",
+        "sample": "recovered"
+      },
+      "productname": {
+        "type": "string",
+        "sample": "Kg Panla"
+      },
+      "productprice": {
+        "type": "number",
+        "sample": 2500
+      },
+      "productweight": {
+        "type": "number",
+        "sample": 1
+      },
+      "unique_id": {
+        "type": "number",
+        "sample": 1
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "671b78bd0a81b62b043f1e87",
+        "__v": 0,
+        "email": "recovered@gpower.com",
+        "password": "recovered",
+        "productname": "Kg Panla",
+        "productprice": 2500,
+        "productweight": 1,
+        "unique_id": 1
+      },
+      {
+        "_id": "677d696b1291330a08389a18",
+        "__v": 0,
+        "email": "recovered@gpower.com",
+        "password": "recovered",
+        "productname": "TITUS KG",
+        "productprice": 8500,
+        "productweight": 1,
+        "unique_id": 2
+      }
+    ]
+  },
+  "users": {
+    "count": 13,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "unique_id": {
+        "type": "number",
+        "sample": 1
+      },
+      "email": {
+        "type": "string",
+        "sample": "ish@gpower.com"
+      },
+      "emailconfirmation": {
+        "type": "string",
+        "sample": "ish@gpower.com"
+      },
+      "password": {
+        "type": "string",
+        "sample": "$2b$10$OzFBNz9FTY0Ii1V0VERyTOjE1OU6u7MFcLlP8iOqNZhtvsuGRq8ba"
+      },
+      "birthday": {
+        "type": "number",
+        "sample": 4
+      },
+      "birthmonth": {
+        "type": "number",
+        "sample": 5
+      },
+      "birthyear": {
+        "type": "number",
+        "sample": 2008
+      },
+      "city": {
+        "type": "string",
+        "sample": "Lagos"
+      },
+      "lastname": {
+        "type": "string",
+        "sample": "abraham"
+      },
+      "passwordconfirmation": {
+        "type": "string",
+        "sample": "@Mexteller0"
+      },
+      "phonenumber": {
+        "type": "string",
+        "sample": "8158979285"
+      },
+      "firstname": {
+        "type": "string",
+        "sample": "ishmeal"
+      },
+      "eventorganizer": {
+        "type": "string",
+        "sample": "data"
+      },
+      "gender": {
+        "type": "string",
+        "sample": "male"
+      },
+      "countrycode": {
+        "type": "string",
+        "sample": "NG"
+      },
+      "country": {
+        "type": "string",
+        "sample": "NG"
+      },
+      "ref": {
+        "type": "string",
+        "sample": ""
+      },
+      "utf8": {
+        "type": "string",
+        "sample": "✓"
+      },
+      "role": {
+        "type": "string",
+        "sample": "sadmin"
+      },
+      "regtime": {
+        "type": "object",
+        "sample": "2024-10-25T10:53:00.649Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 2
+      },
+      "addresses": {
+        "type": "array",
+        "sample": "[1 items]"
+      },
+      "authProvider": {
+        "type": "string",
+        "sample": "local"
+      },
+      "emailVerified": {
+        "type": "boolean",
+        "sample": false
+      },
+      "isActive": {
+        "type": "boolean",
+        "sample": true
+      },
+      "isBlocked": {
+        "type": "boolean",
+        "sample": false
+      },
+      "permissions": {
+        "type": "object",
+        "sample": "object"
+      },
+      "phoneVerified": {
+        "type": "boolean",
+        "sample": false
+      },
+      "walletBalance": {
+        "type": "number",
+        "sample": 0
+      },
+      "lastLogin": {
+        "type": "object",
+        "sample": "2026-08-01T12:59:41.432Z"
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "671b788c0a81b62b043f1e7d",
+        "unique_id": 1,
+        "email": "ish@gpower.com",
+        "emailconfirmation": "ish@gpower.com",
+        "password": "$2b$10$OzFBNz9FTY0Ii1V0VERyTOjE1OU6u7MFcLlP8iOqNZhtvsuGRq8ba",
+        "birthday": 4,
+        "birthmonth": 5,
+        "birthyear": 2008,
+        "city": "Lagos",
+        "lastname": "abraham",
+        "passwordconfirmation": "@Mexteller0",
+        "phonenumber": "8158979285",
+        "firstname": "ishmeal",
+        "eventorganizer": "data",
+        "gender": "male",
+        "countrycode": "NG",
+        "country": "NG",
+        "ref": "",
+        "utf8": "✓",
+        "role": "sadmin",
+        "regtime": "2024-10-25T10:53:00.649Z",
+        "__v": 2,
+        "addresses": [
+          {
+            "street": "Flat 383 ikota villa estate",
+            "city": "lagos",
+            "state": "lagos",
+            "landmark": "",
+            "phone": "8158979285",
+            "isDefault": true,
+            "_id": "6a6d1c3bfc49e2503123fc12"
+          }
+        ],
+        "authProvider": "local",
+        "emailVerified": false,
+        "isActive": true,
+        "isBlocked": false,
+        "permissions": {
+          "canManageCustomers": false,
+          "canManageFinance": false,
+          "canManageInventory": false,
+          "canManageUsers": false,
+          "canViewAnalytics": false,
+          "canViewCustomers": false,
+          "canViewFinance": false,
+          "canViewInventory": false
+        },
+        "phoneVerified": false,
+        "walletBalance": 0,
+        "lastLogin": "2026-08-01T12:59:41.432Z"
+      },
+      {
+        "_id": "686401776a3a871ec0f378e5",
+        "unique_id": 2,
+        "email": "ab@gpower.com",
+        "emailconfirmation": "ab@gpower.com",
+        "password": "MIGHTY1@",
+        "birthday": null,
+        "birthmonth": null,
+        "birthyear": null,
+        "city": "Lagos",
+        "lastname": "ABRAHAM",
+        "passwordconfirmation": "MIGHTY1@",
+        "phonenumber": "",
+        "firstname": "MIGHTY",
+        "eventorganizer": "data",
+        "countrycode": "NG",
+        "country": "NG",
+        "ref": "",
+        "utf8": "✓",
+        "role": "admin",
+        "regtime": "2025-07-01T15:40:39.110Z",
+        "__v": 0,
+        "datentime": "Friday, March 13, 2026 at 8:25:15 PM UTC",
+        "gender": null,
+        "policystatus": null,
+        "permissions": {
+          "canViewInventory": true,
+          "canManageInventory": true,
+          "canViewCustomers": false,
+          "canManageCustomers": false,
+          "canViewFinance": true,
+          "canManageFinance": false,
+          "canViewAnalytics": false,
+          "canManageUsers": false
+        }
+      }
+    ]
+  },
+  "printers": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "sessions": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "adminusers": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "expenses": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "reviews": {
+    "count": 1,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "productId": {
+        "type": "string",
+        "sample": "carton-6a6a370ebc7d59b354c98821"
+      },
+      "customerId": {
+        "type": "object",
+        "sample": "object"
+      },
+      "customerName": {
+        "type": "string",
+        "sample": "ishmeal abraham"
+      },
+      "rating": {
+        "type": "number",
+        "sample": 5
+      },
+      "title": {
+        "type": "string",
+        "sample": "hi"
+      },
+      "comment": {
+        "type": "string",
+        "sample": "this is a great product"
+      },
+      "images": {
+        "type": "array",
+        "sample": "[0 items]"
+      },
+      "helpful": {
+        "type": "number",
+        "sample": 1
+      },
+      "notHelpful": {
+        "type": "number",
+        "sample": 0
+      },
+      "helpfulVotes": {
+        "type": "array",
+        "sample": "[2 items]"
+      },
+      "verified": {
+        "type": "boolean",
+        "sample": false
+      },
+      "status": {
+        "type": "string",
+        "sample": "approved"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-07-31T21:04:41.196Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-07-31T21:04:50.822Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 2
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6a6d0de91fe28badbb42c094",
+        "productId": "carton-6a6a370ebc7d59b354c98821",
+        "customerId": "671b788c0a81b62b043f1e7d",
+        "customerName": "ishmeal abraham",
+        "rating": 5,
+        "title": "hi",
+        "comment": "this is a great product",
+        "images": [],
+        "helpful": 1,
+        "notHelpful": 0,
+        "helpfulVotes": [
+          "671b788c0a81b62b043f1e7d",
+          "671b788c0a81b62b043f1e7d"
+        ],
+        "verified": false,
+        "status": "approved",
+        "createdAt": "2026-07-31T21:04:41.196Z",
+        "updatedAt": "2026-07-31T21:04:50.822Z",
+        "__v": 2
+      }
+    ]
+  },
+  "stocks": {
+    "count": 94,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "stockname": {
+        "type": "string",
+        "sample": "PANLA PP SMALL"
+      },
+      "email": {
+        "type": "string",
+        "sample": "ish@gpower.com"
+      },
+      "stockprice": {
+        "type": "number",
+        "sample": 56000
+      },
+      "stockquantity": {
+        "type": "number",
+        "sample": 0
+      },
+      "stockweight": {
+        "type": "number",
+        "sample": 10
+      },
+      "regtime": {
+        "type": "object",
+        "sample": "2025-03-25T15:33:39.838Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "67e2ccd35fc09114dc4c3c2f",
+        "stockname": "PANLA PP SMALL",
+        "email": "ish@gpower.com",
+        "stockprice": 56000,
+        "stockquantity": 0,
+        "stockweight": 10,
+        "regtime": "2025-03-25T15:33:39.838Z",
+        "__v": 0
+      },
+      {
+        "_id": "67e2ce775fc09114dc4c3c4a",
+        "stockname": "PANLA PRECIOUS",
+        "email": "ish@gpower.com",
+        "stockprice": 53000,
+        "stockquantity": 0,
+        "stockweight": 10,
+        "regtime": "2025-03-25T15:40:39.332Z",
+        "__v": 0
+      }
+    ]
+  },
+  "orders": {
+    "count": 4,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "orderNumber": {
+        "type": "string",
+        "sample": "GPO-1785446948289-V4TV6FPU2"
+      },
+      "customerId": {
+        "type": "object",
+        "sample": "object"
+      },
+      "customerName": {
+        "type": "string",
+        "sample": "Judi McConaughey"
+      },
+      "customerEmail": {
+        "type": "string",
+        "sample": "judidiezvwl13@gmail.com"
+      },
+      "customerPhone": {
+        "type": "string",
+        "sample": "54556565656"
+      },
+      "items": {
+        "type": "array",
+        "sample": "[1 items]"
+      },
+      "subtotal": {
+        "type": "number",
+        "sample": 30000
+      },
+      "deliveryFee": {
+        "type": "number",
+        "sample": 2000
+      },
+      "total": {
+        "type": "number",
+        "sample": 32000
+      },
+      "deliveryOption": {
+        "type": "string",
+        "sample": "home"
+      },
+      "deliveryAddress": {
+        "type": "object",
+        "sample": "object"
+      },
+      "deliveryDate": {
+        "type": "object",
+        "sample": "2026-07-30T00:00:00.000Z"
+      },
+      "paymentMethod": {
+        "type": "string",
+        "sample": "paystack"
+      },
+      "paymentStatus": {
+        "type": "string",
+        "sample": "paid"
+      },
+      "status": {
+        "type": "string",
+        "sample": "processing"
+      },
+      "statusHistory": {
+        "type": "array",
+        "sample": "[1 items]"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-07-30T21:29:08.301Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-07-30T21:29:10.159Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      },
+      "paymentReference": {
+        "type": "string",
+        "sample": "PAY-GPO-1785446948289-V4TV6FPU2"
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6a6bc22483d8bfb40c3cc67e",
+        "orderNumber": "GPO-1785446948289-V4TV6FPU2",
+        "customerId": "6a6bc20383d8bfb40c3cc67c",
+        "customerName": "Judi McConaughey",
+        "customerEmail": "judidiezvwl13@gmail.com",
+        "customerPhone": "54556565656",
+        "items": [
+          {
+            "productId": "carton-6a6a370ebc7d59b354c98821",
+            "productName": "Product",
+            "price": 30000,
+            "quantity": 1,
+            "marketType": "carton",
+            "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+            "subtotal": 30000
+          }
+        ],
+        "subtotal": 30000,
+        "deliveryFee": 2000,
+        "total": 32000,
+        "deliveryOption": "home",
+        "deliveryAddress": {
+          "street": "dfdfd",
+          "city": "fdfd",
+          "state": "Lagos",
+          "landmark": "dghgyt",
+          "phone": "54556565656"
+        },
+        "deliveryDate": "2026-07-30T00:00:00.000Z",
+        "paymentMethod": "paystack",
+        "paymentStatus": "paid",
+        "status": "processing",
+        "statusHistory": [
+          {
+            "status": "pending",
+            "timestamp": "2026-07-30T21:29:08.290Z",
+            "note": "Order created",
+            "_id": "6a6bc22483d8bfb40c3cc67f"
+          }
+        ],
+        "createdAt": "2026-07-30T21:29:08.301Z",
+        "updatedAt": "2026-07-30T21:29:10.159Z",
+        "__v": 0,
+        "paymentReference": "PAY-GPO-1785446948289-V4TV6FPU2"
+      },
+      {
+        "_id": "6a6bc5fbce83a80696fc6871",
+        "orderNumber": "GPO-1785447931616-YYSPHMQT3",
+        "customerId": "6a6bc20383d8bfb40c3cc67c",
+        "customerName": "Judi McConaughey",
+        "customerEmail": "judidiezvwl13@gmail.com",
+        "customerPhone": "54556565656",
+        "items": [
+          {
+            "productId": "carton-6a6a370ebc7d59b354c98821",
+            "productName": "Product",
+            "price": 30000,
+            "quantity": 1,
+            "marketType": "carton",
+            "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+            "subtotal": 30000
+          }
+        ],
+        "subtotal": 30000,
+        "deliveryFee": 2000,
+        "total": 32000,
+        "deliveryOption": "home",
+        "deliveryAddress": {
+          "street": "dfdfd",
+          "city": "fdfd",
+          "state": "Lagos",
+          "landmark": "dghgyt",
+          "phone": "54556565656"
+        },
+        "deliveryDate": "2026-07-30T00:00:00.000Z",
+        "paymentMethod": "paystack",
+        "paymentStatus": "paid",
+        "status": "processing",
+        "statusHistory": [
+          {
+            "status": "pending",
+            "timestamp": "2026-07-30T21:45:31.616Z",
+            "note": "Order created",
+            "_id": "6a6bc5fbce83a80696fc6872"
+          }
+        ],
+        "createdAt": "2026-07-30T21:45:31.637Z",
+        "updatedAt": "2026-07-30T21:45:32.100Z",
+        "__v": 0,
+        "paymentReference": "PAY-GPO-1785447931616-YYSPHMQT3"
+      }
+    ]
+  },
+  "customers": {
+    "count": 121,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "name": {
+        "type": "string",
+        "sample": "IYA AYO"
+      },
+      "totalPurchases": {
+        "type": "number",
+        "sample": 32509500
+      },
+      "lastPurchaseDate": {
+        "type": "object",
+        "sample": "2026-06-03T16:53:47.651Z"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-04-20T14:07:05.178Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 0
+      },
+      "address": {
+        "type": "string",
+        "sample": ""
+      },
+      "email": {
+        "type": "string",
+        "sample": ""
+      },
+      "phone": {
+        "type": "string",
+        "sample": "07039370751"
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "69e6330949e1a62b1a63cd9b",
+        "name": "IYA AYO",
+        "totalPurchases": 32509500,
+        "lastPurchaseDate": "2026-06-03T16:53:47.651Z",
+        "createdAt": "2026-04-20T14:07:05.178Z",
+        "__v": 0,
+        "address": "",
+        "email": "",
+        "phone": "07039370751"
+      },
+      {
+        "_id": "69e642b35e2ef10c01c23c47",
+        "name": "mummy samuel",
+        "totalPurchases": 681750,
+        "lastPurchaseDate": "2026-06-29T13:46:27.033Z",
+        "createdAt": "2026-04-20T15:13:55.261Z",
+        "__v": 0
+      }
+    ]
+  },
+  "credits": {
+    "count": 589,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "customerId": {
+        "type": "string",
+        "sample": "69e6330949e1a62b1a63cd9b"
+      },
+      "customerName": {
+        "type": "string",
+        "sample": "iya ayo"
+      },
+      "saleId": {
+        "type": "string",
+        "sample": "1mtkzyok2ptml"
+      },
+      "amount": {
+        "type": "number",
+        "sample": 85000
+      },
+      "amountPaid": {
+        "type": "number",
+        "sample": 85000
+      },
+      "amountRemaining": {
+        "type": "number",
+        "sample": 0
+      },
+      "status": {
+        "type": "string",
+        "sample": "paid"
+      },
+      "saleDate": {
+        "type": "string",
+        "sample": "20-4-2026"
+      },
+      "payments": {
+        "type": "array",
+        "sample": "[1 items]"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-04-20T14:07:05.239Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-04-20T14:07:47.100Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 1
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "69e6330949e1a62b1a63cda0",
+        "customerId": "69e6330949e1a62b1a63cd9b",
+        "customerName": "iya ayo",
+        "saleId": "1mtkzyok2ptml",
+        "amount": 85000,
+        "amountPaid": 85000,
+        "amountRemaining": 0,
+        "status": "paid",
+        "saleDate": "20-4-2026",
+        "payments": [
+          {
+            "amount": 85000,
+            "paymentDate": "20-4-2026",
+            "paymentMethod": "cash",
+            "_id": "69e633337ff7873c1564f1cd"
+          }
+        ],
+        "createdAt": "2026-04-20T14:07:05.239Z",
+        "updatedAt": "2026-04-20T14:07:47.100Z",
+        "__v": 1
+      },
+      {
+        "_id": "69e6576f02788e000d103200",
+        "customerId": "69e6576f02788e000d1031fa",
+        "customerName": "ALPHA EPE",
+        "saleId": "5ypuo3ona2487",
+        "amount": 643000,
+        "amountPaid": 643000,
+        "amountRemaining": 0,
+        "status": "paid",
+        "saleDate": "20-4-2026",
+        "payments": [
+          {
+            "amount": 643000,
+            "paymentDate": "22-4-2026",
+            "paymentMethod": "transfer",
+            "_id": "69e88013321473859b71a738"
+          }
+        ],
+        "createdAt": "2026-04-20T16:42:23.796Z",
+        "updatedAt": "2026-04-22T08:00:19.550Z",
+        "__v": 1
+      }
+    ]
+  },
+  "wishlists": {
+    "count": 1,
+    "schema": {
+      "_id": {
+        "type": "object",
+        "sample": "object"
+      },
+      "userId": {
+        "type": "object",
+        "sample": "object"
+      },
+      "customerEmail": {
+        "type": "string",
+        "sample": "ish@gpower.com"
+      },
+      "items": {
+        "type": "array",
+        "sample": "[2 items]"
+      },
+      "createdAt": {
+        "type": "object",
+        "sample": "2026-07-31T22:51:40.516Z"
+      },
+      "updatedAt": {
+        "type": "object",
+        "sample": "2026-07-31T22:51:53.151Z"
+      },
+      "__v": {
+        "type": "number",
+        "sample": 1
+      }
+    },
+    "sampleDocs": [
+      {
+        "_id": "6a6d26fce6c659c63095ba97",
+        "userId": "671b788c0a81b62b043f1e7d",
+        "customerEmail": "ish@gpower.com",
+        "items": [
+          {
+            "productId": "carton-6a6a370ebc7d59b354c98821",
+            "productName": "10 Finger Sausage",
+            "productSlug": "10-finger-sausage",
+            "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+            "price": 30000,
+            "marketType": "carton",
+            "addedAt": "2026-07-31T22:51:40.511Z",
+            "_id": "6a6d26fce6c659c63095ba98"
+          },
+          {
+            "productId": "carton-6a6a36d5bc7d59b354c9881e",
+            "productName": "12 Finger Sausage",
+            "productSlug": "12-finger-sausage",
+            "image": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjQwMCIgZmlsbD0iI2Y4ZjlmYSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiIGZpbGw9IiM5Y2ExYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pjwvc3ZnPg==",
+            "price": 52000,
+            "marketType": "carton",
+            "addedAt": "2026-07-31T22:51:53.150Z",
+            "_id": "6a6d2709e6c659c63095ba9a"
+          }
+        ],
+        "createdAt": "2026-07-31T22:51:40.516Z",
+        "updatedAt": "2026-07-31T22:51:53.151Z",
+        "__v": 1
+      }
+    ]
+  },
+  "riders": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  },
+  "verificationtokens": {
+    "count": 0,
+    "schema": {},
+    "sampleDocs": []
+  }
+}

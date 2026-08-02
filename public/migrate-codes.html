@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Database Migrations</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+    }
+    .success {
+      background: #d1fae5;
+      border: 1px solid #6ee7b7;
+      color: #065f46;
+    }
+    .error {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #991b1b;
+    }
+    .loading {
+      background: #dbeafe;
+      border: 1px solid #93c5fd;
+      color: #1e40af;
+    }
+    .section {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Database Migrations</h1>
+  <p>Run these migrations to fix data issues in your orders.</p>
+  
+  <!-- Confirmation Codes Migration -->
+  <div class="section">
+    <h2>1. Add Confirmation Codes</h2>
+    <p>This will add 6-digit confirmation codes to all orders that don't have them.</p>
+    <button id="codesBtn" onclick="runMigration('codes')">Add Confirmation Codes</button>
+    <div id="codesResult" style="display:none;"></div>
+  </div>
+
+  <!-- Fix Product Names Migration -->
+  <div class="section">
+    <h2>2. Fix Product Names</h2>
+    <p>This will replace generic "Product" names with actual product names from your catalog.</p>
+    <button id="productsBtn" onclick="runMigration('products')">Fix Product Names</button>
+    <div id="productsResult" style="display:none;"></div>
+  </div>
+
+  <script>
+    async function runMigration(type) {
+      const endpoints = {
+        codes: '/api/admin/migrate-confirmation-codes',
+        products: '/api/admin/fix-product-names',
+      };
+
+      const btn = document.getElementById(`${type}Btn`);
+      const result = document.getElementById(`${type}Result`);
+      
+      btn.disabled = true;
+      result.style.display = 'block';
+      result.className = 'result loading';
+      result.innerHTML = '⏳ Running migration...';
+
+      try {
+        const response = await fetch(endpoints[type], {
+          method: 'POST',
+          credentials: 'include',
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          result.className = 'result success';
+          result.innerHTML = `
+            <h3>✅ ${data.message}</h3>
+            <p><strong>Items updated:</strong> ${data.updated}</p>
+            ${data.orders && data.orders.length > 0 ? `
+              <details>
+                <summary>View updated items (${data.orders.length})</summary>
+                <ul>
+                  ${data.orders.map(o => `<li>${o.orderNumber}: ${o.confirmationCode || o.newName}</li>`).join('')}
+                </ul>
+              </details>
+            ` : ''}
+            ${data.updates && data.updates.length > 0 ? `
+              <details>
+                <summary>View changes (${data.updates.length})</summary>
+                <ul>
+                  ${data.updates.map(u => `<li>${u.orderNumber}: "${u.oldName}" → "${u.newName}"</li>`).join('')}
+                </ul>
+              </details>
+            ` : ''}
+          `;
+        } else {
+          result.className = 'result error';
+          result.innerHTML = `<h3>❌ Migration failed</h3><p>${data.error || 'Unknown error'}</p>`;
+        }
+      } catch (error) {
+        result.className = 'result error';
+        result.innerHTML = `<h3>❌ Error</h3><p>${error.message}</p>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
