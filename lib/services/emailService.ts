@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
+import { getBaseUrl } from '@/lib/utils/url';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import VerificationToken from '@/models/VerificationToken';
@@ -70,7 +71,8 @@ export class EmailService {
    * Send verification email
    */
   static async sendVerificationEmail(email: string, token: string) {
-    const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
+    const baseUrl = getBaseUrl();
+    const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
     const transporter = createTransporter();
 
     const emailContent = {
@@ -410,7 +412,7 @@ export async function sendOrderStatusEmail(input: {
               <p>${input.message}</p>
             </div>
             <p style="text-align: center;">
-              <a href="${process.env.NEXTAUTH_URL}/orders/${input.orderId}" class="button">View Order Details</a>
+              <a href="${getBaseUrl()}/orders/${input.orderId}" class="button">View Order Details</a>
             </p>
           </div>
           <div class="footer">
@@ -420,7 +422,7 @@ export async function sendOrderStatusEmail(input: {
       </body>
       </html>
     `,
-    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\nView your order at: ${process.env.NEXTAUTH_URL}/orders`,
+    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\nView your order at: ${getBaseUrl()}/orders`,
   };
 
   if (transporter) {

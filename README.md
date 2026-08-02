@@ -57,10 +57,17 @@ Create a `.env.local` file with:
 ```
 MONGODB_URI=your_mongodb_connection_string
 NEXTAUTH_SECRET=your_nextauth_secret
-NEXTAUTH_URL=http://localhost:3000
 NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
 PAYSTACK_SECRET_KEY=your_paystack_secret_key
 ```
+
+**Note:** `NEXTAUTH_URL` is optional and will be auto-detected from:
+1. `VERCEL_URL` on Vercel deployments
+2. Request headers (`x-forwarded-host`, `host`)
+3. `window.location.origin` on the client-side
+4. Defaults to `http://localhost:3000` in development
+
+Only set `NEXTAUTH_URL` explicitly if you need to override the auto-detection.
 
 ## Scripts
 
