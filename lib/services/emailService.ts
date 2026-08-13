@@ -143,6 +143,81 @@ export class EmailService {
   }
 
   /**
+   * Send password reset email
+   */
+  static async sendPasswordResetEmail(email: string, token: string, type?: string) {
+    const baseUrl = getBaseUrl();
+    const typeParam = type ? `&type=${type}` : '';
+    const resetUrl = `${baseUrl}/reset-password?token=${token}${typeParam}`;
+    const transporter = createTransporter();
+
+    const emailContent = {
+      from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Reset Your Password - Gpowerpay',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Password Reset Request 🔑</h1>
+            </div>
+            <div class="content">
+              <p>We received a request to reset your password for your Gpowerpay account.</p>
+              <p style="text-align: center;">
+                <a href="${resetUrl}" class="button">Reset Password</a>
+              </p>
+              <p>Or copy and paste this link into your browser:</p>
+              <p style="word-break: break-all; background: white; padding: 10px; border-radius: 5px;">${resetUrl}</p>
+              <p><strong>This link expires in 1 hour.</strong></p>
+              <p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Gpowerpay. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `Password Reset Request\n\nPlease reset your password by visiting: ${resetUrl}\n\nThis link expires in 1 hour.`,
+    };
+
+    // If SMTP is configured, send real email
+    if (transporter) {
+      try {
+        await transporter.sendMail(emailContent);
+        console.log(`✅ Password reset email sent to ${email}`);
+        return true;
+      } catch (error) {
+        console.error('❌ Email send failed:', error);
+      }
+    }
+
+    // Fallback: Log to console (for development)
+    console.log('='.repeat(80));
+    console.log('📧 PASSWORD RESET EMAIL');
+    console.log('='.repeat(80));
+    console.log(`To: ${email}`);
+    console.log(`Subject: ${emailContent.subject}`);
+    console.log(`\nReset Link:\n${resetUrl}`);
+    console.log('\nThis link expires in 1 hour.');
+    console.log('='.repeat(80));
+
+    return true;
+  }
+
+  /**
    * Verify email token
    */
   static async verifyEmail(token: string) {

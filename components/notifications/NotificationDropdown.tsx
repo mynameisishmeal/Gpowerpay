@@ -85,7 +85,7 @@ export function NotificationDropdown({
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <div className="absolute top-full right-0 mt-2 w-80 sm:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[500px] overflow-hidden flex flex-col">
+    <div className="fixed left-4 right-4 top-16 sm:absolute sm:left-auto sm:top-full sm:right-0 sm:mt-2 sm:w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-[80vh] sm:max-h-[500px] overflow-hidden flex flex-col">
       {/* Header */}
       <div className="p-4 border-b border-gray-200 flex items-center justify-between bg-gray-50">
         <h3 className="font-semibold text-gray-900">

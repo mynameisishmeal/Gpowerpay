@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import crypto from 'crypto';
+import { EmailService } from '@/lib/services/emailService';
 
 // POST /api/auth/forgot-password - Request password reset
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email } = body;
+    const { email, type } = body;
 
     if (!email) {
       return NextResponse.json(
@@ -44,8 +45,8 @@ export async function POST(request: NextRequest) {
     user.passwordResetExpires = resetTokenExpiry;
     await user.save();
 
-    // TODO: Send password reset email
-    // await sendPasswordResetEmail(user.email, resetToken);
+    // Send password reset email
+    await EmailService.sendPasswordResetEmail(user.email, resetToken, type);
 
     console.log('Password reset token generated for:', user.email);
     console.log('Reset token:', resetToken); // Remove in production

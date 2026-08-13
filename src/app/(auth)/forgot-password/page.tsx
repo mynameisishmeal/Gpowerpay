@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
@@ -22,6 +22,23 @@ export default function ForgotPasswordPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  
+  // Use URLSearchParams directly if possible, or standard window.location
+  // Using React hook for Next.js app router
+  const [type, setType] = useState<string | null>(null);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search);
+      setType(searchParams.get('type'));
+    }
+  }, []);
+
+  const getBackLink = () => {
+    if (type === 'admin') return '/admin/login';
+    if (type === 'rider') return '/rider/login';
+    return '/login';
+  };
 
   const {
     register,
@@ -39,7 +56,7 @@ export default function ForgotPasswordPage() {
       const response = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: data.email }),
+        body: JSON.stringify({ email: data.email, type: type }),
       });
 
       const result = await response.json();
@@ -69,7 +86,7 @@ export default function ForgotPasswordPage() {
               We've sent password reset instructions to your email address. 
               Please check your inbox and follow the link to reset your password.
             </p>
-            <Link href="/login">
+            <Link href={getBackLink()}>
               <Button className="btn-modern">
                 <ArrowLeft className="mr-2 h-5 w-5" />
                 Back to Login
@@ -146,7 +163,7 @@ export default function ForgotPasswordPage() {
             {/* Back to Login */}
             <div className="text-center pt-4">
               <Link 
-                href="/login" 
+                href={getBackLink()} 
                 className="text-base text-blue-600 font-medium hover:underline inline-flex items-center"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />

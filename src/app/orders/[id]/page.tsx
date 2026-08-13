@@ -38,10 +38,10 @@ interface Order {
   subtotal: number;
   deliveryFee: number;
   total: number;
-  status: 'pending' | 'processing' | 'out_for_delivery' | 'rider_delivered' | 'completed' | 'delivered' | 'cancelled' | 'disputed';
+  status: 'pending' | 'processing' | 'out_for_delivery' | 'rider_delivered' | 'sadmin_delivered' | 'completed' | 'delivered' | 'cancelled' | 'disputed';
   deliveryOption: 'home' | 'pickup';
   deliveryType?: 'bulk' | 'small';
-  deliveryStatus?: 'in_store' | 'on_the_way' | 'rider_delivered' | 'delivered' | 'disputed';
+  deliveryStatus?: 'in_store' | 'on_the_way' | 'rider_delivered' | 'sadmin_delivered' | 'delivered' | 'disputed';
   assignedRider?: {
     riderId: string;
     name: string;
@@ -398,13 +398,13 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
                     order.deliveryStatus === 'in_store' ? 'bg-yellow-100 text-yellow-800' :
                     order.deliveryStatus === 'on_the_way' ? 'bg-blue-100 text-blue-800' :
-                    order.deliveryStatus === 'rider_delivered' ? 'bg-purple-100 text-purple-800' :
+                    order.deliveryStatus === 'rider_delivered' || order.deliveryStatus === 'sadmin_delivered' ? 'bg-purple-100 text-purple-800' :
                     order.deliveryStatus === 'disputed' ? 'bg-red-100 text-red-800' :
                     'bg-green-100 text-green-800'
                   }`}>
                     {order.deliveryStatus === 'in_store' && <><Package size={16} /> In Store</>}
                     {order.deliveryStatus === 'on_the_way' && <><Truck size={16} /> On The Way</>}
-                    {order.deliveryStatus === 'rider_delivered' && <><CheckCircle size={16} /> Awaiting Confirmation</>}
+                    {(order.deliveryStatus === 'rider_delivered' || order.deliveryStatus === 'sadmin_delivered') && <><CheckCircle size={16} /> Awaiting Confirmation</>}
                     {order.deliveryStatus === 'delivered' && <><CheckCircle size={16} /> Delivered</>}
                     {order.deliveryStatus === 'disputed' && <><XCircle size={16} /> Disputed</>}
                   </span>
@@ -468,7 +468,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
             {/* Delivery Resolution Banner */}
-            {order.status === 'rider_delivered' && (
+            {(order.status === 'rider_delivered' || order.status === 'sadmin_delivered') && (
               <Card className="border-blue-300 bg-blue-50 shadow-sm">
                 <CardContent className="p-6">
                   <div className="flex flex-col md:flex-row items-center justify-between gap-4">
@@ -616,7 +616,7 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                               🚚 On The Way
                             </span>
                           )}
-                          {order.deliveryStatus === 'rider_delivered' && (
+                          {(order.deliveryStatus === 'rider_delivered' || order.deliveryStatus === 'sadmin_delivered') && (
                             <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
                               ⏳ Awaiting Confirmation
                             </span>

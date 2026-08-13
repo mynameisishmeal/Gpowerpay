@@ -3,7 +3,7 @@
 import { useState, useEffect, use } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { ArrowLeft, Package, MapPin, User, Phone, Truck, CheckCircle, Loader2 } from 'lucide-react';
+import { ArrowLeft, Package, MapPin, User, Phone, Truck, CheckCircle, Loader2, Copy } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -49,7 +49,7 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
   const [updating, setUpdating] = useState(false);
   const [showCodeDialog, setShowCodeDialog] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const { confirm } = useConfirm();
+  const { confirm, ConfirmDialog: HookConfirmDialog } = useConfirm();
 
   const { id } = use(params);
 
@@ -153,6 +153,14 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
     }).format(price);
   };
 
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      toast.success(`${label} copied to clipboard!`);
+    }).catch(() => {
+      toast.error('Failed to copy');
+    });
+  };
+
   if (authStatus === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -200,9 +208,18 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
           {/* Confirmation Code */}
           {order.confirmationCode && (
             <div className="mt-4 inline-flex items-center gap-3 bg-yellow-50 border-2 border-yellow-400 rounded-lg px-4 py-3">
-              <div>
-                <p className="text-xs text-yellow-800 font-medium mb-0.5">Confirmation Code</p>
-                <p className="text-2xl font-bold text-yellow-900 tracking-wider font-mono">{order.confirmationCode}</p>
+              <div className="flex items-center gap-4">
+                <div>
+                  <p className="text-xs text-yellow-800 font-medium mb-0.5">Confirmation Code</p>
+                  <p className="text-2xl font-bold text-yellow-900 tracking-wider font-mono">{order.confirmationCode}</p>
+                </div>
+                <button
+                  onClick={() => copyToClipboard(order.confirmationCode, 'Confirmation code')}
+                  className="p-2 hover:bg-yellow-100 rounded transition-colors"
+                  title="Copy confirmation code"
+                >
+                  <Copy size={20} className="text-yellow-700" />
+                </button>
               </div>
             </div>
           )}
@@ -493,6 +510,8 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
             </p>
           </div>
         </ConfirmDialog>
+
+        <HookConfirmDialog />
       </div>
     </div>
   );

@@ -59,6 +59,14 @@ export async function PATCH(
       }
     } else {
       order.deliveryStatus = deliveryStatus;
+      if (deliveryStatus === 'on_the_way') {
+        order.status = 'out_for_delivery';
+        order.statusHistory.push({
+          status: 'out_for_delivery',
+          timestamp: new Date(),
+          note: 'Order is out for delivery',
+        });
+      }
     }
 
     await order.save();
