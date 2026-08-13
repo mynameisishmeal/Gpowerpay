@@ -75,7 +75,6 @@ const WishlistSchema = new Schema<IWishlist>(
 );
 
 // Indexes
-WishlistSchema.index({ userId: 1 });
 WishlistSchema.index({ customerEmail: 1 });
 WishlistSchema.index({ 'items.productId': 1 }); // String index for composite IDs
 

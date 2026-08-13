@@ -8,6 +8,7 @@ import type { DeliveryInfo, PaymentMethod } from '@/src/app/checkout/page';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 import { PaystackService } from '@/lib/paystack';
+import { FundWalletButton } from '@/components/wallet/FundWalletButton';
 
 interface CheckoutStepPaymentProps {
   total: number;
@@ -100,6 +101,8 @@ export function CheckoutStepPayment({
           console.log('✅ Paystack payment successful:', response);
           toast.success('Payment successful!');
           
+          paymentMethod.paymentReference = response.reference;
+
           // NOW create the order after successful payment
           await onComplete(paymentMethod);
         },
@@ -169,8 +172,12 @@ export function CheckoutStepPayment({
                   </p>
                 </div>
               </div>
-              {hasSufficientBalance && (
+              {hasSufficientBalance ? (
                 <span className="text-green-600 font-medium text-sm">Available</span>
+              ) : (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <FundWalletButton onSuccess={fetchWalletBalance} />
+                </div>
               )}
             </div>
           </button>

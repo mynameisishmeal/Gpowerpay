@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Home, ShoppingCart, Package, Users, BarChart3, Settings, UserPlus, ChevronDown, Printer, Menu, X, LogOut, CreditCard, TrendingDown, Bell, Receipt, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function Navigation() {
   const router = useRouter();
@@ -43,7 +44,13 @@ export default function Navigation() {
       <div className="max-w-full mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Package className="h-6 w-6 text-blue-600" />
+            <Image 
+              src="/web-app-manifest-512x512.png" 
+              alt="Gpowerpay Logo" 
+              width={32} 
+              height={32} 
+              className="h-6 w-6 object-contain"
+            />
             <span className="text-xl font-bold text-gray-900">Gpower Pay</span>
           </div>
           

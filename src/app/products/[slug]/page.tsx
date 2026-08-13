@@ -151,6 +151,30 @@ export default function ProductDetailPage() {
     setQuantity(1);
   };
 
+  const handleShare = async () => {
+    if (!product) return;
+    const url = window.location.href;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: product.shortDescription || 'Check out this product on Gpowerpay',
+          url: url,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success('Link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
@@ -301,7 +325,7 @@ export default function ProductDetailPage() {
                   <Heart size={18} className="mr-2" />
                   Wishlist
                 </Button>
-                <Button variant="outline" className="h-12">
+                <Button variant="outline" className="h-12" onClick={handleShare}>
                   <Share2 size={18} className="mr-2" />
                   Share
                 </Button>

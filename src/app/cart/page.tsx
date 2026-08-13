@@ -149,7 +149,7 @@ export default function CartPage() {
                             </span>
                           </div>
                           <button
-                            onClick={() => removeItem(item.productId)}
+                            onClick={() => removeItem(item.productId, item.marketType)}
                             className="text-red-500 hover:text-red-700 ml-4"
                             aria-label="Remove item"
                           >
@@ -167,7 +167,7 @@ export default function CartPage() {
                           <div className="flex items-center gap-3">
                             <button
                               onClick={() =>
-                                updateQuantity(item.productId, item.quantity - 1)
+                                updateQuantity(item.productId, item.quantity - 1, item.marketType)
                               }
                               className="w-10 h-10 flex items-center justify-center border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition-colors"
                               aria-label="Decrease quantity"
@@ -179,7 +179,7 @@ export default function CartPage() {
                             </span>
                             <button
                               onClick={() =>
-                                updateQuantity(item.productId, item.quantity + 1)
+                                updateQuantity(item.productId, item.quantity + 1, item.marketType)
                               }
                               disabled={
                                 item.maxQuantity

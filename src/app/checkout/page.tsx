@@ -42,6 +42,7 @@ export interface PaymentMethod {
   type: 'wallet' | 'paystack' | 'split';
   walletAmount?: number;
   paystackAmount?: number;
+  paymentReference?: string;
 }
 
 export default function CheckoutPage({
@@ -145,6 +146,9 @@ export default function CheckoutPage({
         deliveryDate: deliveryInfo.deliveryDate,
         pickupDate: deliveryInfo.pickupDate,
         paymentMethod: payment.type,
+        paymentReference: payment.paymentReference,
+        walletAmount: payment.walletAmount,
+        paystackAmount: payment.paystackAmount,
       };
 
       console.log('📦 Order Data Being Sent:', JSON.stringify(orderData, null, 2));
@@ -203,6 +207,27 @@ export default function CheckoutPage({
             Complete your order - {getTotalItems()} {getTotalItems() === 1 ? 'item' : 'items'}
           </p>
         </div>
+
+        {/* Email Verification Banner */}
+        {session?.user && !(session.user as any).emailVerified && (
+          <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-r-lg">
+            <div className="flex items-start">
+              <div className="flex-shrink-0">
+                <Mail className="h-5 w-5 text-yellow-400" />
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">
+                  Verify your email address
+                </h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>
+                    Your email address is not verified. Please check your inbox for a verification link to secure your account and receive order updates.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}

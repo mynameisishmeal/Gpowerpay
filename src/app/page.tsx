@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Package, ShoppingCart, Users, TrendingUp, Star, Wallet, Heart } from "lucide-react";
+import Image from 'next/image';
+import { Package, ShoppingCart, TrendingUp, Shield, Wallet as WalletIcon, Star, Wallet, Heart } from "lucide-react";
 import { ProductCard } from '@/components/products/ProductCard';
 import { IProduct } from '@/types';
 import { useCartStore } from '@/lib/store/cartStore';
@@ -77,7 +78,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
           <div className="text-center">
             <div className="flex justify-center mb-6">
-              <Package className="h-16 w-16 text-blue-600" />
+              <Image 
+                src="/web-app-manifest-512x512.png" 
+                alt="Gpowerpay Logo" 
+                width={64} 
+                height={64} 
+                className="h-16 w-16 object-contain"
+              />
             </div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Welcome to Gpowerpay

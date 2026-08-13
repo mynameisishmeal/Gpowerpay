@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Package, Menu, Heart, ShoppingBag, Wallet as WalletIcon, User as UserIcon, LayoutDashboard, ShoppingCart, Users, ChevronDown, Bike } from 'lucide-react';
 import { UserStatus } from './UserStatus';
 import { CartIcon } from '@/components/cart/CartIcon';
@@ -77,7 +78,13 @@ export function Navbar() {
           <div className="flex justify-between items-center h-16 gap-2">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-              <Package className="h-7 w-7 sm:h-8 sm:w-8 text-blue-600" />
+              <Image 
+                src="/web-app-manifest-512x512.png" 
+                alt="Gpowerpay Logo" 
+                width={32} 
+                height={32} 
+                className="h-7 w-7 sm:h-8 sm:w-8 object-contain"
+              />
               <span className="text-lg sm:text-xl font-bold text-gray-900">Gpowerpay</span>
             </Link>
 

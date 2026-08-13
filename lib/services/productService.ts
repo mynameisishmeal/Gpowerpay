@@ -364,8 +364,22 @@ export class ProductService {
   ): Promise<void> {
     await connectDB();
 
-    // NOTE: Stock management not supported with legacy schema
-    // This is a no-op
-    return;
+    if (marketType === 'carton') {
+      try {
+        console.log(`📦 Deducting ${quantity} cartons from stock for productId: ${productId}`);
+        const result = await LegacyStock.findByIdAndUpdate(
+          productId,
+          { $inc: { stockquantity: -quantity } },
+          { new: true }
+        );
+        if (result) {
+          console.log(`✅ Successfully updated stock for ${result.stockname}. New quantity: ${result.stockquantity}`);
+        } else {
+          console.error(`❌ Failed to update stock for carton product: ${productId} - Product not found`);
+        }
+      } catch (error: any) {
+        console.error(`❌ Error updating stock for carton product: ${productId}`, error.message);
+      }
+    }
   }
 }

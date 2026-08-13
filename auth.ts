@@ -1,10 +1,15 @@
-import NextAuth from 'next-auth';
+import NextAuth, { CredentialsSignin } from 'next-auth';
+
+class EmailNotVerifiedError extends CredentialsSignin {
+  code = "Email not verified";
+}
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';
 import Facebook from 'next-auth/providers/facebook';
 import connectDB from './lib/mongodb';
 import User from './models/User';
 import Rider from './models/Rider';
+import { EmailService } from './lib/services/emailService';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -64,8 +69,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         // REQUIRE EMAIL VERIFICATION (except for legacy accounts that don't have emailVerified field)
         if (user.emailVerified === false) {
-          console.log('[AUTH] Email not verified');
-          return null;
+          console.log('[AUTH] Email not verified. Resending verification email...');
+          try {
+            await EmailService.resendVerificationEmail(user.email);
+          } catch (error) {
+            console.error('[AUTH] Failed to resend verification email:', error);
+          }
+          throw new EmailNotVerifiedError();
         }
 
         console.log('[AUTH] Login successful for:', user.email);
@@ -178,10 +188,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             return null;
           }
 
-          // REQUIRE EMAIL VERIFICATION for riders
+          // REQUIRE EMAIL VERIFICATION (except for legacy accounts)
           if (riderUser.emailVerified === false) {
             console.log('[RIDER AUTH] Email not verified');
-            return null;
+            throw new EmailNotVerifiedError();
           }
 
           console.log('[RIDER AUTH] Login successful (User collection)');
@@ -236,10 +246,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
-        // REQUIRE EMAIL VERIFICATION for riders
+        // REQUIRE EMAIL VERIFICATION (except for legacy accounts)
         if (rider.emailVerified === false) {
           console.log('[RIDER AUTH] Email not verified');
-          return null;
+          throw new EmailNotVerifiedError();
         }
 
         console.log('[RIDER AUTH] Login successful (Rider collection)');

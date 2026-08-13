@@ -117,7 +117,7 @@ export function CartSlideOver() {
                         </span>
                       </div>
                       <button
-                        onClick={() => removeItem(item.productId)}
+                        onClick={() => removeItem(item.productId, item.marketType)}
                         className="text-red-500 hover:text-red-700 ml-2"
                         aria-label="Remove item"
                       >
@@ -134,7 +134,7 @@ export function CartSlideOver() {
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() =>
-                          updateQuantity(item.productId, item.quantity - 1)
+                          updateQuantity(item.productId, item.quantity - 1, item.marketType)
                         }
                         className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded hover:bg-gray-100 transition-colors"
                         aria-label="Decrease quantity"
@@ -146,7 +146,7 @@ export function CartSlideOver() {
                       </span>
                       <button
                         onClick={() =>
-                          updateQuantity(item.productId, item.quantity + 1)
+                          updateQuantity(item.productId, item.quantity + 1, item.marketType)
                         }
                         disabled={
                           item.maxQuantity

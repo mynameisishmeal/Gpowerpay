@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { IProduct } from '@/types';
 import { PriceDisplay } from './PriceDisplay';
 import { StockBadge } from './StockBadge';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { Star, ShoppingCart, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWishlistStore } from '@/lib/store/wishlistStore';
 import { useSession } from 'next-auth/react';
@@ -71,6 +71,32 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
     }
   };
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const url = `${window.location.origin}/products/${product.seo.slug}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: product.name,
+          text: product.shortDescription || 'Check out this product on Gpowerpay',
+          url: url,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(url);
+        toast.success('Link copied to clipboard!');
+      } catch (error) {
+        toast.error('Failed to copy link');
+      }
+    }
+  };
+
   return (
     <div className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow duration-300">
       {/* Image Section */}
@@ -128,6 +154,15 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
               inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'
             }`}
           />
+        </button>
+
+        {/* Share Button */}
+        <button
+          onClick={handleShare}
+          className="absolute bottom-12 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+          title="Share product"
+        >
+          <Share2 size={20} className="text-gray-600" />
         </button>
       </Link>
 

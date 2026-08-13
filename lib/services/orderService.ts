@@ -3,6 +3,8 @@ import connectDB from '@/lib/mongodb';
 import { WalletService } from './walletService';
 import { populateOrderProductNames, populateOrdersProductNames } from '@/lib/utils/orderUtils';
 import type { CartItem } from '@/lib/store/cartStore';
+import { PaystackService } from '@/lib/paystack';
+import { ProductService } from './productService';
 
 /**
  * Order Service Layer
@@ -96,7 +98,9 @@ export class OrderService {
   static async processPayment(
     orderId: string,
     paymentMethod: 'wallet' | 'paystack' | 'split',
-    paymentReference: string
+    paymentReference: string,
+    walletAmount?: number,
+    paystackAmount?: number
   ) {
     await connectDB();
 
@@ -109,23 +113,39 @@ export class OrderService {
     console.log(`💳 Payment method: ${paymentMethod}`);
     console.log(`💳 Order total: ₦${order.total}`);
 
-    // Handle wallet or split payment
+    // 1. Verify Paystack Payment first if applicable
+    if (paymentMethod === 'paystack' || paymentMethod === 'split') {
+      console.log(`🔍 Verifying Paystack transaction: ${paymentReference}`);
+      const verification = await PaystackService.verifyPayment(paymentReference);
+      
+      if (verification.status !== 'success') {
+        throw new Error('Paystack payment verification failed.');
+      }
+
+      const paidAmount = PaystackService.toNaira(verification.amount);
+      const expectedAmount = paymentMethod === 'split' ? paystackAmount : order.total;
+
+      if (paidAmount < expectedAmount!) {
+        throw new Error(`Insufficient Paystack payment. Expected ₦${expectedAmount}, got ₦${paidAmount}`);
+      }
+      console.log(`✅ Paystack payment verified successfully`);
+    }
+
+    // 2. Handle wallet or split payment
     if (paymentMethod === 'wallet' || paymentMethod === 'split') {
       console.log(`💰 Attempting to debit wallet for customer ${order.customerId}`);
       
-      // For split payment, debit available wallet balance (up to order total)
+      // For split payment, debit exactly the walletAmount defined in checkout
       if (paymentMethod === 'split') {
-        const walletBalance = await WalletService.getBalance(order.customerId.toString());
-        console.log(`💰 Split payment - Wallet balance: ₦${walletBalance}`);
+        const balance = await WalletService.getBalance(order.customerId.toString());
         
-        if (walletBalance > 0) {
-          const amountToDebit = Math.min(walletBalance, order.total);
-          console.log(`💰 Debiting ₦${amountToDebit} from wallet`);
+        if (balance >= walletAmount!) {
+          console.log(`💰 Debiting exact ₦${walletAmount} from wallet for split payment`);
           
           try {
             const result = await WalletService.debitWallet(
               order.customerId.toString(),
-              amountToDebit,
+              walletAmount!,
               `Payment for order ${order.orderNumber}`,
               `${paymentReference}-WALLET`,
               { orderId: order._id.toString(), orderNumber: order.orderNumber }
@@ -136,7 +156,8 @@ export class OrderService {
             throw error;
           }
         } else {
-          console.log(`⚠️ No wallet balance to debit for split payment`);
+          console.log(`⚠️ Insufficient wallet balance to debit for split payment. Expected ₦${walletAmount}`);
+          throw new Error('Insufficient wallet balance for split payment.');
         }
       } else {
         // Full wallet payment
@@ -153,6 +174,13 @@ export class OrderService {
           console.error(`❌ Failed to debit wallet:`, error.message);
           throw error; // Re-throw to fail the order
         }
+      }
+    }
+
+    // 3. Deduct Inventory stock (Only Cartons per user instruction)
+    for (const item of order.items) {
+      if (item.marketType === 'carton') {
+         await ProductService.updateStockAfterSale(item.productId.toString(), item.marketType, item.quantity);
       }
     }
 

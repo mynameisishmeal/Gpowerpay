@@ -78,11 +78,13 @@ export async function POST(request: NextRequest) {
     });
 
     // Process payment
-    const paymentReference = `PAY-${order.orderNumber}`;
+    const paymentReference = body.paymentReference || `PAY-${order.orderNumber}`;
     await OrderService.processPayment(
       order._id.toString(),
       body.paymentMethod,
-      paymentReference
+      paymentReference,
+      body.walletAmount,
+      body.paystackAmount
     );
 
     // Send notification

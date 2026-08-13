@@ -25,8 +25,8 @@ interface CartState {
   
   // Actions
   addItem: (item: CartItem) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  removeItem: (productId: string, marketType?: 'kilo' | 'carton') => void;
+  updateQuantity: (productId: string, quantity: number, marketType?: 'kilo' | 'carton') => void;
   clearCart: () => void;
   toggleCart: () => void;
   openCart: () => void;
@@ -35,8 +35,8 @@ interface CartState {
   // Computed
   getTotalItems: () => number;
   getTotalPrice: () => number;
-  getItemCount: (productId: string) => number;
-  hasItem: (productId: string) => boolean;
+  getItemCount: (productId: string, marketType: 'kilo' | 'carton') => number;
+  hasItem: (productId: string, marketType: 'kilo' | 'carton') => boolean;
 }
 
 export const useCartStore = create<CartState>()(
@@ -48,7 +48,7 @@ export const useCartStore = create<CartState>()(
       addItem: (item: CartItem) => {
         set((state) => {
           const existingItem = state.items.find(
-            (i) => i.productId === item.productId
+            (i) => i.productId === item.productId && i.marketType === item.marketType
           );
 
           if (existingItem) {
@@ -64,7 +64,7 @@ export const useCartStore = create<CartState>()(
             toast.success(`Updated ${item.name} quantity in cart`);
             return {
               items: state.items.map((i) =>
-                i.productId === item.productId
+                i.productId === item.productId && i.marketType === item.marketType
                   ? { ...i, quantity: newQuantity }
                   : i
               ),
@@ -79,24 +79,26 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      removeItem: (productId: string) => {
-        const item = get().items.find(i => i.productId === productId);
+      removeItem: (productId: string, marketType?: 'kilo' | 'carton') => {
+        // If marketType is provided, remove only that specific item.
+        // If not, remove all items with that productId (fallback for generic removal).
+        const item = get().items.find(i => i.productId === productId && (!marketType || i.marketType === marketType));
         if (item) {
           toast.success(`${item.name} removed from cart`);
         }
         set((state) => ({
-          items: state.items.filter((i) => i.productId !== productId),
+          items: state.items.filter((i) => !(i.productId === productId && (!marketType || i.marketType === marketType))),
         }));
       },
 
-      updateQuantity: (productId: string, quantity: number) => {
+      updateQuantity: (productId: string, quantity: number, marketType?: 'kilo' | 'carton') => {
         if (quantity <= 0) {
-          get().removeItem(productId);
+          get().removeItem(productId, marketType);
           return;
         }
 
         set((state) => {
-          const item = state.items.find(i => i.productId === productId);
+          const item = state.items.find(i => i.productId === productId && (!marketType || i.marketType === marketType));
           if (!item) return state;
 
           // Check if trying to exceed max quantity
@@ -104,8 +106,8 @@ export const useCartStore = create<CartState>()(
             toast.error(`Maximum available quantity is ${item.maxQuantity}`);
             return {
               items: state.items.map((i) =>
-                i.productId === productId
-                  ? { ...i, quantity: item.maxQuantity! } // Non-null assertion since we checked it exists
+                i.productId === productId && (!marketType || i.marketType === marketType)
+                  ? { ...i, quantity: item.maxQuantity! }
                   : i
               ),
             };
@@ -113,7 +115,7 @@ export const useCartStore = create<CartState>()(
 
           return {
             items: state.items.map((i) =>
-              i.productId === productId
+              i.productId === productId && (!marketType || i.marketType === marketType)
                 ? { ...i, quantity }
                 : i
             ),
@@ -148,13 +150,13 @@ export const useCartStore = create<CartState>()(
         );
       },
 
-      getItemCount: (productId: string) => {
-        const item = get().items.find((i) => i.productId === productId);
+      getItemCount: (productId: string, marketType?: 'kilo' | 'carton') => {
+        const item = get().items.find((i) => i.productId === productId && (!marketType || i.marketType === marketType));
         return item ? item.quantity : 0;
       },
 
-      hasItem: (productId: string) => {
-        return get().items.some((i) => i.productId === productId);
+      hasItem: (productId: string, marketType?: 'kilo' | 'carton') => {
+        return get().items.some((i) => i.productId === productId && (!marketType || i.marketType === marketType));
       },
     }),
     {

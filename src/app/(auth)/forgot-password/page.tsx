@@ -2,13 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Package, Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
 
 // Validation schema
 const forgotPasswordSchema = z.object({
@@ -84,8 +85,14 @@ export default function ForgotPasswordPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md card-shadow animate-fade-in-up">
         <CardHeader className="text-center">
-          <div className="flex justify-center mb-4">
-            <Package className="h-12 w-12 text-blue-600" />
+          <div className="flex justify-center mb-6">
+            <Image 
+              src="/web-app-manifest-512x512.png" 
+              alt="Gpowerpay Logo" 
+              width={48} 
+              height={48} 
+              className="h-12 w-12 object-contain"
+            />
           </div>
           <CardTitle className="text-3xl font-bold">Forgot Password?</CardTitle>
           <CardDescription className="text-base">

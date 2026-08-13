@@ -96,7 +96,6 @@ const WalletSchema = new Schema<IWallet>({
 });
 
 // Indexes
-WalletSchema.index({ userId: 1 });
 WalletSchema.index({ 'transactions.reference': 1 });
 WalletSchema.index({ 'transactions.createdAt': -1 });
 

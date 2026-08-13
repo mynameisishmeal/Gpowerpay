@@ -32,7 +32,12 @@ export default function RiderLoginPage() {
       });
 
       if (result?.error) {
-        toast.error('Invalid email or password');
+        if (result.error === 'Email not verified') {
+          toast.error('Email not verified. A fresh verification link has been sent to your inbox. Please check your mail and spam too');
+        } else {
+          toast.error('Invalid email or password');
+        }
+        setLoading(false);
         return;
       }
 

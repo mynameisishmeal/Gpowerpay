@@ -43,3 +43,25 @@ next-env.d.ts
 # setup scripts (sensitive)
 /src/app/api/setup/
 /scripts/create-superadmin.*
+
+# markdown files
+*.md
+!README.md
+
+# database backups
+/db-backup/
+/backup mongo/
+
+# local output & logs
+*.txt
+!robots.txt
+!humans.txt
+
+# IDE & Editor folders
+.kiro/
+.vscode/
+.idea/
+
+# sensitive scratch scripts
+sample-db.js
+inspect-db.js

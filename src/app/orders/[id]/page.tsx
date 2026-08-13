@@ -9,6 +9,15 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useCartStore } from '@/lib/store/cartStore';
 import toast from 'react-hot-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { ReviewForm } from '@/components/reviews/ReviewForm';
+import { Star } from 'lucide-react';
 
 interface OrderItem {
   productId: string;
@@ -381,6 +390,32 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                     >
                       Cancel Order
                     </Button>
+                  )}
+                  {(order.status === 'completed' || order.deliveryStatus === 'delivered') && (
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="text-yellow-600 hover:text-yellow-700 hover:bg-yellow-50"
+                        >
+                          <Star size={16} className="mr-2" />
+                          Rate Items
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Rate Items in Order #{order.orderId}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-6 mt-4">
+                          {order.items.map((item, idx) => (
+                            <div key={idx} className="border-b pb-6 last:border-0 last:pb-0">
+                              <ReviewForm productId={item.productId} productName={item.productName} />
+                            </div>
+                          ))}
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   )}
                 </div>
               </div>
