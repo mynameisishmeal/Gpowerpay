@@ -71,7 +71,7 @@ export async function PATCH(
       order.customerName,
       order.orderNumber,
       order.confirmationCode,
-      order.deliveryStatus
+      order.deliveryStatus || 'in_store'
     );
 
     return NextResponse.json(

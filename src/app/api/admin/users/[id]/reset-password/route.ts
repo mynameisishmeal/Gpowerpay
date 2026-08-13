@@ -6,20 +6,21 @@ import bcrypt from 'bcryptjs';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { session, error } = await requireAdmin();
     if (error) return error;
 
-    if (session.user.role !== 'sadmin') {
+    if (!session?.user || session.user.role !== 'sadmin') {
       return NextResponse.json(
         { success: false, error: 'Only Super Admin can perform this action' },
         { status: 403 }
       );
     }
 
-    const userId = params.id;
+    const userId = id;
     if (!userId) {
       return NextResponse.json(
         { success: false, error: 'User ID is required' },
