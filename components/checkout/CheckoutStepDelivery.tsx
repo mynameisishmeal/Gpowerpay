@@ -59,6 +59,7 @@ export function CheckoutStepDelivery({
     phone: savedData?.address?.phone || initialData?.address?.phone || '',
     deliveryDate: savedData?.deliveryDate || initialData?.deliveryDate || '',
     pickupDate: savedData?.pickupDate || initialData?.pickupDate || '',
+    customerNote: savedData?.customerNote || initialData?.customerNote || '',
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loadingAddresses, setLoadingAddresses] = useState(false);
@@ -130,6 +131,7 @@ export function CheckoutStepDelivery({
       } : undefined,
       deliveryDate: formData.deliveryDate,
       pickupDate: formData.pickupDate,
+      customerNote: formData.customerNote,
     };
     
     try {
@@ -162,6 +164,7 @@ export function CheckoutStepDelivery({
     const deliveryInfo: DeliveryInfo = {
       option: deliveryOption,
       deliveryFee: 0, // No delivery fee yet
+      customerNote: formData.customerNote,
     };
 
     if (deliveryOption === 'home') {
@@ -382,6 +385,16 @@ export function CheckoutStepDelivery({
               />
               {errors.deliveryDate && <p className="text-red-500 text-sm mt-1">{errors.deliveryDate}</p>}
             </div>
+            
+            <div className="pt-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Order Notes (Optional)</label>
+              <textarea
+                value={formData.customerNote}
+                onChange={(e) => setFormData({ ...formData, customerNote: e.target.value })}
+                placeholder="Let us know how you want your order treated, e.g., 'Please cut the fish into small pieces'"
+                className="w-full min-h-[100px] p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y text-sm transition-shadow"
+              />
+            </div>
           </div>
         )}
 
@@ -405,6 +418,16 @@ export function CheckoutStepDelivery({
                 className={errors.pickupDate ? 'border-red-500' : ''}
               />
               {errors.pickupDate && <p className="text-red-500 text-sm mt-1">{errors.pickupDate}</p>}
+            </div>
+
+            <div className="pt-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Order Notes (Optional)</label>
+              <textarea
+                value={formData.customerNote}
+                onChange={(e) => setFormData({ ...formData, customerNote: e.target.value })}
+                placeholder="Let us know how you want your order treated, e.g., 'Please cut the fish into small pieces'"
+                className="w-full min-h-[100px] p-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y text-sm transition-shadow"
+              />
             </div>
           </div>
         )}

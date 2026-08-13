@@ -10,7 +10,8 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 // Validation schema
 const resetPasswordSchema = z.object({
@@ -25,7 +26,7 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export default function ResetPasswordPage() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -62,7 +63,7 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    setIsLoading(true);
+    startLoading('Saving new password...');
     setError('');
 
     try {
@@ -82,7 +83,7 @@ export default function ResetPasswordPage() {
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
-      setIsLoading(false);
+      stopLoading();
     }
   };
 
@@ -157,13 +158,11 @@ export default function ResetPasswordPage() {
                     placeholder="Enter new password"
                     className="h-12 text-base pr-12"
                     {...register('password')}
-                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    disabled={isLoading}
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -185,13 +184,11 @@ export default function ResetPasswordPage() {
                     placeholder="Confirm new password"
                     className="h-12 text-base pr-12"
                     {...register('confirmPassword')}
-                    disabled={isLoading}
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    disabled={isLoading}
                   >
                     {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -205,16 +202,8 @@ export default function ResetPasswordPage() {
               <Button
                 type="submit"
                 className="w-full h-12 text-base btn-modern mt-4"
-                disabled={isLoading}
               >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  'Reset Password'
-                )}
+                Reset Password
               </Button>
             </form>
           )}

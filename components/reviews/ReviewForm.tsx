@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { Star, Loader2 } from 'lucide-react';
+import { Star } from 'lucide-react';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +24,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,7 +47,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
     }
 
     try {
-      setLoading(true);
+      startLoading('Submitting your review...');
 
       const response = await fetch('/api/reviews', {
         method: 'POST',
@@ -74,7 +75,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
     } catch (err: any) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -155,20 +156,11 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
 
           <Button
             type="submit"
-            disabled={loading || rating === 0}
+            disabled={rating === 0}
             className="w-full btn-modern"
           >
-            {loading ? (
-              <>
-                <Loader2 size={20} className="mr-2 animate-spin" />
-                Submitting...
-              </>
-            ) : (
-              <>
-                <Star size={20} className="mr-2" />
-                Submit Review
-              </>
-            )}
+            <Star size={20} className="mr-2" />
+            Submit Review
           </Button>
         </form>
       </CardContent>

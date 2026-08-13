@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import toast from 'react-hot-toast';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 interface RiderReviewFormProps {
   orderId: string;
@@ -24,7 +25,7 @@ export function RiderReviewForm({
   const [punctuality, setPunctuality] = useState(0);
   const [professionalism, setProfessionalism] = useState(0);
   const [communication, setCommunication] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +35,7 @@ export function RiderReviewForm({
       return;
     }
 
-    setLoading(true);
+    startLoading('Submitting review...');
 
     try {
       const response = await fetch(`/api/riders/${riderId}/reviews`, {
@@ -61,7 +62,7 @@ export function RiderReviewForm({
     } catch (error: any) {
       toast.error(error.message || 'Failed to submit review');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -166,10 +167,10 @@ export function RiderReviewForm({
         <div className="flex gap-4">
           <Button
             type="submit"
-            disabled={loading || rating === 0}
+            disabled={rating === 0}
             className="flex-1"
           >
-            {loading ? 'Submitting...' : 'Submit Review'}
+            Submit Review
           </Button>
         </div>
       </form>

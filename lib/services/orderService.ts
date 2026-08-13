@@ -27,6 +27,7 @@ export interface CreateOrderInput {
   pickupDate?: string;
   paymentMethod: 'wallet' | 'paystack' | 'split';
   paymentReference?: string;
+  notes?: string;
 }
 
 export class OrderService {
@@ -87,6 +88,7 @@ export class OrderService {
         timestamp: new Date(),
         note: 'Order created',
       }],
+      notes: input.notes,
     });
 
     return order;

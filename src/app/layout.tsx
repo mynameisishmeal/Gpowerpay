@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import "./globals.css";
 import "./responsive.css";
 import SessionProvider from "@/components/providers/SessionProvider";
+import { LoadingProvider } from "@/components/providers/LoadingProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
 import { ToastProvider } from '@/components/providers/ToastProvider';
@@ -52,10 +53,12 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <SessionProvider>
             <AlertProvider>
-              <Navbar />
+              <LoadingProvider>
+                <Navbar />
               <EmailVerificationBanner />
-              <main className="flex-1">{children}</main>
-              <ToastProvider />
+                <main className="flex-1">{children}</main>
+                <ToastProvider />
+              </LoadingProvider>
             </AlertProvider>
           </SessionProvider>
         </Suspense>

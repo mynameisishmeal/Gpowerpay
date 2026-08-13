@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
       deliveryDate: body.deliveryDate,
       pickupDate: body.pickupDate,
       paymentMethod: body.paymentMethod,
+      notes: body.customerNote,
     });
 
     // Process payment

@@ -367,8 +367,9 @@ export class ProductService {
     if (marketType === 'carton') {
       try {
         console.log(`📦 Deducting ${quantity} cartons from stock for productId: ${productId}`);
+        const actualId = productId.replace(/^carton-/, '');
         const result = await LegacyStock.findByIdAndUpdate(
-          productId,
+          actualId,
           { $inc: { stockquantity: -quantity } },
           { new: true }
         );

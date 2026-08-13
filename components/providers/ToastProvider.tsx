@@ -36,15 +36,13 @@ export function ToastProvider() {
             <>
               {icon}
               {message}
-              {t.type !== 'loading' && (
-                <button
-                  onClick={() => toast.dismiss(t.id)}
-                  className="ml-2 p-1 hover:bg-gray-100 rounded-full transition-colors shrink-0"
-                  aria-label="Close"
-                >
-                  <X size={16} className="text-gray-500" />
-                </button>
-              )}
+              <button
+                onClick={() => toast.dismiss(t.id)}
+                className="ml-2 p-1 hover:bg-gray-100 rounded-full transition-colors shrink-0"
+                aria-label="Close"
+              >
+                <X size={16} className="text-gray-500" />
+              </button>
             </>
           )}
         </ToastBar>

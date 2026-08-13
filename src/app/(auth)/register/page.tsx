@@ -10,7 +10,8 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, Loader2, CheckCircle2 } from 'lucide-react';
+import { Eye, EyeOff, CheckCircle2 } from 'lucide-react';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 // Validation schema
 const registerSchema = z.object({
@@ -30,7 +31,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -78,7 +79,7 @@ export default function RegisterPage() {
   const passwordStrength = getPasswordStrength(password);
 
   const onSubmit = async (data: RegisterFormData) => {
-    setIsLoading(true);
+    startLoading('Creating your account...');
     setError('');
 
     try {
@@ -108,8 +109,7 @@ export default function RegisterPage() {
 
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
+      stopLoading();
     }
   };
 
@@ -125,7 +125,6 @@ export default function RegisterPage() {
             <p className="text-gray-600 mb-4">
               Your account has been created successfully. Redirecting you to login...
             </p>
-            <Loader2 className="h-6 w-6 animate-spin mx-auto text-blue-600" />
           </CardContent>
         </Card>
       </div>
@@ -171,7 +170,6 @@ export default function RegisterPage() {
                 placeholder="Enter your full name"
                 className="h-12 text-base"
                 {...register('name')}
-                disabled={isLoading}
               />
               {errors.name && (
                 <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -189,7 +187,6 @@ export default function RegisterPage() {
                 placeholder="you@example.com"
                 className="h-12 text-base"
                 {...register('email')}
-                disabled={isLoading}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -207,7 +204,6 @@ export default function RegisterPage() {
                 placeholder="08012345678"
                 className="h-12 text-base"
                 {...register('phone')}
-                disabled={isLoading}
               />
               {errors.phone && (
                 <p className="mt-1 text-sm text-red-600">{errors.phone.message}</p>
@@ -226,7 +222,6 @@ export default function RegisterPage() {
                   placeholder="Create a strong password"
                   className="h-12 text-base pr-12"
                   {...register('password')}
-                  disabled={isLoading}
                 />
                 <button
                   type="button"
@@ -275,7 +270,6 @@ export default function RegisterPage() {
                   placeholder="Re-enter your password"
                   className="h-12 text-base pr-12"
                   {...register('confirmPassword')}
-                  disabled={isLoading}
                 />
                 <button
                   type="button"
@@ -294,16 +288,8 @@ export default function RegisterPage() {
             <Button
               type="submit"
               className="w-full h-12 text-base btn-modern"
-              disabled={isLoading}
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Creating Account...
-                </>
-              ) : (
-                'Create Account'
-              )}
+              Create Account
             </Button>
 
             {/* Login Link */}

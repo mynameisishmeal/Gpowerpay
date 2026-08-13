@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { CheckCircle, XCircle, Package, User, Phone, MapPin, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 interface OrderInfo {
   _id: string;
@@ -38,10 +39,9 @@ export default function RiderVerifyPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [code, setCode] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [marking, setMarking] = useState(false);
 
   const isRider = session?.user?.role === 'rider';
   const isSadmin = session?.user?.role === 'sadmin';
@@ -76,7 +76,7 @@ export default function RiderVerifyPage() {
       return;
     }
 
-    setLoading(true);
+    startLoading('Verifying order code...');
     setError(null);
     setOrderInfo(null);
 
@@ -99,7 +99,7 @@ export default function RiderVerifyPage() {
       setError(err.message);
       toast.error(err.message);
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -108,7 +108,7 @@ export default function RiderVerifyPage() {
 
     if (!confirm('Are you sure you want to mark this order as delivered?')) return;
 
-    setMarking(true);
+    startLoading('Marking order as delivered...');
     try {
       const response = await fetch('/api/rider/mark-delivered', {
         method: 'POST',
@@ -132,7 +132,7 @@ export default function RiderVerifyPage() {
     } catch (err: any) {
       toast.error(err.message);
     } finally {
-      setMarking(false);
+      stopLoading();
     }
   };
 
@@ -191,17 +191,16 @@ export default function RiderVerifyPage() {
                   onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
                   maxLength={6}
                   className="text-center text-2xl font-bold tracking-widest"
-                  disabled={loading}
                 />
               </div>
 
               <Button
                 onClick={handleVerify}
-                disabled={loading || code.length !== 6}
+                disabled={code.length !== 6}
                 className="w-full"
                 size="lg"
               >
-                {loading ? 'Verifying...' : 'Verify Order'}
+                Verify Order
               </Button>
             </div>
           </CardContent>
@@ -308,11 +307,10 @@ export default function RiderVerifyPage() {
               {isRider && orderInfo.deliveryStatus !== 'delivered' && (
                 <Button
                   onClick={handleMarkDelivered}
-                  disabled={marking}
                   className="w-full bg-green-600 hover:bg-green-700"
                   size="lg"
                 >
-                  {marking ? 'Marking as Delivered...' : '✅ Mark as Delivered'}
+                  ✅ Mark as Delivered
                 </Button>
               )}
 

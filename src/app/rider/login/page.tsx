@@ -6,13 +6,14 @@ import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Bike, Loader2, Eye, EyeOff } from 'lucide-react';
+import { Bike, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 export default function RiderLoginPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -21,7 +22,7 @@ export default function RiderLoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    startLoading('Authenticating rider...');
 
     try {
       // Use 'rider-credentials' provider specifically for rider login
@@ -37,7 +38,7 @@ export default function RiderLoginPage() {
         } else {
           toast.error('Invalid email or password');
         }
-        setLoading(false);
+        stopLoading();
         return;
       }
 
@@ -58,7 +59,7 @@ export default function RiderLoginPage() {
       console.error('Rider login error:', error);
       toast.error('Login failed. Please try again.');
     } finally {
-      setLoading(false);
+      stopLoading();
     }
   };
 
@@ -91,7 +92,6 @@ export default function RiderLoginPage() {
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="rider@example.com"
-                  disabled={loading}
                 />
               </div>
 
@@ -114,14 +114,12 @@ export default function RiderLoginPage() {
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder="Enter your password"
-                    disabled={loading}
                     className="pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                    disabled={loading}
                   >
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
@@ -132,16 +130,8 @@ export default function RiderLoginPage() {
                 type="submit"
                 className="w-full"
                 size="lg"
-                disabled={loading}
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
-                  </>
-                ) : (
-                  'Sign In'
-                )}
+                Sign In
               </Button>
             </form>
 

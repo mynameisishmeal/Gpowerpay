@@ -9,7 +9,8 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, CheckCircle2, ArrowLeft } from 'lucide-react';
+import { CheckCircle2, ArrowLeft } from 'lucide-react';
+import { useLoading } from '@/components/providers/LoadingProvider';
 
 // Validation schema
 const forgotPasswordSchema = z.object({
@@ -19,7 +20,7 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   
@@ -49,7 +50,7 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    setIsLoading(true);
+    startLoading('Sending reset instructions...');
     setError('');
 
     try {
@@ -69,7 +70,7 @@ export default function ForgotPasswordPage() {
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
-      setIsLoading(false);
+      stopLoading();
     }
   };
 
@@ -137,7 +138,6 @@ export default function ForgotPasswordPage() {
                 placeholder="you@example.com"
                 className="h-12 text-base"
                 {...register('email')}
-                disabled={isLoading}
               />
               {errors.email && (
                 <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -148,16 +148,8 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               className="w-full h-12 text-base btn-modern"
-              disabled={isLoading}
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Sending...
-                </>
-              ) : (
-                'Send Reset Instructions'
-              )}
+              Send Reset Instructions
             </Button>
 
             {/* Back to Login */}

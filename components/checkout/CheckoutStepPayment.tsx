@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { DeliveryInfo, PaymentMethod } from '@/src/app/checkout/page';
 import { useSession } from 'next-auth/react';
-import toast from 'react-hot-toast';
 import { PaystackService } from '@/lib/paystack';
 import { FundWalletButton } from '@/components/wallet/FundWalletButton';
+import { useLoading } from '@/components/providers/LoadingProvider';
+import toast from 'react-hot-toast';
 
 interface CheckoutStepPaymentProps {
   total: number;
@@ -29,10 +30,10 @@ export function CheckoutStepPayment({
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
   const [paymentType, setPaymentType] = useState<'wallet' | 'paystack' | 'split' | null>(null);
-  const [localProcessing, setLocalProcessing] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [fundingWallet, setFundingWallet] = useState(false);
 
-  const processing = externalProcessing || localProcessing;
+  const processing = externalProcessing;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -67,18 +68,18 @@ export function CheckoutStepPayment({
   const handlePayment = async () => {
     if (!paymentType || !session?.user?.email) return;
 
-    setLocalProcessing(true);
-
     try {
       const paymentMethod: PaymentMethod = { type: paymentType };
 
       // WALLET ONLY: No Paystack needed, create order directly
       if (paymentType === 'wallet') {
+        startLoading('Processing your payment...');
         await onComplete(paymentMethod);
         return;
       }
 
       // PAYSTACK or SPLIT: Open Paystack popup FIRST
+      // Do not start global loading yet, otherwise it might appear behind the Paystack popup
       const amountToPay = paymentType === 'split' ? deficit : total;
       const reference = PaystackService.generateReference('GPJ');
 
@@ -99,23 +100,23 @@ export function CheckoutStepPayment({
         },
         onSuccess: async (response: any) => {
           console.log('✅ Paystack payment successful:', response);
-          toast.success('Payment successful!');
+          toast.success('Payment successful! Verifying...');
           
           paymentMethod.paymentReference = response.reference;
 
-          // NOW create the order after successful payment
+          // NOW start loading and create the order after successful payment
+          startLoading('Finalizing your order...');
           await onComplete(paymentMethod);
         },
         onCancel: () => {
           console.log('❌ Payment cancelled');
           toast.error('Payment cancelled');
-          setLocalProcessing(false);
         },
       });
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('Payment failed. Please try again.');
-      setLocalProcessing(false);
+      stopLoading();
     }
   };
 
@@ -270,14 +271,7 @@ export function CheckoutStepPayment({
             disabled={!paymentType || processing}
             className="flex-1 btn-modern bg-green-600 hover:bg-green-700"
           >
-            {processing ? (
-              <>
-                <Loader2 size={20} className="mr-2 animate-spin" />
-                Processing...
-              </>
-            ) : (
-              <>Complete Payment</>
-            )}
+            Complete Payment
           </Button>
         </div>
       </CardContent>

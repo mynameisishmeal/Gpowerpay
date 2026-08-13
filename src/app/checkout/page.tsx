@@ -7,6 +7,7 @@ import { useCartStore } from '@/lib/store/cartStore';
 import { ArrowLeft, Package, MapPin, CreditCard, Check, Mail, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckoutStepReview } from '@/components/checkout/CheckoutStepReview';
 import { CheckoutStepDelivery } from '@/components/checkout/CheckoutStepDelivery';
@@ -36,6 +37,7 @@ export interface DeliveryInfo {
   pickupDate?: string;
   deliveryDate?: string;
   deliveryFee: number;
+  customerNote?: string;
 }
 
 export interface PaymentMethod {
@@ -71,7 +73,7 @@ export default function CheckoutPage({
       }
     }
   }, [currentDeliveryOption, getTotalItems]);
-  const [processing, setProcessing] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
   const [orderCompleted, setOrderCompleted] = useState(false);
   const clearCart = useCartStore((state) => state.clearCart);
 
@@ -121,7 +123,7 @@ export default function CheckoutPage({
   const handleCompleteOrder = async (payment: PaymentMethod) => {
     if (!session?.user || !deliveryInfo) return;
 
-    setProcessing(true);
+    startLoading('Completing your order...');
     setPaymentMethod(payment);
 
     try {
@@ -149,6 +151,7 @@ export default function CheckoutPage({
         paymentReference: payment.paymentReference,
         walletAmount: payment.walletAmount,
         paystackAmount: payment.paystackAmount,
+        customerNote: deliveryInfo.customerNote,
       };
 
       console.log('📦 Order Data Being Sent:', JSON.stringify(orderData, null, 2));
@@ -183,11 +186,12 @@ export default function CheckoutPage({
 
       // Redirect to order confirmation
       toast.success('Order placed successfully!');
+      stopLoading();
       router.push(`/orders/${data.order.orderId}?success=true`);
     } catch (error: any) {
       console.error('Order creation error:', error);
       toast.error(error.message || 'Failed to create order. Please try again.');
-      setProcessing(false);
+      stopLoading();
     }
   };
 
@@ -314,7 +318,6 @@ export default function CheckoutPage({
                 deliveryInfo={deliveryInfo}
                 onBack={() => setCurrentStep(2)}
                 onComplete={handleCompleteOrder}
-                processing={processing}
               />
             )}
           </div>
