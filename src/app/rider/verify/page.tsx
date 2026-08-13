@@ -44,6 +44,31 @@ export default function RiderVerifyPage() {
   const [marking, setMarking] = useState(false);
 
   const isRider = session?.user?.role === 'rider';
+  const isSadmin = session?.user?.role === 'sadmin';
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/rider/login?callbackUrl=/rider/verify');
+    } else if (status === 'authenticated') {
+      if (!isRider && !isSadmin) {
+        toast.error('Access denied. Riders and Super Admins only.');
+        router.push('/');
+      }
+    }
+  }, [status, session, router, isRider, isSadmin]);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  // Double check before rendering
+  if (status === 'unauthenticated' || (!isRider && !isSadmin)) {
+    return null;
+  }
 
   const handleVerify = async () => {
     if (code.length !== 6) {
@@ -313,7 +338,7 @@ export default function RiderVerifyPage() {
               <li>Ask the customer for their 6-digit confirmation code</li>
               <li>Enter the code above and click "Verify Order"</li>
               <li>Confirm the customer details match</li>
-              <li>Deliver the items and collect payment if needed</li>
+              <li>Deliver the items</li>
               <li>{isRider ? 'Click "Mark as Delivered" when complete' : 'Sign in as a rider to mark orders as delivered'}</li>
             </ol>
           </CardContent>

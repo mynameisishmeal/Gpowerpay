@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export interface INotification extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
-  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed';
+  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required';
   title: string;
   message: string;
   data?: {
@@ -35,6 +35,7 @@ const NotificationSchema = new mongoose.Schema<INotification>(
         'rider_assigned',
         'payment_success',
         'payment_failed',
+        'action_required',
       ],
       required: true,
     },

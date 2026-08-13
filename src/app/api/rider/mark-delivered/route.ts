@@ -68,20 +68,56 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Update delivery status
-    order.deliveryStatus = 'delivered';
-    await order.save();
+    if (order.deliveryStatus === 'sadmin_delivered') {
+      // Both parties have now confirmed
+      order.deliveryStatus = 'delivered';
+      order.status = 'delivered';
+      order.completedAt = new Date();
+      order.statusHistory.push({
+        status: 'delivered',
+        timestamp: new Date(),
+        note: `Delivery confirmed by both Admin and rider ${deliveryPartner.name}`,
+      });
+      await order.save();
 
-    // Send notification to customer
-    await NotificationService.notifyDeliveryStatusChanged(
-      order.customerId.toString(),
-      order._id.toString(),
-      order.customerEmail,
-      order.customerName,
-      order.orderNumber,
-      order.confirmationCode,
-      'delivered'
-    );
+      // Send standard delivered notification to customer
+      await NotificationService.notifyDeliveryStatusChanged(
+        order.customerId.toString(),
+        order._id.toString(),
+        order.customerEmail,
+        order.customerName,
+        order.orderNumber,
+        order.confirmationCode,
+        'delivered'
+      );
+    } else {
+      // Only rider confirmed
+      // Update delivery status and overall status to rider_delivered
+      order.deliveryStatus = 'rider_delivered';
+      order.status = 'rider_delivered';
+      order.statusHistory.push({
+        status: 'rider_delivered',
+        timestamp: new Date(),
+        note: `Marked as delivered by rider ${deliveryPartner.name} (Waiting for Customer or Admin)`,
+      });
+      await order.save();
+
+      // Send action_required notification to customer to Accept or Dispute
+      await NotificationService.createNotification({
+        userId: order.customerId.toString(),
+        type: 'action_required',
+        title: 'Action Required: Confirm Delivery',
+        message: `Your rider has marked order #${order.orderNumber} as delivered. Please review and Accept or Dispute the delivery.`,
+        data: {
+          orderId: order._id.toString(),
+          orderNumber: order.orderNumber,
+          deliveryStatus: 'rider_delivered'
+        },
+        sendEmail: true,
+        userEmail: order.customerEmail,
+        userName: order.customerName,
+      });
+    }
 
     return NextResponse.json({
       success: true,

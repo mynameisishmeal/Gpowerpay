@@ -10,6 +10,7 @@ import { NotificationBell } from '@/components/notifications/NotificationBell';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
+import { usePathname } from 'next/navigation';
 import { useWishlistStore } from '@/lib/store/wishlistStore';
 
 export function Navbar() {
@@ -17,7 +18,9 @@ export function Navbar() {
   const [adminDropdownOpen, setAdminDropdownOpen] = useState(false);
   const adminDropdownRef = useRef<HTMLDivElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const mobileButtonRef = useRef<HTMLButtonElement>(null);
   const { data: session } = useSession();
+  const pathname = usePathname();
   const { fetchWishlist, getCount } = useWishlistStore();
   const wishlistCount = getCount();
 
@@ -47,7 +50,12 @@ export function Navbar() {
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+      if (
+        mobileMenuRef.current && 
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        mobileButtonRef.current &&
+        !mobileButtonRef.current.contains(event.target as Node)
+      ) {
         setMobileMenuOpen(false);
       }
     };
@@ -58,10 +66,11 @@ export function Navbar() {
     }
   }, [mobileMenuOpen]);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
-  }, [session]);
+    setAdminDropdownOpen(false);
+  }, [pathname, session]);
 
   const adminLinks = [
     { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -104,7 +113,15 @@ export function Navbar() {
                 <>
                   {/* Admin Dropdown */}
                   {isAdmin && (
-                    <div className="relative" ref={adminDropdownRef}>
+                    <div 
+                      className="relative" 
+                      ref={adminDropdownRef}
+                      onBlur={(e) => {
+                        if (!e.currentTarget.contains(e.relatedTarget)) {
+                          setAdminDropdownOpen(false);
+                        }
+                      }}
+                    >
                       <button
                         onClick={() => setAdminDropdownOpen(!adminDropdownOpen)}
                         className="text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-lg transition-colors font-medium flex items-center gap-2"
@@ -224,6 +241,7 @@ export function Navbar() {
               )}
               {!session && <CartIcon />}
               <Button
+                ref={mobileButtonRef}
                 variant="outline"
                 size="sm"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

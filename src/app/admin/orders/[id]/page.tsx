@@ -26,7 +26,7 @@ interface Order {
   status: string;
   deliveryOption: 'home' | 'pickup';
   deliveryType?: 'bulk' | 'small';
-  deliveryStatus?: 'in_store' | 'on_the_way' | 'delivered';
+  deliveryStatus?: 'in_store' | 'on_the_way' | 'rider_delivered' | 'sadmin_delivered' | 'delivered' | 'disputed';
   assignedRider?: {
     riderId: string;
     name: string;
@@ -86,11 +86,11 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
     }
   };
 
-  const updateDeliveryStatus = async (newStatus: 'in_store' | 'on_the_way' | 'delivered') => {
+  const updateDeliveryStatus = async (newStatus: 'in_store' | 'on_the_way' | 'sadmin_delivered') => {
     if (!order) return;
 
     // If marking as delivered, require confirmation code verification
-    if (newStatus === 'delivered') {
+    if (newStatus === 'sadmin_delivered') {
       setShowCodeDialog(true);
       return;
     }
@@ -117,10 +117,10 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
 
     setShowCodeDialog(false);
     setVerificationCode('');
-    await performStatusUpdate('delivered');
+    await performStatusUpdate('sadmin_delivered');
   };
 
-  const performStatusUpdate = async (newStatus: 'in_store' | 'on_the_way' | 'delivered') => {
+  const performStatusUpdate = async (newStatus: 'in_store' | 'on_the_way' | 'sadmin_delivered') => {
     if (!order) return;
 
     setUpdating(true);
@@ -439,18 +439,22 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
                     </Button>
                     
                     <Button
-                      onClick={() => updateDeliveryStatus('delivered')}
-                      disabled={updating || order.deliveryStatus === 'delivered'}
-                      className={`w-full ${order.deliveryStatus === 'delivered' ? 'bg-green-500' : ''}`}
-                      variant={order.deliveryStatus === 'delivered' ? 'default' : 'outline'}
+                      onClick={() => updateDeliveryStatus('sadmin_delivered')}
+                      disabled={updating || order.deliveryStatus === 'sadmin_delivered' || order.deliveryStatus === 'delivered'}
+                      className={`w-full ${order.deliveryStatus === 'sadmin_delivered' ? 'bg-green-500' : ''}`}
+                      variant={order.deliveryStatus === 'sadmin_delivered' ? 'default' : 'outline'}
                     >
-                      {order.deliveryStatus === 'delivered' && <CheckCircle size={16} className="mr-2" />}
-                      ✅ Delivered
+                      {order.deliveryStatus === 'sadmin_delivered' && <CheckCircle size={16} className="mr-2" />}
+                      ✅ Mark as Delivered (Admin)
                     </Button>
                   </div>
 
                   <p className="text-xs text-gray-500 mt-3">
-                    Current Status: <strong className="capitalize">{order.deliveryStatus?.replace('_', ' ') || 'In Store'}</strong>
+                    Current Status: <strong className="capitalize">
+                      {order.deliveryStatus === 'sadmin_delivered' ? 'Admin Marked Delivered (Awaiting Rider)' :
+                       order.deliveryStatus === 'rider_delivered' ? 'Rider Marked Delivered (Awaiting Customer/Admin)' :
+                       order.deliveryStatus?.replace('_', ' ') || 'In Store'}
+                    </strong>
                   </p>
                 </CardContent>
               </Card>

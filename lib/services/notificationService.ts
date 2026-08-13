@@ -4,7 +4,7 @@ import { sendOrderStatusEmail } from './emailService';
 
 export interface CreateNotificationInput {
   userId: string;
-  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed';
+  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required';
   title: string;
   message: string;
   data?: any;

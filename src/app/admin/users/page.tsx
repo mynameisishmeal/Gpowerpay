@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Search, Filter, CheckCircle, XCircle, Mail, Phone, Wallet, Loader2, Users } from 'lucide-react';
+import { Search, Filter, CheckCircle, XCircle, Mail, Phone, Wallet, Loader2, Users, KeyRound, UserCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import toast from 'react-hot-toast';
 import Link from 'next/link';
 
 interface User {
@@ -33,6 +35,10 @@ export default function AdminUsersPage() {
   const [totalUsers, setTotalUsers] = useState(0);
   const [verifiedFilter, setVerifiedFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [resetPasswordUserId, setResetPasswordUserId] = useState<string | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const [isActivating, setIsActivating] = useState<string | null>(null);
 
   useEffect(() => {
     if (authStatus === 'unauthenticated') {
@@ -84,6 +90,54 @@ export default function AdminUsersPage() {
       style: 'currency',
       currency: 'NGN',
     }).format(price);
+  };
+
+  const handleActivateEmail = async (userId: string) => {
+    try {
+      setIsActivating(userId);
+      const res = await fetch(`/api/admin/users/${userId}/activate-email`, {
+        method: 'PUT',
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success('Email activated successfully');
+        fetchUsers();
+      } else {
+        toast.error(data.error || 'Failed to activate email');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to activate email');
+    } finally {
+      setIsActivating(null);
+    }
+  };
+
+  const handleResetPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetPasswordUserId || !newPassword) return;
+
+    try {
+      setIsResettingPassword(true);
+      const res = await fetch(`/api/admin/users/${resetPasswordUserId}/reset-password`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newPassword }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success('Password reset successfully');
+        setResetPasswordUserId(null);
+        setNewPassword('');
+      } else {
+        toast.error(data.error || 'Failed to reset password');
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to reset password');
+    } finally {
+      setIsResettingPassword(false);
+    }
   };
 
   if (authStatus === 'loading' || loading) {
@@ -174,6 +228,9 @@ export default function AdminUsersPage() {
                       <th className="pb-3 text-sm font-semibold text-gray-600">Wallet</th>
                       <th className="pb-3 text-sm font-semibold text-gray-600">Joined</th>
                       <th className="pb-3 text-sm font-semibold text-gray-600">Last Login</th>
+                      {session?.user?.role === 'sadmin' && (
+                        <th className="pb-3 text-sm font-semibold text-gray-600">Actions</th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -238,6 +295,35 @@ export default function AdminUsersPage() {
                             ? new Date(user.lastLogin).toLocaleDateString()
                             : 'Never'}
                         </td>
+                        {session?.user?.role === 'sadmin' && (
+                          <td className="py-4">
+                            <div className="flex gap-2">
+                              {!user.emailVerified && (
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleActivateEmail(user._id)}
+                                  disabled={isActivating === user._id}
+                                >
+                                  {isActivating === user._id ? (
+                                    <Loader2 className="h-4 w-4 animate-spin" />
+                                  ) : (
+                                    <UserCheck className="h-4 w-4 mr-1 text-green-600" />
+                                  )}
+                                  Activate
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => setResetPasswordUserId(user._id)}
+                              >
+                                <KeyRound className="h-4 w-4 mr-1 text-blue-600" />
+                                Reset
+                              </Button>
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -272,6 +358,42 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Reset Password Dialog */}
+      <Dialog open={!!resetPasswordUserId} onOpenChange={(open) => !open && setResetPasswordUserId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Reset User Password</DialogTitle>
+            <DialogDescription>
+              Enter a new password for this user. They will be able to log in with this new password immediately.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleResetPassword} className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                New Password
+              </label>
+              <Input
+                type="text"
+                required
+                minLength={6}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="Enter new password"
+              />
+            </div>
+            <div className="flex justify-end gap-3 pt-4">
+              <Button type="button" variant="outline" onClick={() => setResetPasswordUserId(null)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isResettingPassword}>
+                {isResettingPassword && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                Reset Password
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

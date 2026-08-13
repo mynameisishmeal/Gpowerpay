@@ -38,7 +38,7 @@ export interface IOrder {
   };
   deliveryDate?: Date;
   pickupDate?: Date;
-  deliveryStatus?: 'in_store' | 'on_the_way' | 'delivered';
+  deliveryStatus?: 'in_store' | 'on_the_way' | 'rider_delivered' | 'sadmin_delivered' | 'delivered' | 'disputed';
   assignedRider?: {
     riderId: string;
     name: string;
@@ -50,7 +50,7 @@ export interface IOrder {
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   paymentReference?: string;
   
-  status: 'pending' | 'processing' | 'out_for_delivery' | 'delivered' | 'cancelled';
+  status: 'pending' | 'processing' | 'out_for_delivery' | 'rider_delivered' | 'sadmin_delivered' | 'delivered' | 'cancelled' | 'disputed';
   statusHistory: Array<{
     status: string;
     timestamp: Date;
@@ -131,7 +131,7 @@ const OrderSchema = new Schema<IOrder>({
   pickupDate: Date,
   deliveryStatus: {
     type: String,
-    enum: ['in_store', 'on_the_way', 'delivered'],
+    enum: ['in_store', 'on_the_way', 'rider_delivered', 'sadmin_delivered', 'delivered', 'disputed'],
     default: 'in_store',
   },
   assignedRider: {
@@ -156,7 +156,7 @@ const OrderSchema = new Schema<IOrder>({
   
   status: {
     type: String,
-    enum: ['pending', 'processing', 'out_for_delivery', 'delivered', 'cancelled'],
+    enum: ['pending', 'processing', 'out_for_delivery', 'rider_delivered', 'sadmin_delivered', 'delivered', 'cancelled', 'disputed'],
     default: 'pending',
     index: true,
   },

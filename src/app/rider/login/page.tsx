@@ -137,17 +137,6 @@ export default function RiderLoginPage() {
               </Button>
             </form>
 
-            {/* Verification Link */}
-            <div className="mt-6 pt-6 border-t text-center">
-              <p className="text-sm text-gray-600 mb-3">
-                Need to verify an order?
-              </p>
-              <Link href="/rider/verify">
-                <Button variant="outline" className="w-full">
-                  Go to Order Verification
-                </Button>
-              </Link>
-            </div>
 
             {/* Other Login Options */}
             <div className="mt-4 pt-4 border-t">

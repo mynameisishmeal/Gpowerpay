@@ -38,10 +38,10 @@ interface Order {
   subtotal: number;
   deliveryFee: number;
   total: number;
-  status: 'pending' | 'processing' | 'completed' | 'cancelled';
+  status: 'pending' | 'processing' | 'out_for_delivery' | 'rider_delivered' | 'completed' | 'delivered' | 'cancelled' | 'disputed';
   deliveryOption: 'home' | 'pickup';
   deliveryType?: 'bulk' | 'small';
-  deliveryStatus?: 'in_store' | 'on_the_way' | 'delivered';
+  deliveryStatus?: 'in_store' | 'on_the_way' | 'rider_delivered' | 'delivered' | 'disputed';
   assignedRider?: {
     riderId: string;
     name: string;
@@ -77,6 +77,9 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
   const [availableRiders, setAvailableRiders] = useState<Rider[]>([]);
   const [loadingRiders, setLoadingRiders] = useState(false);
   const [assigningRider, setAssigningRider] = useState<string | null>(null);
+  const [resolving, setResolving] = useState(false);
+  const [disputeReason, setDisputeReason] = useState('');
+  const [showDisputeDialog, setShowDisputeDialog] = useState(false);
   const addItem = useCartStore((state) => state.addItem);
 
   // Unwrap params Promise in Next.js 16
@@ -177,6 +180,36 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     }
   };
 
+  const handleResolveDelivery = async (action: 'accept' | 'dispute') => {
+    if (action === 'dispute' && !disputeReason) {
+      toast.error('Please provide a reason for the dispute');
+      return;
+    }
+
+    setResolving(true);
+    try {
+      const response = await fetch(`/api/orders/${id}/resolve-delivery`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, reason: action === 'dispute' ? disputeReason : undefined }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to resolve delivery');
+      }
+
+      toast.success(action === 'accept' ? 'Delivery accepted!' : 'Delivery disputed.');
+      setShowDisputeDialog(false);
+      fetchOrder(); // refresh order
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to resolve delivery');
+    } finally {
+      setResolving(false);
+    }
+  };
+
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text).then(() => {
       toast.success(`${label} copied to clipboard!`);
@@ -255,8 +288,12 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     const badges = {
       pending: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: Clock },
       processing: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Truck },
+      out_for_delivery: { bg: 'bg-blue-100', text: 'text-blue-800', icon: Truck },
+      rider_delivered: { bg: 'bg-purple-100', text: 'text-purple-800', icon: CheckCircle },
       completed: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
+      delivered: { bg: 'bg-green-100', text: 'text-green-800', icon: CheckCircle },
       cancelled: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle },
+      disputed: { bg: 'bg-red-100', text: 'text-red-800', icon: XCircle },
     };
 
     const badge = badges[status as keyof typeof badges] || badges.pending;
@@ -361,11 +398,15 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium ${
                     order.deliveryStatus === 'in_store' ? 'bg-yellow-100 text-yellow-800' :
                     order.deliveryStatus === 'on_the_way' ? 'bg-blue-100 text-blue-800' :
+                    order.deliveryStatus === 'rider_delivered' ? 'bg-purple-100 text-purple-800' :
+                    order.deliveryStatus === 'disputed' ? 'bg-red-100 text-red-800' :
                     'bg-green-100 text-green-800'
                   }`}>
                     {order.deliveryStatus === 'in_store' && <><Package size={16} /> In Store</>}
                     {order.deliveryStatus === 'on_the_way' && <><Truck size={16} /> On The Way</>}
+                    {order.deliveryStatus === 'rider_delivered' && <><CheckCircle size={16} /> Awaiting Confirmation</>}
                     {order.deliveryStatus === 'delivered' && <><CheckCircle size={16} /> Delivered</>}
+                    {order.deliveryStatus === 'disputed' && <><XCircle size={16} /> Disputed</>}
                   </span>
                 ) : (
                   getStatusBadge(order.status)
@@ -426,6 +467,69 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6">
+            {/* Delivery Resolution Banner */}
+            {order.status === 'rider_delivered' && (
+              <Card className="border-blue-300 bg-blue-50 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                      <h3 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+                        <CheckCircle className="text-blue-600" />
+                        Confirm Your Delivery
+                      </h3>
+                      <p className="text-blue-800 mt-1">
+                        Your rider has marked this order as delivered. Please confirm that you have received your items in good condition.
+                      </p>
+                    </div>
+                    <div className="flex gap-3 shrink-0">
+                      <Dialog open={showDisputeDialog} onOpenChange={setShowDisputeDialog}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700">
+                            Dispute Delivery
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Dispute Delivery</DialogTitle>
+                          </DialogHeader>
+                          <div className="space-y-4 py-4">
+                            <p className="text-sm text-gray-600">
+                              Please explain why you are disputing this delivery. Our support team will investigate immediately.
+                            </p>
+                            <textarea
+                              className="w-full min-h-[100px] p-3 border rounded-md focus:ring-2 focus:ring-blue-500"
+                              placeholder="E.g., I did not receive the package, items are missing/damaged..."
+                              value={disputeReason}
+                              onChange={(e) => setDisputeReason(e.target.value)}
+                            />
+                            <div className="flex justify-end gap-3">
+                              <Button variant="outline" onClick={() => setShowDisputeDialog(false)}>
+                                Cancel
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                disabled={!disputeReason || resolving}
+                                onClick={() => handleResolveDelivery('dispute')}
+                              >
+                                {resolving ? 'Submitting...' : 'Submit Dispute'}
+                              </Button>
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                      <Button
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        disabled={resolving}
+                        onClick={() => handleResolveDelivery('accept')}
+                      >
+                        {resolving ? 'Confirming...' : 'Accept Delivery'}
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Order Items */}
             <Card>
               <CardHeader>
@@ -512,9 +616,19 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                               🚚 On The Way
                             </span>
                           )}
+                          {order.deliveryStatus === 'rider_delivered' && (
+                            <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">
+                              ⏳ Awaiting Confirmation
+                            </span>
+                          )}
                           {order.deliveryStatus === 'delivered' && (
                             <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">
                               ✅ Delivered
+                            </span>
+                          )}
+                          {order.deliveryStatus === 'disputed' && (
+                            <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
+                              ❌ Disputed
                             </span>
                           )}
                         </div>

@@ -182,17 +182,24 @@ export function CartSlideOver() {
 
             {/* Actions */}
             <div className="space-y-3">
-              <Link href="/cart" onClick={closeCart} className="block">
-                <Button variant="outline" className="w-full">
-                  View Cart
-                </Button>
-              </Link>
-              
               <Link href="/checkout" onClick={closeCart} className="block">
                 <Button className="w-full btn-modern bg-blue-600 hover:bg-blue-700">
                   Proceed to Checkout
                 </Button>
               </Link>
+              
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/cart" onClick={closeCart} className="block">
+                  <Button variant="outline" className="w-full">
+                    View Cart
+                  </Button>
+                </Link>
+                <Link href="/products" onClick={closeCart} className="block">
+                  <Button variant="outline" className="w-full text-sm">
+                    Continue Shopping
+                  </Button>
+                </Link>
+              </div>
               
               <Button
                 variant="outline"

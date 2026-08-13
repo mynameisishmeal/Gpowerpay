@@ -24,7 +24,7 @@ export async function PATCH(
     const body = await request.json();
     const { deliveryStatus } = body;
 
-    if (!deliveryStatus || !['in_store', 'on_the_way', 'delivered'].includes(deliveryStatus)) {
+    if (!deliveryStatus || !['in_store', 'on_the_way', 'sadmin_delivered'].includes(deliveryStatus)) {
       return NextResponse.json(
         { error: 'Invalid delivery status' },
         { status: 400 }
@@ -36,17 +36,34 @@ export async function PATCH(
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
-    order.deliveryStatus = deliveryStatus;
-    
-    // If delivered, also update main order status
-    if (deliveryStatus === 'delivered') {
-      order.status = 'delivered';
-      order.completedAt = new Date();
+    if (deliveryStatus === 'sadmin_delivered') {
+      if (order.deliveryStatus === 'rider_delivered') {
+        // Both parties have now confirmed
+        order.deliveryStatus = 'delivered';
+        order.status = 'delivered';
+        order.completedAt = new Date();
+        order.statusHistory.push({
+          status: 'delivered',
+          timestamp: new Date(),
+          note: 'Delivery confirmed by both Admin and Rider',
+        });
+      } else {
+        // Only admin confirmed
+        order.deliveryStatus = 'sadmin_delivered';
+        order.status = 'sadmin_delivered';
+        order.statusHistory.push({
+          status: 'sadmin_delivered',
+          timestamp: new Date(),
+          note: 'Marked as delivered by Admin (Waiting for Rider)',
+        });
+      }
+    } else {
+      order.deliveryStatus = deliveryStatus;
     }
 
     await order.save();
 
-    // Send notification to customer
+    // Send notification to customer using the computed deliveryStatus
     await NotificationService.notifyDeliveryStatusChanged(
       order.customerId.toString(),
       order._id.toString(),
@@ -54,7 +71,7 @@ export async function PATCH(
       order.customerName,
       order.orderNumber,
       order.confirmationCode,
-      deliveryStatus
+      order.deliveryStatus
     );
 
     return NextResponse.json(
