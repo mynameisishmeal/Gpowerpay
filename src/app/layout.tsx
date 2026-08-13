@@ -6,7 +6,7 @@ import "./responsive.css";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { Navbar } from "@/components/layout/Navbar";
 import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
-import { Toaster } from 'react-hot-toast';
+import { ToastProvider } from '@/components/providers/ToastProvider';
 import { AlertProvider } from "@/lib/hooks/useAlert";
 
 export const metadata: Metadata = {
@@ -55,31 +55,7 @@ export default function RootLayout({
               <Navbar />
               <EmailVerificationBanner />
               <main className="flex-1">{children}</main>
-              <Toaster
-                position="top-right"
-                toastOptions={{
-                  duration: 3000,
-                  style: {
-                    background: '#fff',
-                    color: '#1e293b',
-                    padding: '16px',
-                    borderRadius: '8px',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                  },
-                  success: {
-                    iconTheme: {
-                      primary: '#10b981',
-                      secondary: '#fff',
-                    },
-                  },
-                  error: {
-                    iconTheme: {
-                      primary: '#ef4444',
-                      secondary: '#fff',
-                    },
-                  },
-                }}
-              />
+              <ToastProvider />
             </AlertProvider>
           </SessionProvider>
         </Suspense>
