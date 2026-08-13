@@ -48,10 +48,6 @@ next-env.d.ts
 *.md
 !README.md
 
-# database backups
-/db-backup/
-/backup mongo/
-
 # local output & logs
 *.txt
 !robots.txt
@@ -62,6 +58,5 @@ next-env.d.ts
 .vscode/
 .idea/
 
-# sensitive scratch scripts
-sample-db.js
-inspect-db.js
+# junk/archived files
+junk/
