@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { signIn, signOut } from 'next-auth/react';
+import { useState, useEffect } from 'react';
+import { signIn, useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,12 +13,20 @@ import { Loader2 } from 'lucide-react';
 
 export default function RiderLoginPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
+  // If already logged in as rider, redirect to dashboard
+  useEffect(() => {
+    if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      window.location.href = '/rider/dashboard';
+    }
+  }, [status, session]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,9 +35,10 @@ export default function RiderLoginPage() {
     try {
       // Use 'rider-credentials' provider specifically for rider login
       const result = await signIn('rider-credentials', {
-        email: formData.email,
+        email: formData.email.trim(),
         password: formData.password,
         redirect: false,
+        callbackUrl: '/rider/dashboard',
       });
 
       if (result?.error) {
@@ -42,23 +51,14 @@ export default function RiderLoginPage() {
         return;
       }
 
-      // Check if user is a rider
-      const response = await fetch('/api/auth/session');
-      const session = await response.json();
-
-      if (session?.user?.role !== 'rider') {
-        toast.error('Access denied. Riders only.');
-        await signOut({ redirect: false });
-        return;
+      if (result?.ok) {
+        toast.success('Welcome back!');
+        // Full page navigation to cleanly load the session cookie
+        window.location.href = '/rider/dashboard';
       }
-
-      toast.success('Welcome back!');
-      router.push('/rider/dashboard');
-      router.refresh();
     } catch (error) {
       console.error('Rider login error:', error);
       toast.error('Login failed. Please try again.');
-    } finally {
       setIsLoading(false);
     }
   };
