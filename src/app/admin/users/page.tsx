@@ -386,8 +386,7 @@ export default function AdminUsersPage() {
               <Button type="button" variant="outline" onClick={() => setResetPasswordUserId(null)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isResettingPassword}>
-                {isResettingPassword && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+              <Button type="submit" disabled={isResettingPassword} isLoading={isResettingPassword} loadingText="Resetting...">
                 Reset Password
               </Button>
             </div>

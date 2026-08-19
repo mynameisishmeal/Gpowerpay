@@ -59,6 +59,7 @@ export default function ProfilePage() {
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressError, setAddressError] = useState('');
   const [addressSuccess, setAddressSuccess] = useState('');
+  const [isSavingAddress, setIsSavingAddress] = useState(false);
 
   // Email change state
   const [showEmailForm, setShowEmailForm] = useState(false);
@@ -229,7 +230,8 @@ export default function ProfilePage() {
   const onSubmitAddress = async (data: AddressFormData) => {
     setAddressError('');
     setAddressSuccess('');
-
+    setIsSavingAddress(true);
+    
     try {
       const url = editingAddressId
         ? `/api/user/addresses/${editingAddressId}`
@@ -257,6 +259,8 @@ export default function ProfilePage() {
       setTimeout(() => setAddressSuccess(''), 3000);
     } catch (err: any) {
       setAddressError(err.message);
+    } finally {
+      setIsSavingAddress(false);
     }
   };
 
@@ -407,15 +411,10 @@ export default function ProfilePage() {
                 type="submit"
                 className="btn-modern"
                 disabled={isSavingProfile}
+                isLoading={isSavingProfile}
+                loadingText="Saving..."
               >
-                {isSavingProfile ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  'Save Changes'
-                )}
+                Save Changes
               </Button>
             </form>
 
@@ -643,7 +642,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Button type="submit" className="btn-modern">
+                  <Button type="submit" className="btn-modern" isLoading={isSavingAddress} loadingText={editingAddressId ? 'Updating...' : 'Adding...'}>
                     {editingAddressId ? 'Update Address' : 'Add Address'}
                   </Button>
                   <Button

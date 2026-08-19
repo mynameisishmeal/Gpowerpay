@@ -275,15 +275,10 @@ export default function SettingsPage() {
                   type="submit"
                   className="w-full btn-modern"
                   disabled={isChangingEmail}
+                  isLoading={isChangingEmail}
+                  loadingText="Updating..."
                 >
-                  {isChangingEmail ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : (
-                    'Update Email'
-                  )}
+                  Update Email
                 </Button>
               </form>
             </CardContent>
@@ -393,13 +388,10 @@ export default function SettingsPage() {
                   type="submit"
                   className="w-full btn-modern"
                   disabled={isChangingPassword || !isEmailVerified}
+                  isLoading={isChangingPassword}
+                  loadingText="Updating..."
                 >
-                  {isChangingPassword ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Updating...
-                    </>
-                  ) : !isEmailVerified ? (
+                  {!isEmailVerified && !isChangingPassword ? (
                     <>
                       <Shield className="mr-2 h-4 w-4" />
                       Verify Email Required

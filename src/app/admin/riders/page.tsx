@@ -23,6 +23,7 @@ interface Rider {
 export default function AdminRidersPage() {
   const [riders, setRiders] = useState<Rider[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [editingRider, setEditingRider] = useState<Rider | null>(null);
   const [formData, setFormData] = useState({
@@ -70,6 +71,7 @@ export default function AdminRidersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     try {
       const url = editingRider
@@ -97,6 +99,8 @@ export default function AdminRidersPage() {
       fetchRiders();
     } catch (error: any) {
       toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -442,7 +446,7 @@ export default function AdminRidersPage() {
               </div>
 
               <div className="flex gap-3 pt-4">
-                <Button type="submit" className="flex-1">
+                <Button type="submit" className="flex-1" isLoading={isSubmitting}>
                   {editingRider ? 'Update Rider' : 'Add Rider'}
                 </Button>
                 <Button
