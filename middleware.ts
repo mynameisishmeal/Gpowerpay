@@ -5,7 +5,7 @@ import { getToken } from 'next-auth/jwt';
 // Define protected routes and their required roles
 const protectedRoutes = {
   // Customer routes - require 'customer' role
-  customer: ['/profile', '/cart', '/checkout', '/orders', '/wallet'],
+  customer: ['/profile', '/cart', '/checkout', '/orders', '/wallet', '/dashboard', '/settings', '/notifications', '/wishlist'],
   
   // Admin routes - require 'superadmin' or 'support' roles
   admin: ['/admin/dashboard', '/admin/products', '/admin/orders', '/admin/customers', '/admin/riders', '/admin/users', '/admin/settings'],
@@ -86,7 +86,7 @@ export async function middleware(request: NextRequest) {
   const userRole = token.role as string;
 
   // Block riders from customer-only routes
-  const customerOnlyRoutes = ['/profile', '/cart', '/checkout', '/orders', '/wallet', '/wishlist', '/products'];
+  const customerOnlyRoutes = ['/profile', '/cart', '/checkout', '/orders', '/wallet', '/wishlist', '/dashboard', '/settings', '/notifications'];
   if (customerOnlyRoutes.some(route => pathname.startsWith(route))) {
     if (userRole === 'rider') {
       // Redirect riders to their dashboard

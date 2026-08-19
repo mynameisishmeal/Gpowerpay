@@ -1,31 +1,45 @@
+import { headers } from 'next/headers';
+
 /**
  * Get the base URL for the application
  * Works in both server and client environments
  * 
  * Priority:
- * 1. NEXTAUTH_URL environment variable (if set)
- * 2. Vercel URL (if deployed on Vercel)
- * 3. Auto-detect from headers (server-side)
- * 4. window.location.origin (client-side)
+ * 1. Auto-detect from headers (server-side, for dynamic domains like Ngrok)
+ * 2. window.location.origin (client-side)
+ * 3. NEXTAUTH_URL environment variable (fallback)
+ * 4. Vercel URL (if deployed on Vercel)
  * 5. Fallback to localhost:3000
  */
-export function getBaseUrl(): string {
-  // 1. Check NEXTAUTH_URL (for explicit configuration)
-  if (process.env.NEXTAUTH_URL) {
-    return process.env.NEXTAUTH_URL;
+export async function getBaseUrl(): Promise<string> {
+  // 1. Try to get dynamically from request headers (server-side)
+  try {
+    const headersList = await headers();
+    const host = headersList.get('x-forwarded-host') || headersList.get('host');
+    const protocol = headersList.get('x-forwarded-proto') || 'http';
+    if (host) {
+      return `${protocol}://${host}`;
+    }
+  } catch (e) {
+    // Ignore error if outside request context
   }
 
-  // 2. Check Vercel URL (automatically set on Vercel deployments)
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-
-  // 3. Client-side: use window.location.origin
+  // 2. Client-side: use window.location.origin
   if (typeof window !== 'undefined') {
     return window.location.origin;
   }
 
-  // 4. Fallback to localhost for development
+  // 3. Check NEXTAUTH_URL (for explicit configuration)
+  if (process.env.NEXTAUTH_URL) {
+    return process.env.NEXTAUTH_URL;
+  }
+
+  // 4. Check Vercel URL (automatically set on Vercel deployments)
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  // 5. Fallback to localhost for development
   return 'http://localhost:3000';
 }
 
@@ -50,8 +64,8 @@ export function getBaseUrlFromHeaders(headers: Headers): string {
  * @param path - Relative path (e.g., '/api/users')
  * @returns Absolute URL
  */
-export function getAbsoluteUrl(path: string): string {
-  const baseUrl = getBaseUrl();
+export async function getAbsoluteUrl(path: string): Promise<string> {
+  const baseUrl = await getBaseUrl();
   
   // Ensure path starts with /
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;

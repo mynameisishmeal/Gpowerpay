@@ -147,15 +147,18 @@ export function CheckoutStepPayment({
           <label className="text-sm font-medium text-gray-700">Choose Payment Method</label>
 
           {/* Option 1: Pay from Wallet */}
-          <button
-            type="button"
-            onClick={() => setPaymentType('wallet')}
-            disabled={!hasSufficientBalance || loadingBalance}
+          <div
+            role="button"
+            tabIndex={(!hasSufficientBalance || loadingBalance) ? -1 : 0}
+            onClick={() => {
+              if (!hasSufficientBalance || loadingBalance) return;
+              setPaymentType('wallet');
+            }}
             className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
               paymentType === 'wallet'
                 ? 'border-blue-600 bg-blue-50'
                 : 'border-gray-200 hover:border-gray-300'
-            } ${!hasSufficientBalance ? 'opacity-50 cursor-not-allowed' : ''}`}
+            } ${(!hasSufficientBalance || loadingBalance) ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -175,23 +178,26 @@ export function CheckoutStepPayment({
               {hasSufficientBalance ? (
                 <span className="text-green-600 font-medium text-sm">Available</span>
               ) : (
-                <div onClick={(e) => e.stopPropagation()}>
+                <div onClick={(e) => e.stopPropagation()} className="cursor-default pointer-events-auto">
                   <FundWalletButton onSuccess={fetchWalletBalance} />
                 </div>
               )}
             </div>
-          </button>
+          </div>
 
           {/* Option 2: Pay with Card (Paystack) */}
-          <button
-            type="button"
-            onClick={() => setPaymentType('paystack')}
-            disabled={loadingBalance}
+          <div
+            role="button"
+            tabIndex={loadingBalance ? -1 : 0}
+            onClick={() => {
+              if (loadingBalance) return;
+              setPaymentType('paystack');
+            }}
             className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
               paymentType === 'paystack'
                 ? 'border-blue-600 bg-blue-50'
                 : 'border-gray-200 hover:border-gray-300'
-            }`}
+            } ${loadingBalance ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
           >
             <div className="flex items-center gap-3">
               <CreditCard
@@ -203,19 +209,22 @@ export function CheckoutStepPayment({
                 <p className="text-sm text-gray-500">Powered by Paystack</p>
               </div>
             </div>
-          </button>
+          </div>
 
           {/* Option 3: Split Payment */}
           {!hasSufficientBalance && walletBalance > 0 && (
-            <button
-              type="button"
-              onClick={() => setPaymentType('split')}
-              disabled={loadingBalance}
+            <div
+              role="button"
+              tabIndex={loadingBalance ? -1 : 0}
+              onClick={() => {
+                if (loadingBalance) return;
+                setPaymentType('split');
+              }}
               className={`w-full p-4 border-2 rounded-lg transition-all text-left ${
                 paymentType === 'split'
                   ? 'border-blue-600 bg-blue-50'
                   : 'border-gray-200 hover:border-gray-300'
-              }`}
+              } ${loadingBalance ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <div className="flex items-center gap-3">
                 <DollarSign
@@ -229,7 +238,7 @@ export function CheckoutStepPayment({
                   </p>
                 </div>
               </div>
-            </button>
+            </div>
           )}
         </div>
 

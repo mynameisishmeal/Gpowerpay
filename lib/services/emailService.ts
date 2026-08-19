@@ -75,7 +75,7 @@ export class EmailService {
    * Send verification email
    */
   static async sendVerificationEmail(email: string, token: string) {
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
     const transporter = createTransporter();
 
@@ -150,7 +150,7 @@ export class EmailService {
    * Send email change verification email
    */
   static async sendEmailChangeVerification(email: string, token: string) {
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
     const transporter = createTransporter();
 
@@ -221,7 +221,7 @@ export class EmailService {
    * Send password reset email
    */
   static async sendPasswordResetEmail(email: string, token: string, type?: string) {
-    const baseUrl = getBaseUrl();
+    const baseUrl = await getBaseUrl();
     const typeParam = type ? `&type=${type}` : '';
     const resetUrl = `${baseUrl}/reset-password?token=${token}${typeParam}`;
     const transporter = createTransporter();
@@ -614,6 +614,7 @@ export async function sendOrderStatusEmail(input: {
   message: string;
 }) {
   const transporter = createTransporter();
+  const baseUrl = await getBaseUrl();
 
   const statusEmojis: Record<string, string> = {
     in_store: '📦',
@@ -670,7 +671,7 @@ export async function sendOrderStatusEmail(input: {
               <p>${input.message}</p>
             </div>
             <p style="text-align: center;">
-              <a href="${getBaseUrl()}/orders/${input.orderId}" class="button">View Order Details</a>
+              <a href="${baseUrl}/orders/${input.orderId}" class="button">View Order Details</a>
             </p>
           </div>
           <div class="footer">
@@ -680,7 +681,7 @@ export async function sendOrderStatusEmail(input: {
       </body>
       </html>
     `,
-    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\nView your order at: ${getBaseUrl()}/orders`,
+    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\nView your order at: ${baseUrl}/orders`,
   };
 
   if (transporter) {
@@ -714,6 +715,7 @@ export async function sendOrderStatusEmail(input: {
  */
 export async function sendLowStockAlertEmail(emails: string[], productName: string, currentStock: number) {
   const transporter = createTransporter();
+  const baseUrl = await getBaseUrl();
 
   const emailContent = {
     from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
@@ -746,7 +748,7 @@ export async function sendLowStockAlertEmail(emails: string[], productName: stri
             </div>
             <p>Please restock this item soon to avoid running out of inventory.</p>
             <p style="text-align: center;">
-              <a href="${getBaseUrl()}/admin/products" class="button">Manage Inventory</a>
+              <a href="${baseUrl}/admin/products" class="button">Manage Inventory</a>
             </p>
           </div>
           <div class="footer">
