@@ -208,10 +208,12 @@ export function ReviewList({ productId, refreshTrigger = 0 }: ReviewListProps) {
                 </div>
 
                 {/* Review Content */}
-                <div className="mb-4">
-                  <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>
-                  <p className="text-gray-700 leading-relaxed">{review.comment}</p>
-                </div>
+                {(review.title || review.comment) && (
+                  <div className="mb-4">
+                    {review.title && <h4 className="font-semibold text-gray-900 mb-2">{review.title}</h4>}
+                    {review.comment && <p className="text-gray-700 leading-relaxed">{review.comment}</p>}
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="flex items-center gap-4 pt-4 border-t border-gray-100">

@@ -12,8 +12,8 @@ export interface IReview {
   orderNumber?: string;
   
   rating: number; // 1-5 stars
-  title: string;
-  comment: string;
+  title?: string;
+  comment?: string;
   
   images?: string[]; // Optional review images
   
@@ -65,12 +65,14 @@ const ReviewSchema = new Schema<IReview>({
   },
   title: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
     maxlength: 100,
   },
   comment: {
     type: String,
-    required: true,
+    required: false,
+    default: '',
     maxlength: 1000,
   },
   

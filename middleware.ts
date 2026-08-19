@@ -11,7 +11,7 @@ const protectedRoutes = {
   admin: ['/admin/dashboard', '/admin/products', '/admin/orders', '/admin/customers', '/admin/riders', '/admin/users', '/admin/settings'],
   
   // Rider routes - require 'rider' role
-  rider: ['/rider/dashboard', '/rider/deliveries', '/rider/earnings'],
+  rider: ['/rider/dashboard', '/rider/deliveries', '/rider/earnings', '/rider/orders', '/rider/settings'],
 };
 
 // Public routes that don't require authentication
@@ -23,6 +23,8 @@ const publicRoutes = [
   '/reset-password',
   '/verify-email',
   '/admin/login',
+  '/rider/login',
+  '/rider/verify',
   '/products',
   '/about',
   '/contact',
@@ -74,9 +76,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url);
     }
     
-    // Redirect rider routes to rider login (if you create one)
+    // Redirect rider routes to rider login
     if (pathname.startsWith('/rider')) {
-      const url = new URL('/login', request.url); // Or create /rider/login
+      const url = new URL('/rider/login', request.url);
       url.searchParams.set('callbackUrl', pathname);
       return NextResponse.redirect(url);
     }
@@ -116,7 +118,7 @@ export async function middleware(request: NextRequest) {
   // Rider routes - only allow riders
   if (protectedRoutes.rider.some(route => pathname.startsWith(route))) {
     if (userRole !== 'rider') {
-      return NextResponse.redirect(new URL('/login', request.url));
+      return NextResponse.redirect(new URL('/rider/login', request.url));
     }
   }
 

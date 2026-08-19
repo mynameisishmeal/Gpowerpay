@@ -50,10 +50,59 @@ export function PushNotificationProvider({ children }: { children: React.ReactNo
   const handleRequestPermission = async () => {
     setShowPrompt(false);
     try {
-      const permission = await Notification.requestPermission();
-      
+      // 1. Check if Notification API exists in this environment
+      if (typeof window === 'undefined' || !('Notification' in window)) {
+        toast.error('Push notifications are not supported by this browser/device.', {
+          icon: 'ℹ️',
+          duration: 5000,
+        });
+        localStorage.setItem('notification_prompt_dismissed', 'true');
+        return;
+      }
+
+      // 2. Check if the context is secure (HTTPS or localhost)
+      if (window.isSecureContext === false) {
+        toast.error('Notifications require HTTPS or a secure connection.', {
+          icon: '🔒',
+          duration: 5000,
+        });
+        return;
+      }
+
+      // 3. If already permanently denied by user in browser settings
+      if (Notification.permission === 'denied') {
+        toast.error(
+          'Notifications are currently blocked in your browser settings. To enable, tap the site settings / lock icon in your URL bar and change Notifications to Allow.',
+          {
+            duration: 8000,
+            icon: '🔕',
+          }
+        );
+        localStorage.setItem('notification_prompt_dismissed', 'true');
+        return;
+      }
+
+      // 4. Request native browser permission (supporting both Promise and legacy callback APIs)
+      let permission: NotificationPermission = 'default';
+      try {
+        const res = Notification.requestPermission();
+        if (res && typeof (res as any).then === 'function') {
+          permission = await res;
+        } else {
+          // Callback-based API
+          permission = await new Promise<NotificationPermission>((resolve) => {
+            Notification.requestPermission((p) => resolve(p));
+          });
+        }
+      } catch (reqError) {
+        console.warn('Promise requestPermission failed, trying callback syntax:', reqError);
+        permission = await new Promise<NotificationPermission>((resolve) => {
+          Notification.requestPermission((p) => resolve(p));
+        });
+      }
+
       if (permission === 'denied') {
-        toast.error('Notifications blocked! You can enable them later in your browser settings.', {
+        toast.error('Notifications were not allowed. You can enable them later in browser settings.', {
           duration: 6000,
           icon: '🔕',
         });
@@ -66,7 +115,8 @@ export function PushNotificationProvider({ children }: { children: React.ReactNo
         await fetchTokenSilently();
       }
     } catch (error) {
-      console.error('Error requesting permission', error);
+      console.error('Error requesting notification permission:', error);
+      toast.error('Could not request notification permission.');
     }
   };
 

@@ -41,11 +41,6 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
       return;
     }
 
-    if (!title.trim() || !comment.trim()) {
-      setError('Please fill in all fields');
-      return;
-    }
-
     try {
       startLoading('Submitting your review...');
 
@@ -55,8 +50,8 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
         body: JSON.stringify({
           productId,
           rating,
-          title: title.trim(),
-          comment: comment.trim(),
+          title: title.trim() || undefined,
+          comment: comment.trim() || undefined,
         }),
       });
 
@@ -95,7 +90,7 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Write a Review</CardTitle>
+        <CardTitle className="text-lg">Rate & Review</CardTitle>
         <p className="text-sm text-gray-600">for {productName}</p>
       </CardHeader>
       <CardContent>
@@ -115,15 +110,14 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
           {/* Title */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Review Title *
+              Review Title (Optional)
             </label>
             <Input
               type="text"
-              placeholder="Summarize your experience"
+              placeholder="Summarize your experience (optional)"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               maxLength={100}
-              required
             />
             <p className="text-xs text-gray-500 mt-1">
               {title.length}/100 characters
@@ -133,15 +127,14 @@ export function ReviewForm({ productId, productName, onSuccess }: ReviewFormProp
           {/* Comment */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Your Review *
+              Your Review (Optional)
             </label>
             <textarea
-              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[120px]"
-              placeholder="Tell others about your experience with this product"
+              className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 min-h-[100px]"
+              placeholder="Tell others about your experience (optional)"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               maxLength={1000}
-              required
             />
             <p className="text-xs text-gray-500 mt-1">
               {comment.length}/1000 characters

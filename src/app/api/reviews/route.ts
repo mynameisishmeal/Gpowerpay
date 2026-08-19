@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
 
-    // Validate input
-    if (!body.productId || !body.rating || !body.title || !body.comment) {
+    // Validate input - only productId and rating are required
+    if (!body.productId || !body.rating) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Product ID and rating are required' },
         { status: 400 }
       );
     }
@@ -76,8 +76,8 @@ export async function POST(request: NextRequest) {
       customerId: session.user.id,
       customerName: session.user.name || 'Customer',
       rating: body.rating,
-      title: body.title,
-      comment: body.comment,
+      title: body.title?.trim() || '',
+      comment: body.comment?.trim() || '',
       images: body.images || [],
     });
 

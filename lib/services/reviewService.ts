@@ -12,8 +12,8 @@ export interface CreateReviewInput {
   customerId: string;
   customerName: string;
   rating: number;
-  title: string;
-  comment: string;
+  title?: string;
+  comment?: string;
   images?: string[];
 }
 
@@ -45,7 +45,13 @@ export class ReviewService {
 
     // Create review
     const review = await Review.create({
-      ...input,
+      productId: input.productId,
+      customerId: input.customerId,
+      customerName: input.customerName,
+      rating: input.rating,
+      title: input.title?.trim() || '',
+      comment: input.comment?.trim() || '',
+      images: input.images || [],
       verified,
       orderId: order?._id,
       orderNumber: order?.orderNumber,
