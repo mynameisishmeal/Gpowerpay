@@ -14,6 +14,7 @@ export const authConfig = {
         token.role = user.role || 'customer';
         token.image = user.image || '';
         token.emailVerified = !!user.emailVerified;
+        (token as any).phone = (user as any).phone || '';
       }
       return token;
     },
@@ -25,6 +26,7 @@ export const authConfig = {
         session.user.role = token.role as any;
         session.user.image = token.image as string;
         (session.user as any).emailVerified = !!token.emailVerified;
+        (session.user as any).phonenumber = (token as any).phone as string;
       }
       return session;
     },

@@ -38,18 +38,18 @@ export function FundWalletButton({ onSuccess }: { onSuccess?: () => void }) {
 
     const amountInNaira = parseFloat(amount);
 
-    if (!amountInNaira || amountInNaira < 500) {
+    if (!amountInNaira || amountInNaira < 1000) {
       showAlert({
         type: 'warning',
-        message: 'Minimum funding amount is ₦500',
+        message: 'Minimum funding amount is ₦1,000',
       });
       return;
     }
 
-    if (amountInNaira > 500000) {
+    if (amountInNaira > 5000000) {
       showAlert({
         type: 'warning',
-        message: 'Maximum funding amount is ₦500,000',
+        message: 'Maximum funding amount is ₦5,000,000',
       });
       return;
     }
@@ -140,7 +140,7 @@ export function FundWalletButton({ onSuccess }: { onSuccess?: () => void }) {
           <DialogTitle>Fund Your Wallet</DialogTitle>
           <DialogDescription>
             Add money to your wallet using card, bank transfer, or USSD.
-            Minimum: ₦500, Maximum: ₦500,000
+            Minimum: ₦1,000, Maximum: ₦5,000,000
           </DialogDescription>
         </DialogHeader>
 
@@ -154,8 +154,8 @@ export function FundWalletButton({ onSuccess }: { onSuccess?: () => void }) {
               placeholder="Enter amount"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              min={500}
-              max={500000}
+              min={1000}
+              max={5000000}
               step={100}
             />
             <p className="text-xs text-gray-500 mt-1">

@@ -88,13 +88,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -163,13 +169,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -235,13 +247,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -387,13 +405,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .order-details { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -458,13 +482,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .status { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; text-align: center; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -524,13 +554,19 @@ export class EmailService {
         <html>
         <head>
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .otp-box { background: white; border: 2px dashed #667eea; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 5px; font-weight: bold; margin: 20px 0; border-radius: 5px; }
-            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-          </style>
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
+        </style>
         </head>
         <body>
           <div class="container">
@@ -654,13 +690,18 @@ export async function sendOrderStatusEmail(input: {
       <html>
       <head>
         <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-          .message-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #667eea; }
-          .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
         </style>
       </head>
       <body>
@@ -731,13 +772,18 @@ export async function sendLowStockAlertEmail(emails: string[], productName: stri
       <html>
       <head>
         <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .header { background: #E53E3E; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-          .alert-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #E53E3E; }
-          .button { display: inline-block; padding: 12px 30px; background: #E53E3E; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+          body { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; background-color: #f3f4f6; margin: 0; padding: 20px; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+          .header { background-color: #2563eb; color: #ffffff; padding: 32px 40px; text-align: center; }
+          .header h1 { margin: 0; font-size: 24px; font-weight: 600; letter-spacing: -0.025em; color: #ffffff !important; }
+          .content { padding: 40px; background: #ffffff; }
+          .message-box { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #2563eb; }
+          .button { display: inline-block; padding: 14px 32px; background-color: #2563eb; color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 16px; margin: 24px 0; text-align: center; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); transition: background-color 0.2s; }
+          .footer { text-align: center; padding: 24px 40px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 14px; color: #64748b; }
+          .order-details { width: 100%; border-collapse: collapse; margin-top: 20px; }
+          .order-details th, .order-details td { padding: 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+          .order-details th { font-weight: 600; color: #4b5563; background-color: #f8fafc; }
+          .total-row { font-weight: bold; font-size: 18px; color: #1f2937; }
         </style>
       </head>
       <body>

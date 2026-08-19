@@ -93,6 +93,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: user.role,
           image: user.profilePicture,
           emailVerified: user.emailVerified || false,
+          phone: user.phonenumber || user.phone,
         };
       },
     }),
@@ -144,6 +145,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: admin.role,
           image: admin.profilePicture,
           emailVerified: admin.emailVerified || false,
+          phone: admin.phonenumber || admin.phone,
         };
       },
     }),
@@ -208,6 +210,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             role: 'rider',
             image: riderUser.profilePicture,
             emailVerified: riderUser.emailVerified || false,
+            phone: riderUser.phonenumber || riderUser.phone,
           };
         }
 
@@ -266,6 +269,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           role: 'rider',
           image: rider.profilePhoto,
           emailVerified: rider.emailVerified || false,
+          phone: rider.phone,
         };
       },
     }),
@@ -335,6 +339,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           user.id = existingUser._id.toString();
           user.role = existingUser.role || 'customer';
           user.emailVerified = existingUser.emailVerified || false;
+          (user as any).phone = existingUser.phonenumber || existingUser.phone;
 
           return true;
         } catch (error) {
