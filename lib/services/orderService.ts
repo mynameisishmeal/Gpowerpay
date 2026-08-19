@@ -50,16 +50,43 @@ export class OrderService {
     // Generate 6-digit confirmation code
     const confirmationCode = this.generateConfirmationCode();
 
-    // Transform cart items to order items
-    const orderItems = input.items.map((item) => ({
-      productId: item.productId,
-      productName: item.name,
-      price: item.price,
-      quantity: item.quantity,
-      marketType: item.marketType,
-      image: item.image,
-      subtotal: item.price * item.quantity,
+    // Transform cart items to order items and verify prices
+    let calculatedSubtotal = 0;
+    const orderItems = await Promise.all(input.items.map(async (item) => {
+      const dbProduct = await ProductService.getProduct(item.productId);
+      if (!dbProduct) {
+        throw new Error(`Product not found: ${item.name}`);
+      }
+      
+      let price = 0;
+      if (item.marketType === 'kilo') {
+        price = dbProduct.pricing.kilo.price;
+      } else if (item.marketType === 'carton') {
+        price = dbProduct.pricing.carton.price;
+      } else {
+        throw new Error(`Invalid market type for product: ${item.name}`);
+      }
+      
+      const subtotal = price * item.quantity;
+      calculatedSubtotal += subtotal;
+
+      return {
+        productId: item.productId,
+        productName: dbProduct.name,
+        price: price,
+        quantity: item.quantity,
+        marketType: item.marketType,
+        image: dbProduct.images && dbProduct.images.length > 0 ? dbProduct.images[0].url : item.image,
+        subtotal: subtotal,
+      };
     }));
+
+    const calculatedTotal = calculatedSubtotal + input.deliveryFee;
+
+    // Verify totals match what the client agreed to (allowing small floating point difference)
+    if (Math.abs(calculatedTotal - input.total) > 1) {
+      throw new Error(`Price mismatch. The product prices may have changed. Expected ₦${calculatedTotal}, but got ₦${input.total}. Please refresh and try again.`);
+    }
 
     // Create order
     const order = await Order.create({
@@ -70,9 +97,9 @@ export class OrderService {
       customerEmail: input.customerEmail,
       customerPhone: input.customerPhone,
       items: orderItems,
-      subtotal: input.subtotal,
+      subtotal: calculatedSubtotal,
       deliveryFee: input.deliveryFee,
-      total: input.total,
+      total: calculatedTotal,
       deliveryOption: input.deliveryOption,
       deliveryType: input.deliveryType,
       deliveryAddress: input.deliveryAddress,

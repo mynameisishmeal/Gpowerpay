@@ -11,6 +11,22 @@ export function PushNotificationProvider({ children }: { children: React.ReactNo
   const [tokenSent, setTokenSent] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
 
+  const fetchTokenSilently = async () => {
+    try {
+      const token = await requestForToken();
+      if (token) {
+        await fetch('/api/user/fcm-token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        setTokenSent(true);
+      }
+    } catch (error) {
+      console.error('Error handling FCM token:', error);
+    }
+  };
+
   useEffect(() => {
     // Only process if user is authenticated
     if (status === 'authenticated') {
@@ -30,22 +46,6 @@ export function PushNotificationProvider({ children }: { children: React.ReactNo
       }
     }
   }, [status, tokenSent]);
-
-  const fetchTokenSilently = async () => {
-    try {
-      const token = await requestForToken();
-      if (token) {
-        await fetch('/api/user/fcm-token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ token }),
-        });
-        setTokenSent(true);
-      }
-    } catch (error) {
-      console.error('Error handling FCM token:', error);
-    }
-  };
 
   const handleRequestPermission = async () => {
     setShowPrompt(false);

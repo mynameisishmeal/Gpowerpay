@@ -10,8 +10,10 @@ import connectDB from './lib/mongodb';
 import User from './models/User';
 import Rider from './models/Rider';
 import { EmailService } from './lib/services/emailService';
+import { authConfig } from './auth.config';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  ...authConfig,
   providers: [
     // Customer Email/Password Login
     Credentials({
@@ -343,41 +345,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       return true;
     },
-
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user.id || '';
-        token.email = user.email || '';
-        token.name = user.name || '';
-        token.role = user.role || 'customer';
-        token.image = user.image || '';
-        token.emailVerified = !!user.emailVerified; // Convert to boolean
-      }
-      return token;
-    },
-
-    async session({ session, token }) {
-      if (token && session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
-        session.user.role = token.role as any;
-        session.user.image = token.image as string;
-        (session.user as any).emailVerified = !!token.emailVerified;
-      }
-      return session;
-    },
+    ...authConfig.callbacks, // Keep existing jwt/session callbacks from config
   },
-
-  pages: {
-    signIn: '/login',
-    error: '/login',
-  },
-
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60,
-  },
-
-  secret: process.env.NEXTAUTH_SECRET,
 });
