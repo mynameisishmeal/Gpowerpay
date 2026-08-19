@@ -33,13 +33,21 @@ export async function GET() {
     const orders = await Order.find({
       'assignedRider.riderId': deliveryPartner._id.toString(),
     })
+      .select('-confirmationCode') // Exclude confirmationCode so rider cannot see it
       .sort({ createdAt: -1 })
       .lean();
 
     // Populate product names for all orders
     const ordersWithProductNames = await populateOrdersProductNames(orders);
 
-    return NextResponse.json({ success: true, orders: ordersWithProductNames });
+    // One more paranoid strip to absolutely guarantee it's removed
+    const safeOrders = ordersWithProductNames.map((o: any) => {
+      const safeOrder = { ...o };
+      delete safeOrder.confirmationCode;
+      return safeOrder;
+    });
+
+    return NextResponse.json({ success: true, orders: safeOrders });
   } catch (error: any) {
     console.error('Error fetching rider orders:', error);
     return NextResponse.json(

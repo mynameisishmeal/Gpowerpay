@@ -20,6 +20,14 @@ export async function POST(
     const { user, error } = await requireAuth();
     if (error) return error;
 
+    // Riders should never be able to assign riders
+    if (user.role === 'rider') {
+      return NextResponse.json(
+        { error: 'Forbidden. Riders cannot assign orders.' },
+        { status: 403 }
+      );
+    }
+
     await connectDB();
 
     const body = await request.json();

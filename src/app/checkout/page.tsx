@@ -81,8 +81,10 @@ export default function CheckoutPage({
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/checkout');
+    } else if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      router.push('/rider/dashboard');
     }
-  }, [status, router]);
+  }, [status, router, session]);
   
   // Redirect if cart is empty (but not if order was just completed)
   useEffect(() => {
@@ -98,6 +100,20 @@ export default function CheckoutPage({
         <div className="text-center">
           <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto mb-4" />
           <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if ((session?.user?.role as string) === 'rider') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600 mb-4">Riders cannot access the checkout page.</p>
+          <Link href="/rider/dashboard">
+            <Button>Go to Rider Dashboard</Button>
+          </Link>
         </div>
       </div>
     );

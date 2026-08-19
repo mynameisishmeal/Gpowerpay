@@ -318,6 +318,21 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     );
   }
 
+  if ((session?.user?.role as string) === 'rider') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <XCircle size={48} className="text-red-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600 mb-6">Riders cannot view customer order details.</p>
+          <Link href="/rider/dashboard">
+            <Button>Go to Dashboard</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   if (error || !order) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -375,8 +390,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   })}
                 </p>
                 
-                {/* Confirmation Code */}
-                {order.confirmationCode && (
+                {/* Confirmation Code - Only show for customers, NEVER for riders */}
+                {order.confirmationCode && (session?.user?.role as string) !== 'rider' && (
                   <div className="mt-4 inline-flex items-center gap-3 bg-blue-50 border-2 border-blue-300 rounded-lg px-4 py-3">
                     <div>
                       <p className="text-xs text-blue-700 font-medium mb-0.5">Confirmation Code</p>
@@ -662,8 +677,8 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   {order.assignedRider ? (
                     /* Show assigned rider */
                     <div className="space-y-4">
-                      {/* Confirmation Code for Rider */}
-                      {order.confirmationCode && (
+                      {/* Confirmation Code for Rider - Only show to customers, never to riders */}
+                      {order.confirmationCode && (session?.user?.role as string) !== 'rider' && (
                         <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
                           <div className="flex items-center justify-between">
                             <div>

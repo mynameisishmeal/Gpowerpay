@@ -150,6 +150,17 @@ export default function NotificationsPage() {
     if (!notification.read) {
       await markAsRead(notification._id);
     }
+    
+    // If the user is a rider, route them to their dedicated rider order details page
+    if ((session?.user?.role as string) === 'rider') {
+      if (notification.data?.orderId) {
+        router.push(`/rider/orders/${notification.data.orderId}`);
+      } else {
+        router.push('/rider/dashboard');
+      }
+      return;
+    }
+
     if (notification.data?.orderId) {
       router.push(`/orders/${notification.data.orderId}`);
     }

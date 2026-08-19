@@ -4,6 +4,8 @@ import { useCartStore } from '@/lib/store/cartStore';
 import { X, Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useConfirm } from '@/lib/hooks/useConfirm';
 
@@ -22,6 +24,14 @@ export function CartSlideOver() {
     getTotalItems,
     clearCart,
   } = useCartStore();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // Close cart when route changes
+    if (isOpen) {
+      closeCart();
+    }
+  }, [pathname]);
 
   const { confirm, ConfirmDialog } = useConfirm();
 
@@ -38,13 +48,13 @@ export function CartSlideOver() {
     <>
       {/* Overlay - Click to close */}
       <div
-        className="fixed inset-0 bg-black/30 z-40 transition-opacity"
+        className="fixed inset-0 bg-black/50 z-[110] transition-opacity"
         onClick={closeCart}
         aria-label="Close cart"
       />
 
       {/* Slide-over Panel */}
-      <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl z-50 flex flex-col animate-slide-in">
+      <div className="fixed inset-y-0 right-0 w-full max-w-md bg-white shadow-xl z-[120] flex flex-col animate-slide-in">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-2">

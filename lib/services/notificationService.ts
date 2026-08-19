@@ -13,6 +13,8 @@ export interface CreateNotificationInput {
   sendEmail?: boolean;
   userEmail?: string;
   userName?: string;
+  actionPath?: string;
+  actionText?: string;
 }
 
 export class NotificationService {
@@ -43,6 +45,8 @@ export class NotificationService {
           confirmationCode: input.data?.confirmationCode,
           status: input.data?.status || input.data?.deliveryStatus || '',
           message: input.message,
+          actionPath: input.actionPath,
+          actionText: input.actionText,
         });
 
         // Mark email as sent
@@ -67,6 +71,24 @@ export class NotificationService {
             data: {
               type: input.type,
               ...(input.data && { extraData: JSON.stringify(input.data) })
+            },
+            android: {
+              priority: 'high' as const,
+              notification: {
+                channelId: 'high_importance_channel',
+                defaultSound: true,
+                defaultVibrateTimings: true,
+                notificationCount: 1,
+                visibility: 'public' as const, // Ensures it shows on lock screen
+              },
+            },
+            apns: {
+              payload: {
+                aps: {
+                  sound: 'default',
+                  badge: 1,
+                },
+              },
             },
             tokens: user.fcmTokens as string[],
           };
@@ -284,6 +306,8 @@ export class NotificationService {
       sendEmail: true,
       userEmail: riderEmail,
       userName: riderName,
+      actionPath: `/rider/orders/${orderId}`,
+      actionText: 'View Order Details',
     });
   }
 }

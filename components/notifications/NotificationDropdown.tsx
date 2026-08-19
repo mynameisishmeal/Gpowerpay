@@ -1,6 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { X, CheckCheck, Trash2, Package, TruckIcon, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -53,6 +54,7 @@ export function NotificationDropdown({
   onClose,
 }: NotificationDropdownProps) {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
@@ -75,9 +77,18 @@ export function NotificationDropdown({
       await onMarkAsRead(notification._id);
     }
 
+    const isRider = (session?.user?.role as string) === 'rider';
+
     // Navigate to order if orderId exists
     if (notification.data?.orderId) {
-      router.push(`/orders/${notification.data.orderId}`);
+      if (isRider) {
+        router.push(`/rider/orders/${notification.data.orderId}`);
+      } else {
+        router.push(`/orders/${notification.data.orderId}`);
+      }
+      onClose();
+    } else if (isRider) {
+      router.push('/rider/dashboard');
       onClose();
     }
   };

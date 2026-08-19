@@ -43,7 +43,12 @@ export async function middleware(request: NextRequest) {
   }
 
   // Check if route is public
-  const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some(route => {
+    if (route === '/') {
+      return pathname === '/';
+    }
+    return pathname === route || pathname.startsWith(`${route}/`);
+  });
   
   if (isPublicRoute) {
     return NextResponse.next();

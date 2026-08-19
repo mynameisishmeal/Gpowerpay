@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Bike, Package, CheckCircle, MapPin, Phone, User, LogOut, Loader2 } from 'lucide-react';
+import { Bike, Package, CheckCircle, MapPin, Phone, User, LogOut, Loader2, Truck, Eye } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
@@ -21,7 +21,6 @@ import Link from 'next/link';
 interface Order {
   _id: string;
   orderNumber: string;
-  confirmationCode: string;
   customerName: string;
   customerPhone: string;
   deliveryAddress: {
@@ -107,11 +106,6 @@ export default function RiderDashboardPage() {
       return;
     }
 
-    if (enteredCode !== selectedOrder.confirmationCode) {
-      toast.error('Invalid confirmation code');
-      return;
-    }
-
     setSubmitting(true);
 
     try {
@@ -137,6 +131,26 @@ export default function RiderDashboardPage() {
       toast.error(error.message);
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleMarkPickedUp = async (orderId: string) => {
+    try {
+      const response = await fetch(`/api/rider/orders/${orderId}/pickup`, {
+        method: 'POST',
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to mark order as picked up');
+      }
+
+      toast.success('Order marked as picked up! You are on the way to customer.', {
+        icon: '🚚',
+      });
+      fetchMyOrders();
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
@@ -272,14 +286,35 @@ export default function RiderDashboardPage() {
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t">
+                    <div className="flex items-center justify-between pt-3 border-t gap-2 flex-wrap">
                       <span className="font-semibold">{formatPrice(order.total)}</span>
-                      <Button
-                        size="sm"
-                        onClick={() => openConfirmDialog(order)}
-                      >
-                        Mark as Delivered
-                      </Button>
+                      <div className="flex items-center gap-2">
+                        <Link href={`/rider/orders/${order._id}`}>
+                          <Button size="sm" variant="outline">
+                            <Eye size={14} className="mr-1.5" />
+                            View Details
+                          </Button>
+                        </Link>
+                        {order.deliveryStatus === 'on_the_way' ? (
+                          <Button
+                            size="sm"
+                            onClick={() => openConfirmDialog(order)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            <CheckCircle size={14} className="mr-1.5" />
+                            Mark as Delivered
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            onClick={() => handleMarkPickedUp(order._id)}
+                            className="bg-amber-600 hover:bg-amber-700 text-white"
+                          >
+                            <Truck size={14} className="mr-1.5" />
+                            Mark as Picked Up
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -308,6 +343,11 @@ export default function RiderDashboardPage() {
                           Delivered
                         </span>
                         <p className="text-sm text-gray-600 mt-1">{formatPrice(order.total)}</p>
+                        <Link href={`/rider/orders/${order._id}`} className="inline-block mt-2">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs text-blue-600 hover:text-blue-800 p-0">
+                            View Details →
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   </div>

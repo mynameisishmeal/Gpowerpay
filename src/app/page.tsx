@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from 'next/image';
@@ -12,10 +14,19 @@ import { useCartStore } from '@/lib/store/cartStore';
 import toast from 'react-hot-toast';
 
 export default function Home() {
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const [featuredProducts, setFeaturedProducts] = useState<IProduct[]>([]);
   const [newArrivals, setNewArrivals] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const addItem = useCartStore((state) => state.addItem);
+
+  // Redirect rider to their dashboard
+  useEffect(() => {
+    if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      router.replace('/rider/dashboard');
+    }
+  }, [status, session, router]);
 
   useEffect(() => {
     fetchHomeData();
@@ -47,6 +58,10 @@ export default function Home() {
   };
 
   const handleAddToCart = (product: IProduct) => {
+    if ((session?.user?.role as string) === 'rider') {
+      return;
+    }
+
     const primaryMarket = product.availableMarkets[0];
     const pricing = product.pricing[primaryMarket];
     const inventory = product.inventory[primaryMarket];
@@ -70,6 +85,11 @@ export default function Home() {
       icon: '🛒',
     });
   };
+
+  // If authenticated as rider, don't show customer homepage while redirecting
+  if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

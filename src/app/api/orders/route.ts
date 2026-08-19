@@ -54,6 +54,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (session.user.role === 'rider') {
+      return NextResponse.json(
+        { error: 'Forbidden. Riders cannot place orders.' },
+        { status: 403 }
+      );
+    }
+
     const body = await request.json();
 
     console.log('📦 Received order data:', JSON.stringify(body, null, 2));

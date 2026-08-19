@@ -30,6 +30,7 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const pricing = product.pricing[primaryMarket];
   const inventory = product.inventory[primaryMarket];
 
+  const isRider = (session?.user?.role as string) === 'rider';
   const isInStock = !inventory.trackInventory || inventory.stock > 0;
   const productId = String(product._id);
   const inWishlist = isInWishlist(productId, primaryMarket);
@@ -37,6 +38,10 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const handleWishlistToggle = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    if (isRider) {
+      return;
+    }
 
     if (!session) {
       toast.error('Please login to add to wishlist');
@@ -141,25 +146,29 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
           />
         </div>
 
-        {/* Wishlist Button */}
-        <button
-          onClick={handleWishlistToggle}
-          disabled={wishlistLoading}
-          className="absolute bottom-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors disabled:opacity-50"
-          title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
-        >
-          <Heart
-            size={20}
-            className={`transition-colors ${
-              inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'
-            }`}
-          />
-        </button>
+        {/* Wishlist Button - Hidden for riders */}
+        {!isRider && (
+          <button
+            onClick={handleWishlistToggle}
+            disabled={wishlistLoading}
+            className="absolute bottom-2 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors disabled:opacity-50"
+            title={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+          >
+            <Heart
+              size={20}
+              className={`transition-colors ${
+                inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'
+              }`}
+            />
+          </button>
+        )}
 
         {/* Share Button */}
         <button
           onClick={handleShare}
-          className="absolute bottom-12 right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors"
+          className={`absolute right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors ${
+            isRider ? 'bottom-2' : 'bottom-12'
+          }`}
           title="Share product"
         >
           <Share2 size={20} className="text-gray-600" />
@@ -226,8 +235,8 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
           </p>
         </div>
 
-        {/* Add to Cart Button */}
-        {onAddToCart && (
+        {/* Add to Cart Button - Hidden for riders */}
+        {!isRider && onAddToCart && (
           <Button
             onClick={() => onAddToCart(product)}
             disabled={!isInStock}

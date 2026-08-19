@@ -48,12 +48,14 @@ export default function ProductDetailPage() {
   const [reviewRefresh, setReviewRefresh] = useState(0);
   const addItem = useCartStore((state) => state.addItem);
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated or dashboard if rider
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push(`/login?callbackUrl=/products/${slug}`);
+    } else if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      router.replace('/rider/dashboard');
     }
-  }, [status, router, slug]);
+  }, [status, session, router, slug]);
 
   // Fetch product
   useEffect(() => {
@@ -101,8 +103,8 @@ export default function ProductDetailPage() {
     );
   }
 
-  // Don't render if not authenticated (will redirect)
-  if (status === 'unauthenticated') {
+  // Don't render if not authenticated or if rider (will redirect)
+  if (status === 'unauthenticated' || (status === 'authenticated' && (session?.user?.role as string) === 'rider')) {
     return null;
   }
 

@@ -612,6 +612,8 @@ export async function sendOrderStatusEmail(input: {
   confirmationCode?: string;
   status: string;
   message: string;
+  actionPath?: string;
+  actionText?: string;
 }) {
   const transporter = createTransporter();
   const baseUrl = await getBaseUrl();
@@ -639,6 +641,9 @@ export async function sendOrderStatusEmail(input: {
   const confirmationCodeText = input.confirmationCode
     ? `\n\nCONFIRMATION CODE: ${input.confirmationCode}\nShare this code with your delivery rider.\n`
     : '';
+
+  const linkUrl = input.actionPath ? `${baseUrl}${input.actionPath}` : `${baseUrl}/orders/${input.orderId}`;
+  const linkText = input.actionText || 'View Order Details';
 
   const emailContent = {
     from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
@@ -671,7 +676,7 @@ export async function sendOrderStatusEmail(input: {
               <p>${input.message}</p>
             </div>
             <p style="text-align: center;">
-              <a href="${baseUrl}/orders/${input.orderId}" class="button">View Order Details</a>
+              <a href="${linkUrl}" class="button">${linkText}</a>
             </p>
           </div>
           <div class="footer">
@@ -681,7 +686,7 @@ export async function sendOrderStatusEmail(input: {
       </body>
       </html>
     `,
-    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\nView your order at: ${baseUrl}/orders`,
+    text: `Hi ${input.userName},\n\nOrder #${input.orderNumber} Update:\n${input.message}${confirmationCodeText}\n\n${linkText}: ${linkUrl}`,
   };
 
   if (transporter) {

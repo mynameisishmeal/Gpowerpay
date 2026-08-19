@@ -39,8 +39,10 @@ export default function OrdersPage() {
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/orders');
+    } else if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      router.push('/rider/dashboard');
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   useEffect(() => {
     if (session) {
@@ -137,6 +139,20 @@ export default function OrdersPage() {
       setReorderingId(null);
     }
   };
+
+  if ((session?.user?.role as string) === 'rider') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600 mb-4">Riders cannot view customer order history.</p>
+          <Link href="/rider/dashboard">
+            <Button>Go to Rider Dashboard</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   if (status === 'loading' || loading) {
     return (

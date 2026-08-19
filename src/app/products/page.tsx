@@ -63,12 +63,14 @@ export default function ProductsPage() {
     prevPage,
   } = useProductList(initialFilters);
 
-  // Redirect to login if not authenticated
+  // Redirect to login if not authenticated or dashboard if rider
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/products');
+    } else if (status === 'authenticated' && (session?.user?.role as string) === 'rider') {
+      router.replace('/rider/dashboard');
     }
-  }, [status, router]);
+  }, [status, session, router]);
 
   // Fetch categories and price range
   useEffect(() => {
@@ -132,8 +134,8 @@ export default function ProductsPage() {
     );
   }
 
-  // Don't render if not authenticated (will redirect)
-  if (status === 'unauthenticated') {
+  // Don't render if not authenticated or if rider (will redirect)
+  if (status === 'unauthenticated' || (status === 'authenticated' && (session?.user?.role as string) === 'rider')) {
     return null;
   }
 
