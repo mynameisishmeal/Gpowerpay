@@ -90,9 +90,14 @@ export default NextAuth(authConfig).auth((req) => {
   const userRole = token.user.role as string;
 
   // Block riders from customer-only API routes
-  const customerApiRoutes = ['/api/cart', '/api/orders', '/api/wallet', '/api/wishlist', '/api/profile'];
-  if (customerApiRoutes.some(route => pathname.startsWith(route))) {
-    if (userRole === 'rider') {
+  if (userRole === 'rider') {
+    // Specifically block /api/orders but ALLOW /api/orders/[id]
+    if (pathname === '/api/orders' || pathname === '/api/orders/') {
+      return NextResponse.json({ error: 'Forbidden. Riders cannot access this API endpoint.' }, { status: 403 });
+    }
+    
+    const customerApiRoutes = ['/api/cart', '/api/wallet', '/api/wishlist', '/api/profile'];
+    if (customerApiRoutes.some(route => pathname.startsWith(route))) {
       return NextResponse.json({ error: 'Forbidden. Riders cannot access this API endpoint.' }, { status: 403 });
     }
   }

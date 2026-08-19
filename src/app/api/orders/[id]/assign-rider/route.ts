@@ -117,7 +117,6 @@ export async function POST(
       rider.name,
       order._id.toString(),
       order.orderNumber,
-      undefined, // DO NOT SEND CONFIRMATION CODE TO RIDER!
       order.customerName,
       order.customerPhone,
       deliveryAddress,

@@ -47,6 +47,7 @@ next-env.d.ts
 # markdown files
 *.md
 !README.md
+APP_ARCHITECTURE.md
 
 # local output & logs
 *.txt

@@ -283,7 +283,6 @@ export class NotificationService {
     riderName: string,
     orderId: string,
     orderNumber: string,
-    confirmationCode: string | undefined,
     customerName: string,
     customerPhone: string,
     deliveryAddress: string,
@@ -297,7 +296,6 @@ export class NotificationService {
       data: { 
         orderId, 
         orderNumber, 
-        confirmationCode, 
         customerName, 
         customerPhone, 
         deliveryAddress,
