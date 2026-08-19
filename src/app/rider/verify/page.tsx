@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { CheckCircle, XCircle, Package, User, Phone, MapPin, LogIn } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { useLoading } from '@/components/providers/LoadingProvider';
+import { Loader2 } from 'lucide-react';
 
 interface OrderInfo {
   _id: string;
@@ -39,7 +39,8 @@ export default function RiderVerifyPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [code, setCode] = useState('');
-  const { startLoading, stopLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMarkingDelivered, setIsMarkingDelivered] = useState(false);
   const [orderInfo, setOrderInfo] = useState<OrderInfo | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -76,7 +77,7 @@ export default function RiderVerifyPage() {
       return;
     }
 
-    startLoading('Verifying order code...');
+    setIsLoading(true);
     setError(null);
     setOrderInfo(null);
 
@@ -99,7 +100,7 @@ export default function RiderVerifyPage() {
       setError(err.message);
       toast.error(err.message);
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -108,7 +109,7 @@ export default function RiderVerifyPage() {
 
     if (!confirm('Are you sure you want to mark this order as delivered?')) return;
 
-    startLoading('Marking order as delivered...');
+    setIsMarkingDelivered(true);
     try {
       const response = await fetch('/api/rider/mark-delivered', {
         method: 'POST',
@@ -132,7 +133,7 @@ export default function RiderVerifyPage() {
     } catch (err: any) {
       toast.error(err.message);
     } finally {
-      stopLoading();
+      setIsMarkingDelivered(false);
     }
   };
 
@@ -196,11 +197,18 @@ export default function RiderVerifyPage() {
 
               <Button
                 onClick={handleVerify}
-                disabled={code.length !== 6}
+                disabled={code.length !== 6 || isLoading}
                 className="w-full"
                 size="lg"
               >
-                Verify Order
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  'Verify Order'
+                )}
               </Button>
             </div>
           </CardContent>
@@ -307,10 +315,18 @@ export default function RiderVerifyPage() {
               {isRider && orderInfo.deliveryStatus !== 'delivered' && (
                 <Button
                   onClick={handleMarkDelivered}
+                  disabled={isMarkingDelivered}
                   className="w-full bg-green-600 hover:bg-green-700"
                   size="lg"
                 >
-                  ✅ Mark as Delivered
+                  {isMarkingDelivered ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Marking as Delivered...
+                    </>
+                  ) : (
+                    '✅ Mark as Delivered'
+                  )}
                 </Button>
               )}
 

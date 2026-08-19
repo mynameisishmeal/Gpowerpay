@@ -14,20 +14,42 @@ export function PushNotificationProvider({ children }: { children: React.ReactNo
     if (status === 'authenticated' && !tokenSent) {
       const fetchToken = async () => {
         try {
-          const token = await requestForToken();
-          if (token) {
-            // Send token to our backend
-            await fetch('/api/user/fcm-token', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ token }),
-            });
-            setTokenSent(true);
+          if (typeof window !== 'undefined' && 'Notification' in window) {
+            const currentPermission = Notification.permission;
+            
+            let permission = currentPermission;
+            if (currentPermission === 'default') {
+              permission = await Notification.requestPermission();
+              
+              if (permission === 'denied') {
+                toast.error('Notifications blocked! You will not be able to receive in-app alerts for your orders.', {
+                  duration: 6000,
+                  icon: '🔕',
+                });
+                return; // Stop trying to fetch token
+              }
+            } else if (currentPermission === 'denied') {
+              // Already denied, do not proceed to request token
+              return;
+            }
+
+            if (permission === 'granted') {
+              const token = await requestForToken();
+              if (token) {
+                // Send token to our backend
+                await fetch('/api/user/fcm-token', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({ token }),
+                });
+                setTokenSent(true);
+              }
+            }
           }
         } catch (error) {
-          console.error('Error fetching FCM token:', error);
+          console.error('Error handling FCM token:', error);
         }
       };
 

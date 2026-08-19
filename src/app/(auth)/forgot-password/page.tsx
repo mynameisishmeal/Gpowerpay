@@ -9,9 +9,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, ArrowLeft } from 'lucide-react';
-import { useLoading } from '@/components/providers/LoadingProvider';
-
+import { CheckCircle2, ArrowLeft, Loader2 } from 'lucide-react';
 // Validation schema
 const forgotPasswordSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -20,7 +18,7 @@ const forgotPasswordSchema = z.object({
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
 export default function ForgotPasswordPage() {
-  const { startLoading, stopLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   
@@ -50,7 +48,7 @@ export default function ForgotPasswordPage() {
   });
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    startLoading('Sending reset instructions...');
+    setIsLoading(true);
     setError('');
 
     try {
@@ -70,7 +68,7 @@ export default function ForgotPasswordPage() {
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -147,9 +145,17 @@ export default function ForgotPasswordPage() {
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={isLoading}
               className="w-full h-12 text-base btn-modern"
             >
-              Send Reset Instructions
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                'Send Reset Instructions'
+              )}
             </Button>
 
             {/* Back to Login */}

@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { useLoading } from '@/components/providers/LoadingProvider';
 
 // Validation schema
 const adminLoginSchema = z.object({
@@ -26,7 +25,7 @@ function AdminLoginForm() {
   const callbackUrl = searchParams.get('callbackUrl') || '/admin/dashboard';
   
   const [showPassword, setShowPassword] = useState(false);
-  const { startLoading, stopLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const {
@@ -38,7 +37,7 @@ function AdminLoginForm() {
   });
 
   const onSubmit = async (data: AdminLoginFormData) => {
-    startLoading('Verifying credentials...');
+    setIsLoading(true);
     setError('');
 
     try {
@@ -65,7 +64,7 @@ function AdminLoginForm() {
     } catch (err) {
       setError('Something went wrong. Please try again.');
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -161,10 +160,20 @@ function AdminLoginForm() {
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={isLoading}
               className="w-full h-12 text-base bg-blue-600 hover:bg-blue-700 text-white"
             >
-              <Shield className="mr-2 h-5 w-5" />
-              Sign In to Admin Portal
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Verifying...
+                </>
+              ) : (
+                <>
+                  <Shield className="mr-2 h-5 w-5" />
+                  Sign In to Admin Portal
+                </>
+              )}
             </Button>
 
             {/* Help Text */}

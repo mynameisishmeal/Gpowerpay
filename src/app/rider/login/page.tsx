@@ -9,11 +9,11 @@ import { Input } from '@/components/ui/input';
 import { Bike, Eye, EyeOff } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-import { useLoading } from '@/components/providers/LoadingProvider';
+import { Loader2 } from 'lucide-react';
 
 export default function RiderLoginPage() {
   const router = useRouter();
-  const { startLoading, stopLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -22,7 +22,7 @@ export default function RiderLoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    startLoading('Authenticating rider...');
+    setIsLoading(true);
 
     try {
       // Use 'rider-credentials' provider specifically for rider login
@@ -38,7 +38,7 @@ export default function RiderLoginPage() {
         } else {
           toast.error('Invalid email or password');
         }
-        stopLoading();
+        setIsLoading(false);
         return;
       }
 
@@ -59,7 +59,7 @@ export default function RiderLoginPage() {
       console.error('Rider login error:', error);
       toast.error('Login failed. Please try again.');
     } finally {
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -130,8 +130,16 @@ export default function RiderLoginPage() {
                 type="submit"
                 className="w-full"
                 size="lg"
+                disabled={isLoading}
               >
-                Sign In
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  'Sign In'
+                )}
               </Button>
             </form>
 

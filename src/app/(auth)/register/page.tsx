@@ -10,8 +10,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Eye, EyeOff, CheckCircle2 } from 'lucide-react';
-import { useLoading } from '@/components/providers/LoadingProvider';
+import { Eye, EyeOff, CheckCircle2, Loader2 } from 'lucide-react';
 
 // Validation schema
 const registerSchema = z.object({
@@ -31,7 +30,7 @@ export default function RegisterPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { startLoading, stopLoading } = useLoading();
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
@@ -79,7 +78,7 @@ export default function RegisterPage() {
   const passwordStrength = getPasswordStrength(password);
 
   const onSubmit = async (data: RegisterFormData) => {
-    startLoading('Creating your account...');
+    setIsLoading(true);
     setError('');
 
     try {
@@ -109,7 +108,7 @@ export default function RegisterPage() {
 
     } catch (err: any) {
       setError(err.message || 'Something went wrong. Please try again.');
-      stopLoading();
+      setIsLoading(false);
     }
   };
 
@@ -287,9 +286,17 @@ export default function RegisterPage() {
             {/* Submit Button */}
             <Button
               type="submit"
+              disabled={isLoading}
               className="w-full h-12 text-base btn-modern"
             >
-              Create Account
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Account...
+                </>
+              ) : (
+                'Create Account'
+              )}
             </Button>
 
             {/* Login Link */}
