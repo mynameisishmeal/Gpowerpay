@@ -21,6 +21,7 @@ import {
   CreditCard,
   FileText,
   ShieldAlert,
+  Copy,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -256,6 +257,11 @@ export default function RiderOrderDetailsPage() {
     ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`
     : '';
 
+  const copyToClipboard = (text: string, label: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success(`${label} copied!`, { icon: '📋', duration: 2000 });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-6 sm:py-8">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -272,8 +278,15 @@ export default function RiderOrderDetailsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-5 rounded-xl border shadow-sm">
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-2xl font-bold text-gray-900">
+                <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                   Order #{order.orderNumber}
+                  <button 
+                    onClick={() => copyToClipboard(order.orderNumber, 'Order number')}
+                    className="text-gray-400 hover:text-gray-700 transition-colors bg-gray-100 hover:bg-gray-200 p-1.5 rounded-md flex items-center justify-center focus:outline-none"
+                    title="Copy Order Number"
+                  >
+                    <Copy size={16} />
+                  </button>
                 </h1>
                 <span
                   className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
@@ -403,13 +416,24 @@ export default function RiderOrderDetailsPage() {
                   </div>
                   <div>
                     <span className="text-xs text-gray-500 block">Phone Contact</span>
-                    <a
-                      href={`tel:${order.customerPhone || order.deliveryAddress?.phone}`}
-                      className="font-semibold text-blue-600 hover:underline flex items-center gap-1.5 mt-0.5"
-                    >
-                      <Phone size={14} />
-                      {order.customerPhone || order.deliveryAddress?.phone || 'No phone provided'}
-                    </a>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <a
+                        href={`tel:${order.customerPhone || order.deliveryAddress?.phone}`}
+                        className="font-semibold text-blue-600 hover:underline flex items-center gap-1.5"
+                      >
+                        <Phone size={14} />
+                        {order.customerPhone || order.deliveryAddress?.phone || 'No phone provided'}
+                      </a>
+                      {(order.customerPhone || order.deliveryAddress?.phone) && (
+                        <button
+                          onClick={() => copyToClipboard((order.customerPhone || order.deliveryAddress?.phone) as string, 'Phone number')}
+                          className="text-gray-400 hover:text-blue-600 transition-colors p-1 rounded-md hover:bg-blue-50 focus:outline-none"
+                          title="Copy Phone Number"
+                        >
+                          <Copy size={14} />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
 
