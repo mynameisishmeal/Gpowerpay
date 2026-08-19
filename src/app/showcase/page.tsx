@@ -1,9 +1,13 @@
+'use client';
+
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Home, ShoppingCart, Package, Users, TrendingUp, Star } from "lucide-react";
+import { Home, ShoppingCart, Package, Users, TrendingUp, Star, Eye, EyeOff } from "lucide-react";
 
 export default function ShowcasePage() {
+  const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-7xl mx-auto space-y-12">
@@ -152,7 +156,16 @@ export default function ShowcasePage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Password Input
                 </label>
-                <Input type="password" placeholder="••••••••" />
+                <div className="relative">
+                  <Input type={showPassword ? 'text' : 'password'} placeholder="••••••••" className="pr-10" />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
               </div>
               
               <div>

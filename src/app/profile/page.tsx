@@ -9,7 +9,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { User as UserIcon, MapPin, Loader2, Plus, Edit, Trash2, Home } from 'lucide-react';
+import { User as UserIcon, MapPin, Loader2, Plus, Edit, Trash2, Home, Eye, EyeOff } from 'lucide-react';
 
 // Profile validation schema
 const profileSchema = z.object({
@@ -67,6 +67,7 @@ export default function ProfilePage() {
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [otpStep, setOtpStep] = useState(false);
   const [otpCode, setOtpCode] = useState('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
 
   // Profile form
   const {
@@ -444,15 +445,25 @@ export default function ProfilePage() {
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Current Password
                         </label>
-                        <Input
-                          type="password"
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          required
-                          placeholder="Verify your password"
-                          disabled={isChangingEmail}
-                          className="bg-white"
-                        />
+                        <div className="relative">
+                          <Input
+                            type={showCurrentPassword ? 'text' : 'password'}
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            required
+                            placeholder="Verify your password"
+                            disabled={isChangingEmail}
+                            className="bg-white pr-10"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                            disabled={isChangingEmail}
+                          >
+                            {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                          </button>
+                        </div>
                       </div>
                     )}
                     

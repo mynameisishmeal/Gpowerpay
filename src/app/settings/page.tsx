@@ -47,6 +47,7 @@ export default function SettingsPage() {
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showEmailPassword, setShowEmailPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -247,12 +248,22 @@ export default function SettingsPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Current Password
                   </label>
-                  <Input
-                    type="password"
-                    placeholder="Enter your current password"
-                    {...emailForm.register('currentPassword')}
-                    disabled={isChangingEmail}
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showEmailPassword ? 'text' : 'password'}
+                      placeholder="Enter your current password"
+                      {...emailForm.register('currentPassword')}
+                      disabled={isChangingEmail}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailPassword(!showEmailPassword)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    >
+                      {showEmailPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
                   {emailForm.formState.errors.currentPassword && (
                     <p className="mt-1 text-sm text-red-600">
                       {emailForm.formState.errors.currentPassword.message}

@@ -183,6 +183,12 @@ export default function RiderDashboardPage() {
               <p className="text-gray-600 mt-1">Welcome back, {session?.user?.name}!</p>
             </div>
             <div className="flex gap-3">
+              <Link href="/rider/profile">
+                <Button variant="outline">
+                  <User size={16} className="mr-2" />
+                  Profile
+                </Button>
+              </Link>
               <Link href="/rider/verify">
                 <Button variant="outline">
                   <Package size={16} className="mr-2" />
