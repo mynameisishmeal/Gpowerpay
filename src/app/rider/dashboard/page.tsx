@@ -177,12 +177,12 @@ export default function RiderDashboardPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Rider Dashboard</h1>
               <p className="text-gray-600 mt-1">Welcome back, {session?.user?.name}!</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <Link href="/rider/profile">
                 <Button variant="outline">
                   <User size={16} className="mr-2" />
