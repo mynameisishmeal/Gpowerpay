@@ -197,12 +197,6 @@ declare module 'next-auth' {
   }
 }
 
-declare module 'next-auth/jwt' {
-  interface JWT extends SessionUser {
-    // Add custom properties if needed in future
-    _id?: string;
-  }
-}
 
 // ============================================
 // CATEGORY TYPES
