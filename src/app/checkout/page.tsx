@@ -7,7 +7,6 @@ import { useCartStore } from '@/lib/store/cartStore';
 import { ArrowLeft, Package, MapPin, CreditCard, Check, Mail, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { useLoading } from '@/components/providers/LoadingProvider';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckoutStepReview } from '@/components/checkout/CheckoutStepReview';
 import { CheckoutStepDelivery } from '@/components/checkout/CheckoutStepDelivery';
@@ -38,6 +37,7 @@ export interface DeliveryInfo {
   deliveryDate?: string;
   deliveryFee: number;
   customerNote?: string;
+  saveAddress?: boolean;
 }
 
 export interface PaymentMethod {
@@ -73,7 +73,7 @@ export default function CheckoutPage({
       }
     }
   }, [currentDeliveryOption, getTotalItems]);
-  const { startLoading, stopLoading } = useLoading();
+  const [isProcessing, setIsProcessing] = useState(false);
   const [orderCompleted, setOrderCompleted] = useState(false);
   const clearCart = useCartStore((state) => state.clearCart);
 
@@ -123,7 +123,7 @@ export default function CheckoutPage({
   const handleCompleteOrder = async (payment: PaymentMethod) => {
     if (!session?.user || !deliveryInfo) return;
 
-    startLoading('Completing your order...');
+    setIsProcessing(true);
     setPaymentMethod(payment);
 
     try {
@@ -173,6 +173,28 @@ export default function CheckoutPage({
 
       console.log('✅ Order created successfully:', data.order);
 
+      // Save address if requested
+      if (deliveryInfo.saveAddress && deliveryInfo.option === 'home' && deliveryInfo.address) {
+        try {
+          await fetch('/api/user/addresses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              street: deliveryInfo.address.street,
+              city: deliveryInfo.address.city,
+              state: deliveryInfo.address.state,
+              landmark: deliveryInfo.address.landmark || '',
+              phone: deliveryInfo.address.phone,
+              isDefault: false,
+            }),
+          });
+          console.log('✅ Address saved successfully');
+        } catch (addrErr) {
+          console.error('Failed to save address:', addrErr);
+          // Don't fail the order if address save fails
+        }
+      }
+
       // Mark order as completed to prevent cart redirect
       setOrderCompleted(true);
 
@@ -186,12 +208,11 @@ export default function CheckoutPage({
 
       // Redirect to order confirmation
       toast.success('Order placed successfully!');
-      stopLoading();
       router.push(`/orders/${data.order.orderId}?success=true`);
     } catch (error: any) {
       console.error('Order creation error:', error);
       toast.error(error.message || 'Failed to create order. Please try again.');
-      stopLoading();
+      setIsProcessing(false);
     }
   };
 
@@ -318,6 +339,7 @@ export default function CheckoutPage({
                 deliveryInfo={deliveryInfo}
                 onBack={() => setCurrentStep(2)}
                 onComplete={handleCompleteOrder}
+                processing={isProcessing}
               />
             )}
           </div>

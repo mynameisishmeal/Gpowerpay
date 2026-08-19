@@ -33,26 +33,30 @@ const createTransporter = () => {
 
 export class EmailService {
   /**
-   * Generate verification token
+   * Generate verification token (crypto string)
    */
   static generateToken(): string {
     return crypto.randomBytes(32).toString('hex');
   }
 
   /**
-   * Create email verification token
+   * Generate a 6-digit numeric OTP
    */
-  static async createVerificationToken(userId: string, email: string) {
+  static generateNumericOTP(): string {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  }
+
+  static async createVerificationToken(userId: string, email: string, type: 'email_verification' | 'email_change' | 'email_change_auth' = 'email_verification') {
     await connectDB();
 
     const token = this.generateToken();
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 24); // 24 hours expiry
 
-    // Delete any existing verification tokens for this user
+    // Delete any existing verification tokens of this type for this user
     await VerificationToken.deleteMany({
       userId,
-      type: 'email_verification',
+      type,
     });
 
     // Create new token
@@ -60,7 +64,7 @@ export class EmailService {
       userId,
       email,
       token,
-      type: 'email_verification',
+      type,
       expiresAt,
     });
 
@@ -143,6 +147,77 @@ export class EmailService {
   }
 
   /**
+   * Send email change verification email
+   */
+  static async sendEmailChangeVerification(email: string, token: string) {
+    const baseUrl = getBaseUrl();
+    const verificationUrl = `${baseUrl}/verify-email?token=${token}`;
+    const transporter = createTransporter();
+
+    const emailContent = {
+      from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Verify Your New Email - Gpowerpay',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Email Change Request 📧</h1>
+            </div>
+            <div class="content">
+              <p>You have requested to change your email address for your Gpowerpay account.</p>
+              <p style="text-align: center;">
+                <a href="${verificationUrl}" class="button">Verify New Email</a>
+              </p>
+              <p>Or copy and paste this link into your browser:</p>
+              <p style="word-break: break-all; background: white; padding: 10px; border-radius: 5px;">${verificationUrl}</p>
+              <p><strong>This link expires in 24 hours.</strong></p>
+              <p>If you didn't request this change, please ignore this email.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Gpowerpay. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `Email Change Request\n\nPlease verify your new email by visiting: ${verificationUrl}\n\nThis link expires in 24 hours.`,
+    };
+
+    if (transporter) {
+      try {
+        await transporter.sendMail(emailContent);
+        console.log(`✅ Email change verification sent to ${email}`);
+        return true;
+      } catch (error) {
+        console.error('❌ Email send failed:', error);
+      }
+    }
+
+    // Fallback to console
+    console.log('='.repeat(80));
+    console.log('📧 EMAIL CHANGE VERIFICATION');
+    console.log('='.repeat(80));
+    console.log(`To: ${email}`);
+    console.log(`\nVerification Link:\n${verificationUrl}`);
+    console.log('='.repeat(80));
+
+    return true;
+  }
+
+  /**
    * Send password reset email
    */
   static async sendPasswordResetEmail(email: string, token: string, type?: string) {
@@ -218,7 +293,7 @@ export class EmailService {
   }
 
   /**
-   * Verify email token
+   * Verify email token (for both new signups and email changes)
    */
   static async verifyEmail(token: string) {
     await connectDB();
@@ -226,7 +301,7 @@ export class EmailService {
     // Find token
     const verificationToken = await VerificationToken.findOne({
       token,
-      type: 'email_verification',
+      type: { $in: ['email_verification', 'email_change'] },
     });
 
     if (!verificationToken) {
@@ -243,6 +318,23 @@ export class EmailService {
     const user = await User.findById(verificationToken.userId);
     if (!user) {
       throw new Error('User not found');
+    }
+
+    if (verificationToken.type === 'email_change') {
+      if (!user.pendingEmail) {
+        throw new Error('No pending email change found for this account');
+      }
+      
+      const { default: EmailHistory } = await import('@/models/EmailHistory');
+      await EmailHistory.create({
+        userId: user._id,
+        oldEmail: user.email,
+        newEmail: user.pendingEmail,
+        changedBy: 'user'
+      });
+
+      user.email = user.pendingEmail;
+      user.pendingEmail = undefined;
     }
 
     user.emailVerified = true;
@@ -416,6 +508,97 @@ export class EmailService {
 
     return true;
   }
+
+  /**
+   * Send 6-digit OTP for email change authorization to current email
+   */
+  static async sendEmailChangeAuthOTP(email: string, otp: string) {
+    const transporter = createTransporter();
+
+    const emailContent = {
+      from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      to: email,
+      subject: 'Security Code to Change Email - Gpowerpay',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .otp-box { background: white; border: 2px dashed #667eea; padding: 20px; text-align: center; font-size: 32px; letter-spacing: 5px; font-weight: bold; margin: 20px 0; border-radius: 5px; }
+            .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Security Code 🔐</h1>
+            </div>
+            <div class="content">
+              <p>You requested to change the email address associated with your Gpowerpay account.</p>
+              <p>Please enter the following 6-digit code to authorize this change:</p>
+              <div class="otp-box">${otp}</div>
+              <p><strong>This code expires in 15 minutes.</strong></p>
+              <p>If you did not request this, please secure your account immediately.</p>
+            </div>
+            <div class="footer">
+              <p>&copy; ${new Date().getFullYear()} Gpowerpay. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `Security Code Request\n\nYour 6-digit code to change your email is: ${otp}\n\nThis code expires in 15 minutes.`,
+    };
+
+    if (transporter) {
+      try {
+        await transporter.sendMail(emailContent);
+        console.log(`✅ Security OTP sent to ${email}`);
+        return true;
+      } catch (error) {
+        console.error('❌ Email send failed:', error);
+      }
+    }
+
+    // Fallback to console
+    console.log('='.repeat(80));
+    console.log('🔐 SECURITY OTP FOR EMAIL CHANGE');
+    console.log('='.repeat(80));
+    console.log(`To: ${email}`);
+    console.log(`\nOTP Code: ${otp}`);
+    console.log('='.repeat(80));
+
+    return true;
+  }
+
+  /**
+   * Verify numeric OTP token
+   */
+  static async verifyNumericOTP(userId: string, otp: string, type: 'email_change_auth') {
+    await connectDB();
+    const verificationToken = await VerificationToken.findOne({
+      userId,
+      token: otp,
+      type
+    });
+
+    if (!verificationToken) {
+      throw new Error('Invalid verification code');
+    }
+
+    if (verificationToken.expiresAt < new Date()) {
+      await VerificationToken.deleteOne({ _id: verificationToken._id });
+      throw new Error('Verification code has expired');
+    }
+
+    // Delete token so it can't be used again
+    await VerificationToken.deleteOne({ _id: verificationToken._id });
+    return true;
+  }
 }
 
 /**
@@ -521,6 +704,78 @@ export async function sendOrderStatusEmail(input: {
     console.log(`Confirmation Code: ${input.confirmationCode}`);
   }
   console.log(`Message: ${input.message}`);
+  console.log('='.repeat(80));
+
+  return true;
+}
+
+/**
+ * Send low stock alert email to admins
+ */
+export async function sendLowStockAlertEmail(emails: string[], productName: string, currentStock: number) {
+  const transporter = createTransporter();
+
+  const emailContent = {
+    from: `Gpowerpay <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+    to: emails.join(', '),
+    subject: `⚠️ Low Stock Alert: ${productName}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: #E53E3E; color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+          .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+          .alert-box { background: white; padding: 20px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #E53E3E; }
+          .button { display: inline-block; padding: 12px 30px; background: #E53E3E; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>⚠️ Low Stock Alert</h1>
+          </div>
+          <div class="content">
+            <p>Admin Alert,</p>
+            <div class="alert-box">
+              <h2>${productName}</h2>
+              <p>Current Stock Level: <strong>${currentStock}</strong></p>
+            </div>
+            <p>Please restock this item soon to avoid running out of inventory.</p>
+            <p style="text-align: center;">
+              <a href="${getBaseUrl()}/admin/products" class="button">Manage Inventory</a>
+            </p>
+          </div>
+          <div class="footer">
+            <p>&copy; ${new Date().getFullYear()} Gpowerpay. All rights reserved.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `,
+    text: `Admin Alert:\n\nLow Stock for ${productName}.\nCurrent stock: ${currentStock}.\n\nPlease restock soon.`,
+  };
+
+  if (transporter) {
+    try {
+      await transporter.sendMail(emailContent);
+      console.log(`✅ Low stock alert email sent to ${emails.length} admins`);
+      return true;
+    } catch (error) {
+      console.error('❌ Email send failed:', error);
+      throw error;
+    }
+  }
+
+  // Fallback to console
+  console.log('='.repeat(80));
+  console.log('📧 LOW STOCK ALERT EMAIL');
+  console.log('='.repeat(80));
+  console.log(`To: ${emails.join(', ')}`);
+  console.log(`Product: ${productName} - Stock: ${currentStock}`);
   console.log('='.repeat(80));
 
   return true;

@@ -2,13 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import Rider from '@/models/Rider';
+import VerificationToken from '@/models/VerificationToken';
 import { auth } from '@/auth';
 import { EmailService } from '@/lib/services/emailService';
 
 /**
- * POST /api/user/change-email
- * Change user email address (requires current password verification and sends verification to new email)
- * Works for all user types: customers, admins, riders
+ * POST /api/user/change-email/request-otp
+ * Request an OTP to change email address.
+ * If user has a password, current password is required.
+ * OTP is sent to current email address to verify identity.
  */
 export async function POST(request: NextRequest) {
   try {
@@ -22,17 +24,15 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { newEmail, otp } = body;
+    const { newEmail, currentPassword } = body;
 
-    // Validation
-    if (!newEmail || !otp) {
+    if (!newEmail) {
       return NextResponse.json(
-        { error: 'New email and security code (OTP) are required' },
+        { error: 'New email is required' },
         { status: 400 }
       );
     }
 
-    // Email format validation
     const emailRegex = /^\S+@\S+\.\S+$/;
     if (!emailRegex.test(newEmail)) {
       return NextResponse.json(
@@ -41,10 +41,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Normalize email
     const normalizedEmail = newEmail.toLowerCase();
 
-    // Check if new email is same as current
     if (normalizedEmail === session.user.email.toLowerCase()) {
       return NextResponse.json(
         { error: 'New email cannot be the same as current email' },
@@ -54,12 +52,10 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
 
-    // Determine user type and fetch user
     let user: any = null;
     let userModel: 'User' | 'Rider' = 'User';
 
     if (session.user.role === 'rider') {
-      // Check both User and Rider collections for riders
       const riderUser = await User.findById(session.user.id);
       if (riderUser) {
         user = riderUser;
@@ -72,7 +68,6 @@ export async function POST(request: NextRequest) {
         }
       }
     } else {
-      // Customer, admin, support users
       user = await User.findById(session.user.id);
     }
 
@@ -83,17 +78,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Verify OTP
-    try {
-      await EmailService.verifyNumericOTP(String(user._id), otp, 'email_change_auth');
-    } catch (err: any) {
-      return NextResponse.json(
-        { error: err.message || 'Invalid security code' },
-        { status: 401 }
-      );
+    // Verify current password if user has one
+    if (user.password) {
+      if (!currentPassword) {
+        return NextResponse.json(
+          { error: 'Current password is required to change email' },
+          { status: 400 }
+        );
+      }
+      const isPasswordValid = await user.comparePassword(currentPassword);
+      if (!isPasswordValid) {
+        return NextResponse.json(
+          { error: 'Current password is incorrect' },
+          { status: 401 }
+        );
+      }
     }
 
-    // Check if new email is already in use (check both User and Rider collections)
+    // Check if new email is already in use
     const [existingUser, existingRider] = await Promise.all([
       User.findOne({ email: normalizedEmail }),
       Rider.findOne({ email: normalizedEmail }),
@@ -106,30 +108,41 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save the new email as pending
-    user.pendingEmail = normalizedEmail;
-    await user.save();
+    // Generate 6-digit OTP
+    const otp = EmailService.generateNumericOTP();
+    
+    const expiresAt = new Date();
+    expiresAt.setMinutes(expiresAt.getMinutes() + 15); // 15 mins expiry
 
-    // Send verification email to new address with email_change token
-    const verificationToken = await EmailService.createVerificationToken(
-      String(user._id),
-      normalizedEmail,
-      'email_change'
-    );
-    await EmailService.sendEmailChangeVerification(normalizedEmail, verificationToken);
+    // Delete existing tokens of this type for this user
+    await VerificationToken.deleteMany({
+      userId: user._id,
+      type: 'email_change_auth',
+    });
+
+    // Create new token
+    await VerificationToken.create({
+      userId: user._id,
+      email: user.email,
+      token: otp,
+      type: 'email_change_auth',
+      expiresAt,
+    });
+
+    // Send OTP to CURRENT email address
+    await EmailService.sendEmailChangeAuthOTP(user.email, otp);
 
     return NextResponse.json(
       {
         success: true,
-        message: 'Email updated successfully. Please check your new email to verify it.',
-        newEmail: normalizedEmail,
+        message: 'Security code sent to your current email address.',
       },
       { status: 200 }
     );
   } catch (error: any) {
-    console.error('Change email error:', error);
+    console.error('Request OTP error:', error);
     return NextResponse.json(
-      { error: error.message || 'Failed to change email' },
+      { error: error.message || 'Failed to request security code' },
       { status: 500 }
     );
   }

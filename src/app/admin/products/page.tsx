@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { StockBadge } from '@/components/products/StockBadge';
 import { formatPrice, formatDate } from '@/lib/utils/formatters';
+import { useConfirm } from '@/lib/hooks/useConfirm';
+import toast from 'react-hot-toast';
 import {
   Search,
   Plus,
@@ -31,6 +33,7 @@ export default function AdminProductsPage() {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Filters
   const [search, setSearch] = useState('');
@@ -116,19 +119,25 @@ export default function AdminProductsPage() {
 
       await Promise.all(promises);
       setSelectedIds(new Set());
+      toast.success('Products updated successfully');
       fetchProducts();
     } catch (error) {
       console.error('Bulk update failed:', error);
-      alert('Failed to update products');
+      toast.error('Failed to update products');
     }
   };
 
   const handleBulkDelete = async () => {
     if (selectedIds.size === 0) return;
 
-    if (!confirm(`Delete ${selectedIds.size} products? This cannot be undone.`)) {
-      return;
-    }
+    const confirmed = await confirm({
+      title: 'Delete Products',
+      message: `Delete ${selectedIds.size} products? This cannot be undone.`,
+      confirmText: 'Delete',
+      variant: 'danger'
+    });
+
+    if (!confirmed) return;
 
     try {
       const promises = Array.from(selectedIds).map((id) =>
@@ -137,15 +146,22 @@ export default function AdminProductsPage() {
 
       await Promise.all(promises);
       setSelectedIds(new Set());
+      toast.success('Products deleted successfully');
       fetchProducts();
     } catch (error) {
       console.error('Bulk delete failed:', error);
-      alert('Failed to delete products');
+      toast.error('Failed to delete products');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Delete this product? This cannot be undone.')) return;
+    const confirmed = await confirm({
+      title: 'Delete Product',
+      message: 'Delete this product? This cannot be undone.',
+      confirmText: 'Delete',
+      variant: 'danger'
+    });
+    if (!confirmed) return;
 
     try {
       const response = await fetch(`/api/products/${id}`, {
@@ -153,13 +169,14 @@ export default function AdminProductsPage() {
       });
 
       if (response.ok) {
+        toast.success('Product deleted successfully');
         fetchProducts();
       } else {
-        alert('Failed to delete product');
+        toast.error('Failed to delete product');
       }
     } catch (error) {
       console.error('Delete failed:', error);
-      alert('Failed to delete product');
+      toast.error('Failed to delete product');
     }
   };
 
@@ -448,6 +465,7 @@ export default function AdminProductsPage() {
           </div>
         )}
       </div>
+      <ConfirmDialog />
     </div>
   );
 }

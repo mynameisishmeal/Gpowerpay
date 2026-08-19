@@ -4,6 +4,9 @@ import Category from '@/models/Category';
 import connectDB from '@/lib/mongodb';
 import { IProductFilters, IPaginationParams, IPaginatedResponse, IProduct } from '@/types';
 import { ProductAdapter } from '@/lib/adapters/productAdapter';
+import User from '@/models/User';
+import { NotificationService } from './notificationService';
+import { sendLowStockAlertEmail } from './emailService';
 
 /**
  * Product Service Layer
@@ -375,6 +378,35 @@ export class ProductService {
         );
         if (result) {
           console.log(`✅ Successfully updated stock for ${result.stockname}. New quantity: ${result.stockquantity}`);
+          
+          // LOW STOCK ALERT SYSTEM
+          const LOW_STOCK_THRESHOLD = 5;
+          if (result.stockquantity <= LOW_STOCK_THRESHOLD) {
+            console.log(`⚠️ Low stock detected for ${result.stockname}. Sending alerts to admins.`);
+            try {
+              // Find all admins
+              const admins = await User.find({ role: { $in: ['sadmin', 'admin'] } }).lean();
+              const adminEmails = admins.map(a => a.email).filter(Boolean);
+              
+              if (adminEmails.length > 0) {
+                // Send Batch Email
+                await sendLowStockAlertEmail(adminEmails, result.stockname, result.stockquantity);
+              }
+              
+              // Create In-App Notifications (Triggers FCM Push)
+              for (const admin of admins) {
+                await NotificationService.createNotification({
+                  userId: admin._id.toString(),
+                  type: 'action_required',
+                  title: 'Low Stock Alert',
+                  message: `${result.stockname} is running low. Only ${result.stockquantity} left in stock.`,
+                  data: { productId: actualId, marketType: 'carton' }
+                });
+              }
+            } catch (alertError) {
+              console.error('❌ Failed to send low stock alerts:', alertError);
+            }
+          }
         } else {
           console.error(`❌ Failed to update stock for carton product: ${productId} - Product not found`);
         }

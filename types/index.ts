@@ -55,11 +55,15 @@ export interface IUser extends Document {
   emailVerified?: boolean;
   phoneVerified?: boolean;
   emailVerificationToken?: string;
+  pendingEmail?: string;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
   isActive?: boolean;
   isBlocked?: boolean;
   lastLogin?: Date;
+  
+  // Push Notifications
+  fcmTokens?: string[];
   
   // Timestamps
   createdAt: Date;
@@ -187,11 +191,17 @@ declare module 'next-auth' {
     user?: SessionUser;
   }
   
-  interface User extends SessionUser {}
+  interface User extends SessionUser {
+    // Add custom properties if needed in future
+    _id?: string;
+  }
 }
 
 declare module 'next-auth/jwt' {
-  interface JWT extends SessionUser {}
+  interface JWT extends SessionUser {
+    // Add custom properties if needed in future
+    _id?: string;
+  }
 }
 
 // ============================================

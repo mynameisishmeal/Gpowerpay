@@ -20,7 +20,13 @@ export async function GET(
     }
 
     const { id } = await params;
-    const order = await OrderService.getOrderById(id, session.user.id);
+
+    // Customers can only see their own orders. Riders/Admins can see any order (or are restricted later).
+    const userRole = (session.user as any).role || 'customer';
+    const isCustomer = userRole === 'customer';
+    const customerId = isCustomer ? session.user.id : undefined;
+
+    const order = await OrderService.getOrderById(id, customerId);
 
     return NextResponse.json({
       success: true,

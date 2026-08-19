@@ -9,7 +9,7 @@ export interface IVerificationToken extends Document {
   userId: mongoose.Types.ObjectId | string;
   email: string;
   token: string;
-  type: 'email_verification' | 'password_reset';
+  type: 'email_verification' | 'password_reset' | 'email_change' | 'email_change_auth';
   expiresAt: Date;
   createdAt: Date;
 }
@@ -33,7 +33,7 @@ const VerificationTokenSchema = new Schema<IVerificationToken>(
     },
     type: {
       type: String,
-      enum: ['email_verification', 'password_reset'],
+      enum: ['email_verification', 'password_reset', 'email_change', 'email_change_auth'],
       required: true,
     },
     expiresAt: {

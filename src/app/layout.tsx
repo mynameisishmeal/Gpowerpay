@@ -9,6 +9,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBanner";
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import { AlertProvider } from "@/lib/hooks/useAlert";
+import { PushNotificationProvider } from '@/components/providers/PushNotificationProvider';
 
 export const metadata: Metadata = {
   title: {
@@ -52,14 +53,16 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Suspense fallback={null}>
           <SessionProvider>
-            <AlertProvider>
-              <LoadingProvider>
-                <Navbar />
-              <EmailVerificationBanner />
-                <main className="flex-1">{children}</main>
-                <ToastProvider />
-              </LoadingProvider>
-            </AlertProvider>
+            <PushNotificationProvider>
+              <AlertProvider>
+                <LoadingProvider>
+                  <Navbar />
+                <EmailVerificationBanner />
+                  <main className="flex-1">{children}</main>
+                  <ToastProvider />
+                </LoadingProvider>
+              </AlertProvider>
+            </PushNotificationProvider>
           </SessionProvider>
         </Suspense>
       </body>

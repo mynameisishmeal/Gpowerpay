@@ -55,8 +55,13 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // If no token, redirect to appropriate login page
+  // If no token, redirect to appropriate login page or return 401 for API routes
   if (!token) {
+    // If it's an API route, return 401 Unauthorized instead of redirecting
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     // Redirect admin routes to admin login
     if (pathname.startsWith('/admin')) {
       const url = new URL('/admin/login', request.url);

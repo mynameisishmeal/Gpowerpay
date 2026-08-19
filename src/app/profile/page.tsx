@@ -51,6 +51,7 @@ export default function ProfilePage() {
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileError, setProfileError] = useState('');
   const [profileSuccess, setProfileSuccess] = useState('');
+  const [authProvider, setAuthProvider] = useState('email');
 
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [isLoadingAddresses, setIsLoadingAddresses] = useState(true);
@@ -58,6 +59,14 @@ export default function ProfilePage() {
   const [editingAddressId, setEditingAddressId] = useState<string | null>(null);
   const [addressError, setAddressError] = useState('');
   const [addressSuccess, setAddressSuccess] = useState('');
+
+  // Email change state
+  const [showEmailForm, setShowEmailForm] = useState(false);
+  const [newEmail, setNewEmail] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [isChangingEmail, setIsChangingEmail] = useState(false);
+  const [otpStep, setOtpStep] = useState(false);
+  const [otpCode, setOtpCode] = useState('');
 
   // Profile form
   const {
@@ -103,6 +112,7 @@ export default function ProfilePage() {
       if (data.success) {
         setProfileValue('name', data.user.name);
         setProfileValue('phone', data.user.phone || '');
+        setAuthProvider(data.user.authProvider || 'email');
       }
     } catch (error) {
       console.error('Failed to fetch profile:', error);
@@ -123,6 +133,68 @@ export default function ProfilePage() {
       console.error('Failed to fetch addresses:', error);
     } finally {
       setIsLoadingAddresses(false);
+    }
+  };
+
+  const requestEmailChangeOTP = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsChangingEmail(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const response = await fetch('/api/user/change-email/request-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newEmail, currentPassword }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to request code');
+      }
+
+      setProfileSuccess(result.message);
+      setOtpStep(true);
+      setTimeout(() => setProfileSuccess(''), 5000);
+    } catch (err: any) {
+      setProfileError(err.message);
+    } finally {
+      setIsChangingEmail(false);
+    }
+  };
+
+  const handleEmailChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsChangingEmail(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const response = await fetch('/api/user/change-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newEmail, otp: otpCode }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to change email');
+      }
+
+      setProfileSuccess(result.message);
+      setShowEmailForm(false);
+      setOtpStep(false);
+      setNewEmail('');
+      setCurrentPassword('');
+      setOtpCode('');
+      setTimeout(() => setProfileSuccess(''), 5000);
+    } catch (err: any) {
+      setProfileError(err.message);
+    } finally {
+      setIsChangingEmail(false);
     }
   };
 
@@ -292,15 +364,26 @@ export default function ProfilePage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email
-                  </label>
+                  <div className="flex justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Email
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => setShowEmailForm(!showEmailForm)}
+                      className="text-xs text-blue-600 hover:underline"
+                    >
+                      {showEmailForm ? 'Cancel' : 'Change Email'}
+                    </button>
+                  </div>
                   <Input
                     value={session?.user?.email || ''}
                     className="h-11 bg-gray-100"
                     disabled
                   />
-                  <p className="mt-1 text-xs text-gray-500">Email cannot be changed</p>
+                  { (session?.user as any)?.pendingEmail && (
+                    <p className="mt-1 text-xs text-yellow-600">Pending verification: {(session?.user as any)?.pendingEmail}</p>
+                  )}
                 </div>
 
                 <div>
@@ -334,6 +417,108 @@ export default function ProfilePage() {
                 )}
               </Button>
             </form>
+
+            {showEmailForm && (
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h4 className="font-medium mb-3">Change Email Address</h4>
+                
+                {!otpStep ? (
+                  <form onSubmit={requestEmailChangeOTP} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        New Email
+                      </label>
+                      <Input
+                        type="email"
+                        value={newEmail}
+                        onChange={(e) => setNewEmail(e.target.value)}
+                        required
+                        placeholder="Enter new email address"
+                        disabled={isChangingEmail}
+                        className="bg-white"
+                      />
+                    </div>
+                    
+                    {authProvider === 'email' && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Current Password
+                        </label>
+                        <Input
+                          type="password"
+                          value={currentPassword}
+                          onChange={(e) => setCurrentPassword(e.target.value)}
+                          required
+                          placeholder="Verify your password"
+                          disabled={isChangingEmail}
+                          className="bg-white"
+                        />
+                      </div>
+                    )}
+                    
+                    <Button
+                      type="submit"
+                      className="btn-modern w-full"
+                      disabled={isChangingEmail || !newEmail || (authProvider === 'email' && !currentPassword)}
+                    >
+                      {isChangingEmail ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Sending Code...
+                        </>
+                      ) : (
+                        'Request Email Change'
+                      )}
+                    </Button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleEmailChange} className="space-y-4">
+                    <div className="p-3 bg-blue-50 text-blue-800 rounded text-sm mb-4">
+                      We've sent a 6-digit security code to your current email address. Please enter it below to authorize this change.
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Security Code (OTP)
+                      </label>
+                      <Input
+                        type="text"
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value)}
+                        required
+                        maxLength={6}
+                        placeholder="123456"
+                        disabled={isChangingEmail}
+                        className="bg-white text-center tracking-[0.5em] font-mono text-lg"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        type="submit"
+                        className="btn-modern flex-1"
+                        disabled={isChangingEmail || !otpCode || otpCode.length < 6}
+                      >
+                        {isChangingEmail ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Verifying...
+                          </>
+                        ) : (
+                          'Verify & Update Email'
+                        )}
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setOtpStep(false)}
+                        disabled={isChangingEmail}
+                      >
+                        Back
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
 

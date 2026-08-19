@@ -8,7 +8,6 @@ import type { DeliveryInfo, PaymentMethod } from '@/src/app/checkout/page';
 import { useSession } from 'next-auth/react';
 import { PaystackService } from '@/lib/paystack';
 import { FundWalletButton } from '@/components/wallet/FundWalletButton';
-import { useLoading } from '@/components/providers/LoadingProvider';
 import toast from 'react-hot-toast';
 
 interface CheckoutStepPaymentProps {
@@ -30,10 +29,10 @@ export function CheckoutStepPayment({
   const [walletBalance, setWalletBalance] = useState<number>(0);
   const [loadingBalance, setLoadingBalance] = useState(true);
   const [paymentType, setPaymentType] = useState<'wallet' | 'paystack' | 'split' | null>(null);
-  const { startLoading, stopLoading } = useLoading();
+  const [isInternalProcessing, setIsInternalProcessing] = useState(false);
   const [fundingWallet, setFundingWallet] = useState(false);
 
-  const processing = externalProcessing;
+  const processingState = externalProcessing || isInternalProcessing;
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -73,13 +72,13 @@ export function CheckoutStepPayment({
 
       // WALLET ONLY: No Paystack needed, create order directly
       if (paymentType === 'wallet') {
-        startLoading('Processing your payment...');
+        setIsInternalProcessing(true);
         await onComplete(paymentMethod);
+        setIsInternalProcessing(false);
         return;
       }
 
       // PAYSTACK or SPLIT: Open Paystack popup FIRST
-      // Do not start global loading yet, otherwise it might appear behind the Paystack popup
       const amountToPay = paymentType === 'split' ? deficit : total;
       const reference = PaystackService.generateReference('GPJ');
 
@@ -104,9 +103,9 @@ export function CheckoutStepPayment({
           
           paymentMethod.paymentReference = response.reference;
 
-          // NOW start loading and create the order after successful payment
-          startLoading('Finalizing your order...');
+          setIsInternalProcessing(true);
           await onComplete(paymentMethod);
+          setIsInternalProcessing(false);
         },
         onCancel: () => {
           console.log('❌ Payment cancelled');
@@ -116,7 +115,7 @@ export function CheckoutStepPayment({
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('Payment failed. Please try again.');
-      stopLoading();
+      setIsInternalProcessing(false);
     }
   };
 
@@ -268,10 +267,17 @@ export function CheckoutStepPayment({
           </Button>
           <Button
             onClick={handlePayment}
-            disabled={!paymentType || processing}
+            disabled={!paymentType || processingState}
             className="flex-1 btn-modern bg-green-600 hover:bg-green-700"
           >
-            Complete Payment
+            {processingState ? (
+              <span className="flex items-center">
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Processing...
+              </span>
+            ) : (
+              'Complete Payment'
+            )}
           </Button>
         </div>
       </CardContent>

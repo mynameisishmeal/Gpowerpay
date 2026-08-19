@@ -66,7 +66,7 @@ export async function PATCH(
     if (image !== undefined) updateData.image = image;
 
     const rider = await DeliveryPartner.findByIdAndUpdate(id, updateData, {
-      new: true,
+      returnDocument: 'after',
       runValidators: true,
     });
 

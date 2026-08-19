@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { 
   Wallet, TrendingUp, TrendingDown, 
-  Filter, Download, RefreshCw 
+  Download, RefreshCw 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,13 +43,7 @@ export default function WalletPage() {
     }
   }, [status, router]);
 
-  useEffect(() => {
-    if (session) {
-      fetchWalletData();
-    }
-  }, [session, page, filterType]);
-
-  const fetchWalletData = async () => {
+  const fetchWalletData = useCallback(async () => {
     try {
       setLoading(true);
       const [balanceRes, transactionsRes] = await Promise.all([
@@ -75,7 +69,13 @@ export default function WalletPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, filterType]);
+
+  useEffect(() => {
+    if (session) {
+      fetchWalletData();
+    }
+  }, [session, fetchWalletData]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-NG', {

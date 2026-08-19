@@ -47,8 +47,8 @@ export async function POST(
       );
     }
 
-    // Must be in rider_delivered state to resolve
-    if (order.status !== 'rider_delivered') {
+    // Must be in rider_delivered or sadmin_delivered state to resolve
+    if (order.status !== 'rider_delivered' && order.status !== 'sadmin_delivered') {
       return NextResponse.json(
         { error: 'Order is not waiting for delivery confirmation' },
         { status: 400 }

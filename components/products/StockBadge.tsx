@@ -42,7 +42,7 @@ export function StockBadge({
     >
       {showIcon && <Package size={iconSizes[size]} />}
       <span>{label}</span>
-      {status === 'low_stock' && trackInventory && (
+      {['in_stock', 'low_stock'].includes(status) && trackInventory && (
         <span className="ml-1">({stock} left)</span>
       )}
     </span>

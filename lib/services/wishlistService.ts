@@ -22,7 +22,7 @@ export class WishlistService {
   static async getWishlist(userId: string) {
     await connectDB();
 
-    let wishlist = await Wishlist.findOne({ userId }).populate('items.productId');
+    const wishlist = await Wishlist.findOne({ userId }).populate('items.productId');
 
     if (!wishlist) {
       return { items: [] };

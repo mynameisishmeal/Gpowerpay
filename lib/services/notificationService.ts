@@ -1,6 +1,8 @@
 import Notification from '@/lib/models/Notification';
 import connectDB from '@/lib/mongodb';
 import { sendOrderStatusEmail } from './emailService';
+import { adminMessaging } from '@/lib/firebase-admin';
+import User from '@/models/User';
 
 export interface CreateNotificationInput {
   userId: string;
@@ -52,6 +54,33 @@ export class NotificationService {
       }
     }
 
+    // Send FCM Push Notification
+    try {
+      if (adminMessaging) {
+        const user = await User.findById(input.userId).select('fcmTokens').lean();
+        if (user && user.fcmTokens && user.fcmTokens.length > 0) {
+          const payload = {
+            notification: {
+              title: input.title,
+              body: input.message,
+            },
+            data: {
+              type: input.type,
+              ...(input.data && { extraData: JSON.stringify(input.data) })
+            },
+            tokens: user.fcmTokens as string[],
+          };
+
+          const response = await adminMessaging.sendEachForMulticast(payload);
+          console.log(`FCM send success: ${response.successCount}, failure: ${response.failureCount}`);
+        }
+      } else {
+        console.log('FCM Push Notification skipped: Firebase Admin not initialized.');
+      }
+    } catch (error) {
+      console.error('Failed to send FCM push notification:', error);
+    }
+
     return notification;
   }
 
@@ -98,7 +127,7 @@ export class NotificationService {
     const notification = await Notification.findOneAndUpdate(
       { _id: notificationId, userId },
       { read: true },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     return notification;

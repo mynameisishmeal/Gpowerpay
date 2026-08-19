@@ -50,11 +50,13 @@ const UserSchema = new Schema<IUser>({
   emailVerified: { type: Boolean, default: false },
   phoneVerified: { type: Boolean, default: false },
   emailVerificationToken: { type: String },
+  pendingEmail: { type: String },
   passwordResetToken: { type: String },
   passwordResetExpires: { type: Date },
   isActive: { type: Boolean, default: true },
   isBlocked: { type: Boolean, default: false },
   lastLogin: { type: Date },
+  fcmTokens: [{ type: String }],
 });
 
 // Indexes

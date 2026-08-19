@@ -51,6 +51,7 @@ export function CheckoutStepDelivery({
   const [savedAddresses, setSavedAddresses] = useState<SavedAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>('');
   const [useNewAddress, setUseNewAddress] = useState(true);
+  const [saveAddress, setSaveAddress] = useState(true);
   const [formData, setFormData] = useState({
     street: savedData?.address?.street || initialData?.address?.street || '',
     city: savedData?.address?.city || initialData?.address?.city || '',
@@ -165,6 +166,7 @@ export function CheckoutStepDelivery({
       option: deliveryOption,
       deliveryFee: 0, // No delivery fee yet
       customerNote: formData.customerNote,
+      saveAddress: (useNewAddress || savedAddresses.length === 0) ? saveAddress : false,
     };
 
     if (deliveryOption === 'home') {
@@ -370,6 +372,19 @@ export function CheckoutStepDelivery({
                     className={errors.phone ? 'border-red-500' : ''}
                   />
                   {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
+                </div>
+
+                <div className="flex items-center space-x-2 pt-2 pb-2">
+                  <input
+                    type="checkbox"
+                    id="saveAddress"
+                    checked={saveAddress}
+                    onChange={(e) => setSaveAddress(e.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <label htmlFor="saveAddress" className="text-sm font-medium text-gray-700 cursor-pointer">
+                    Save this address for next time
+                  </label>
                 </div>
               </>
             )}
