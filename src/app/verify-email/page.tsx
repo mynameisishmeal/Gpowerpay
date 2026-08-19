@@ -25,35 +25,35 @@ export default function VerifyEmailPage() {
       return;
     }
 
-    verifyEmail();
-  }, [token]);
+    const verifyEmail = async () => {
+      try {
+        const response = await fetch('/api/auth/verify-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
 
-  const verifyEmail = async () => {
-    try {
-      const response = await fetch('/api/auth/verify-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token }),
-      });
+        const data = await response.json();
 
-      const data = await response.json();
-
-      if (data.success) {
-        setStatus('success');
-        setMessage('Your email has been verified successfully!');
-        
-        setTimeout(() => {
-          router.push('/login?verified=true');
-        }, 3000);
-      } else {
+        if (data.success) {
+          setStatus('success');
+          setMessage('Your email has been verified successfully!');
+          
+          setTimeout(() => {
+            router.push('/login?verified=true');
+          }, 3000);
+        } else {
+          setStatus('error');
+          setMessage(data.error || 'Failed to verify email');
+        }
+      } catch (error) {
         setStatus('error');
-        setMessage(data.error || 'Failed to verify email');
+        setMessage('An error occurred while verifying your email');
       }
-    } catch (error) {
-      setStatus('error');
-      setMessage('An error occurred while verifying your email');
-    }
-  };
+    };
+
+    verifyEmail();
+  }, [token, router]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
