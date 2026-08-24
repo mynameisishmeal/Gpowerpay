@@ -3,11 +3,11 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Disable cacheComponents to use the older caching model
   cacheComponents: false,
-  
+
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   // Image optimization configuration
   images: {
     remotePatterns: [

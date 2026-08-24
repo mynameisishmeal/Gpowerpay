@@ -17,7 +17,7 @@ export function NotificationBell() {
   // Fetch notifications
   const fetchNotifications = async () => {
     if (!session?.user) return;
-    
+
     setLoading(true);
     try {
       const response = await fetch('/api/notifications?limit=10');
@@ -26,11 +26,7 @@ export function NotificationBell() {
         setNotifications(data.notifications || []);
         setUnreadCount(data.unreadCount || 0);
       }
-    } catch (error: any) {
-      if (error?.message === 'Failed to fetch') {
-        // Silently ignore in dev (expected during hot-reload or initial API route compile)
-        return;
-      }
+    } catch (error) {
       console.error('Failed to fetch notifications:', error);
     } finally {
       setLoading(false);
@@ -41,7 +37,7 @@ export function NotificationBell() {
   useEffect(() => {
     if (session?.user) {
       fetchNotifications();
-      
+
       // Poll for new notifications every 30 seconds
       const interval = setInterval(fetchNotifications, 30000);
       return () => clearInterval(interval);
@@ -72,7 +68,7 @@ export function NotificationBell() {
   const markAsRead = async (notificationId: string) => {
     try {
       // Optimistically update local state
-      setNotifications(prev => 
+      setNotifications(prev =>
         prev.map(n => n._id === notificationId ? { ...n, read: true } : n)
       );
       setUnreadCount(prev => Math.max(0, prev - 1));
@@ -81,7 +77,7 @@ export function NotificationBell() {
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: 'PATCH',
       });
-      
+
       if (!response.ok) {
         // Revert on error
         fetchNotifications();
@@ -121,7 +117,7 @@ export function NotificationBell() {
       const response = await fetch(`/api/notifications/${notificationId}`, {
         method: 'DELETE',
       });
-      
+
       if (!response.ok) {
         // Revert on error
         fetchNotifications();

@@ -7,7 +7,6 @@ import {
   Package,
   ShoppingCart,
   Users,
-  Wallet,
   TrendingUp,
   TrendingDown,
   Clock,
@@ -83,7 +82,7 @@ export default function AdminDashboard() {
     }
 
     fetchDashboardData();
-  }, [status, session]);
+  }, [status, session, router]);
 
   const fetchDashboardData = async () => {
     try {
@@ -348,7 +347,18 @@ export default function AdminDashboard() {
               >
                 Manage Users
               </Link>
-
+              <Link
+                href="/admin/support"
+                className="block w-full p-2 text-sm text-center bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition"
+              >
+                Support Tickets
+              </Link>
+              <Link
+                href="/admin/live-chat"
+                className="block w-full p-2 text-sm text-center bg-green-50 border border-green-200 text-green-700 rounded hover:bg-green-100 transition"
+              >
+                Live Chat
+              </Link>
             </CardContent>
           </Card>
         </div>

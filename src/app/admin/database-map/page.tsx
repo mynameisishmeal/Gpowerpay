@@ -27,7 +27,7 @@ export default function DatabaseMapPage() {
     }
 
     fetchDatabaseMap();
-  }, [authStatus, session]);
+  }, [authStatus, session, router]);
 
   const fetchDatabaseMap = async () => {
     try {

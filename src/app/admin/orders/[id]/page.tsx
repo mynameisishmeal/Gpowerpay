@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect, use, useCallback } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { ArrowLeft, Package, MapPin, User, Phone, Truck, CheckCircle, Loader2, Copy } from 'lucide-react';
@@ -65,9 +66,9 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
     }
 
     fetchOrder();
-  }, [authStatus, session, id]);
+  }, [authStatus, session, id, router, fetchOrder]);
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/orders/${id}`);
       const data = await response.json();
@@ -84,7 +85,7 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, router]);
 
   const updateDeliveryStatus = async (newStatus: 'in_store' | 'on_the_way' | 'sadmin_delivered') => {
     if (!order) return;
@@ -238,9 +239,11 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
                   {order.items.map((item: any, index: number) => (
                     <div key={index} className="py-4 first:pt-0 last:pb-0 flex gap-4">
                       {item.image && (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.productName}
+                          width={80}
+                          height={80}
                           className="w-20 h-20 object-cover rounded-lg"
                         />
                       )}
@@ -338,9 +341,11 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
                 <CardContent>
                   <div className="flex items-center gap-4">
                     {order.assignedRider!.image ? (
-                      <img
+                      <Image
                         src={order.assignedRider!.image}
                         alt={order.assignedRider!.name}
+                        width={64}
+                        height={64}
                         className="w-16 h-16 rounded-full object-cover"
                       />
                     ) : (

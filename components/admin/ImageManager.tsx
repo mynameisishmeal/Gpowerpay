@@ -397,6 +397,7 @@ export function ImageManager({
                     src={image.url}
                     alt={image.alt}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     className="object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLElement;

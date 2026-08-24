@@ -18,7 +18,7 @@ const pricingSchema = z.object({
     compareAtPrice: z.number().min(0).optional(),
     minQuantity: z.number().min(1).transform(val => Math.floor(val)).default(1),
     maxQuantity: z.number().min(1).transform(val => Math.floor(val)).optional(),
-    unitsPerCarton: z.number().min(1, 'Units per carton must be at least 1').transform(val => Math.floor(val)),
+    unitsPerCarton: z.number().min(0, 'Units per carton must be at least 0').transform(val => Math.floor(val)),
   }),
 });
 
@@ -65,68 +65,68 @@ export const createProductSchema = z.object({
   name: z.string()
     .min(2, 'Product name must be at least 2 characters')
     .max(200, 'Product name must be 200 characters or less'),
-  
+
   shortDescription: z.string()
     .max(250, 'Short description must be 250 characters or less')
     .optional(),
-  
+
   description: z.string()
     .min(10, 'Description must be at least 10 characters')
     .max(5000, 'Description must be 5000 characters or less'),
-  
+
   category: z.string().min(1, 'Category is required'),
-  
+
   tags: z.array(z.string()).default([]),
-  
+
   pricing: pricingSchema,
-  
+
   inventory: inventorySchema,
-  
+
   availableMarkets: z.array(z.enum(['kilo', 'carton']))
     .min(1, 'At least one market type is required'),
-  
+
   images: z.array(productImageSchema)
     .min(1, 'At least one image is required')
     .max(10, 'Maximum 10 images allowed'),
-  
+
   videoUrl: z.string().url('Invalid video URL').optional(),
-  
+
   seo: seoSchema,
-  
+
   brand: z.string().max(100).optional(),
-  
+
   sku: z.string()
     .max(50)
     .regex(/^[A-Z0-9-]+$/, 'SKU must contain only uppercase letters, numbers, and hyphens')
     .optional(),
-  
+
   barcode: z.string().max(50).optional(),
-  
+
   weight: z.number().min(0).optional(),
-  
+
   dimensions: dimensionsSchema,
-  
+
   status: z.enum(['draft', 'active', 'inactive', 'out_of_stock']).default('draft'),
-  
+
   isFeatured: z.boolean().default(false),
-  
+
   isNewArrival: z.boolean().default(false),
-  
+
   relatedProducts: z.array(z.string()).default([]),
 }).refine(
   (data) => {
     // Validate that available markets match pricing
     const hasKilo = data.availableMarkets.includes('kilo');
     const hasCarton = data.availableMarkets.includes('carton');
-    
+
     if (hasKilo && data.pricing.kilo.price <= 0) {
       return false;
     }
-    
+
     if (hasCarton && data.pricing.carton.price <= 0) {
       return false;
     }
-    
+
     return true;
   },
   {

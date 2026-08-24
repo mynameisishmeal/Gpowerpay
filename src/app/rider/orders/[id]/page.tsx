@@ -280,7 +280,7 @@ export default function RiderOrderDetailsPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
                   Order #{order.orderNumber}
-                  <button 
+                  <button
                     onClick={() => copyToClipboard(order.orderNumber, 'Order number')}
                     className="text-gray-400 hover:text-gray-700 transition-colors bg-gray-100 hover:bg-gray-200 p-1.5 rounded-md flex items-center justify-center focus:outline-none"
                     title="Copy Order Number"
@@ -289,19 +289,18 @@ export default function RiderOrderDetailsPage() {
                   </button>
                 </h1>
                 <span
-                  className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${
-                    isDelivered
+                  className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${isDelivered
                       ? 'bg-green-100 text-green-800'
                       : isOnTheWay
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}
                 >
                   {isDelivered
                     ? 'Delivered'
                     : isOnTheWay
-                    ? 'On The Way'
-                    : 'Ready for Pickup'}
+                      ? 'On The Way'
+                      : 'Ready for Pickup'}
                 </span>
               </div>
               <p className="text-xs text-gray-500 mt-1 flex items-center gap-1.5">
@@ -511,6 +510,7 @@ export default function RiderOrderDetailsPage() {
                             src={item.image}
                             alt={item.productName || 'Product'}
                             fill
+                            sizes="56px"
                             className="object-cover"
                           />
                         ) : (
@@ -567,11 +567,10 @@ export default function RiderOrderDetailsPage() {
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Payment Status</span>
                   <span
-                    className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${
-                      order.paymentStatus === 'paid'
+                    className={`px-2 py-0.5 rounded text-xs font-semibold uppercase ${order.paymentStatus === 'paid'
                         ? 'bg-green-100 text-green-800'
                         : 'bg-yellow-100 text-yellow-800'
-                    }`}
+                      }`}
                   >
                     {order.paymentStatus}
                   </span>

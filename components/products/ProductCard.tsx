@@ -24,7 +24,7 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const { data: session } = useSession();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlistStore();
   const [wishlistLoading, setWishlistLoading] = useState(false);
-  
+
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0];
   const primaryMarket = product.availableMarkets[0];
   const pricing = product.pricing[primaryMarket];
@@ -79,9 +79,9 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const handleShare = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     const url = `${window.location.origin}/products/${product.seo.slug}`;
-    
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -156,9 +156,8 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
           >
             <Heart
               size={20}
-              className={`transition-colors ${
-                inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'
-              }`}
+              className={`transition-colors ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-600'
+                }`}
             />
           </button>
         )}
@@ -166,9 +165,8 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
         {/* Share Button */}
         <button
           onClick={handleShare}
-          className={`absolute right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors ${
-            isRider ? 'bottom-2' : 'bottom-12'
-          }`}
+          className={`absolute right-2 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-colors ${isRider ? 'bottom-2' : 'bottom-12'
+            }`}
           title="Share product"
         >
           <Share2 size={20} className="text-gray-600" />
@@ -228,8 +226,8 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
             size="md"
           />
           <p className="text-xs text-gray-500 mt-1">
-            {primaryMarket === 'kilo' 
-              ? 'Per Kilo' 
+            {primaryMarket === 'kilo'
+              ? 'Per Kilo'
               : `Per Carton${('unitsPerCarton' in pricing) ? ` (${pricing.unitsPerCarton} units)` : ''}`
             }
           </p>

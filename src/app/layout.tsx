@@ -10,6 +10,7 @@ import { EmailVerificationBanner } from "@/components/auth/EmailVerificationBann
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import { AlertProvider } from "@/lib/hooks/useAlert";
 import { PushNotificationProvider } from '@/components/providers/PushNotificationProvider';
+import { LiveChatWidget } from '@/components/LiveChatWidget';
 
 export const metadata: Metadata = {
   title: {
@@ -57,9 +58,10 @@ export default function RootLayout({
               <AlertProvider>
                 <LoadingProvider>
                   <Navbar />
-                <EmailVerificationBanner />
+                  <EmailVerificationBanner />
                   <main className="flex-1">{children}</main>
                   <ToastProvider />
+                  <LiveChatWidget />
                 </LoadingProvider>
               </AlertProvider>
             </PushNotificationProvider>
