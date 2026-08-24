@@ -68,6 +68,11 @@ TicketSchema.pre('validate', async function(next) {
   next();
 });
 
-const Ticket: Model<ITicket> = mongoose.models.Ticket || mongoose.model<ITicket>('Ticket', TicketSchema);
+// Delete models if they exist to prevent HMR validation errors in Next.js development
+if (mongoose.models.Ticket) {
+  delete mongoose.models.Ticket;
+}
+
+const Ticket: Model<ITicket> = mongoose.model<ITicket>('Ticket', TicketSchema);
 
 export default Ticket;

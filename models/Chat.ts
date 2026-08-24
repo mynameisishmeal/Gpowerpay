@@ -5,6 +5,7 @@ export interface IChatMessage extends Document {
   senderId: mongoose.Types.ObjectId; // User ID
   senderRole: 'customer' | 'admin' | 'support' | 'sadmin';
   message: string;
+  attachments?: string[];
   read: boolean;
   createdAt: Date;
 }
@@ -23,6 +24,7 @@ const ChatMessageSchema = new Schema<IChatMessage>({
   senderId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   senderRole: { type: String, required: true },
   message: { type: String, required: true },
+  attachments: [{ type: String }],
   read: { type: Boolean, default: false }
 }, { timestamps: { createdAt: true, updatedAt: false } });
 
@@ -43,5 +45,13 @@ ChatSessionSchema.index({ status: 1 });
 ChatSessionSchema.index({ customer: 1, status: 1 });
 ChatSessionSchema.index({ lastMessageAt: -1 });
 
-export const ChatMessage: Model<IChatMessage> = mongoose.models.ChatMessage || mongoose.model<IChatMessage>('ChatMessage', ChatMessageSchema);
-export const ChatSession: Model<IChatSession> = mongoose.models.ChatSession || mongoose.model<IChatSession>('ChatSession', ChatSessionSchema);
+// Delete models if they exist to prevent HMR validation errors in Next.js development
+if (mongoose.models.ChatMessage) {
+  delete mongoose.models.ChatMessage;
+}
+if (mongoose.models.ChatSession) {
+  delete mongoose.models.ChatSession;
+}
+
+export const ChatMessage: Model<IChatMessage> = mongoose.model<IChatMessage>('ChatMessage', ChatMessageSchema);
+export const ChatSession: Model<IChatSession> = mongoose.model<IChatSession>('ChatSession', ChatSessionSchema);

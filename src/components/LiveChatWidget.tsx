@@ -3,7 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, X, Send, Minus, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Minus, Loader2, Paperclip, ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import { compressImage } from '@/lib/utils/imageCompression';
 
 export function LiveChatWidget() {
   const { data: session } = useSession();
@@ -14,9 +16,13 @@ export function LiveChatWidget() {
   const [inputMessage, setInputMessage] = useState('');
   const [isSending, setIsSending] = useState(false);
   const [isInitializing, setIsInitializing] = useState(false);
+  const [attachment, setAttachment] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pollingInterval = useRef<NodeJS.Timeout | null>(null);
+  const lastMessageIdRef = useRef<string | null>(null);
 
   // Initialize chat session when opening for the first time
   useEffect(() => {
@@ -31,6 +37,16 @@ export function LiveChatWidget() {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages, isOpen, isMinimized]);
+
+  // Listen for open-chat event
+  useEffect(() => {
+    const handleOpenChat = () => {
+      setIsOpen(true);
+      setIsMinimized(false);
+    };
+    window.addEventListener('open-chat', handleOpenChat);
+    return () => window.removeEventListener('open-chat', handleOpenChat);
+  }, []);
 
   // Polling logic
   useEffect(() => {
@@ -68,8 +84,7 @@ export function LiveChatWidget() {
   const syncMessages = async (sid = sessionId) => {
     if (!sid) return;
     
-    // Get the ID of the last message we have
-    const lastMessageId = messages.length > 0 ? messages[messages.length - 1]._id : null;
+    const lastMessageId = lastMessageIdRef.current;
     const url = `/api/chat/sync?sessionId=${sid}${lastMessageId ? `&lastMessageId=${lastMessageId}` : ''}`;
     
     try {
@@ -77,39 +92,81 @@ export function LiveChatWidget() {
       const data = await res.json();
       
       if (data.success && data.messages.length > 0) {
-        setMessages(prev => [...prev, ...data.messages]);
+        lastMessageIdRef.current = data.messages[data.messages.length - 1]._id;
+        setMessages(prev => {
+          const existingIds = new Set(prev.map(m => m._id));
+          const newMessages = data.messages.filter((m: any) => !existingIds.has(m._id));
+          return [...prev, ...newMessages];
+        });
       }
     } catch (err) {
       console.error('Failed to sync chat', err);
     }
   };
 
-  const sendMessage = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputMessage.trim() || !sessionId) return;
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const msgText = inputMessage.trim();
-    setInputMessage('');
-    setIsSending(true);
-
+    setIsUploading(true);
     try {
-      const res = await fetch('/api/chat/send', {
+      const compressedFile = await compressImage(file);
+      const formData = new FormData();
+      formData.append('file', compressedFile);
+      
+      const res = await fetch('/api/upload/image', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, message: msgText })
+        body: formData,
       });
       const data = await res.json();
       
       if (data.success) {
-        // Manually trigger a sync to grab our new message + any others
+        setAttachment(data.url);
+      } else {
+        alert(data.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.error('Failed to upload image:', err);
+      alert('Upload failed');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if ((!inputMessage.trim() && !attachment) || !sessionId) return;
+
+    const msgText = inputMessage.trim() || 'Sent an attachment';
+    setInputMessage('');
+    const currentAttachment = attachment;
+    setAttachment(null);
+    setIsSending(true);
+
+    try {
+      const payload: any = { sessionId, message: msgText };
+      if (currentAttachment) {
+        payload.attachments = [currentAttachment];
+      }
+
+      const res = await fetch('/api/chat/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      
+      if (data.success) {
         syncMessages();
       } else {
-        // Put the message back if it failed
         setInputMessage(msgText);
+        setAttachment(currentAttachment);
       }
     } catch (err) {
       console.error('Failed to send message', err);
       setInputMessage(msgText);
+      setAttachment(currentAttachment);
     } finally {
       setIsSending(false);
     }
@@ -187,7 +244,11 @@ export function LiveChatWidget() {
                 const isMe = msg.senderRole === 'customer';
                 return (
                   <div key={idx} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                    {!isMe && <span className="text-[10px] text-gray-500 ml-1 mb-0.5">Support</span>}
+                    {!isMe && (
+                      <span className="text-[10px] text-gray-500 ml-1 mb-0.5 font-medium">
+                        {msg.senderId?.name ? `${msg.senderId.name} (${msg.senderRole === 'sadmin' ? 'SUPER ADMIN' : msg.senderRole.toUpperCase()})` : 'Support'}
+                      </span>
+                    )}
                     <div 
                       className={`max-w-[85%] px-3 py-2 text-sm rounded-2xl ${
                         isMe 
@@ -195,7 +256,14 @@ export function LiveChatWidget() {
                           : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
                       }`}
                     >
-                      {msg.message}
+                      {msg.attachments && msg.attachments.length > 0 && (
+                        <div className="mb-2 rounded overflow-hidden">
+                          {msg.attachments.map((img: string, i: number) => (
+                            <img key={i} src={img} alt="attachment" className="w-full h-auto max-h-48 object-cover rounded cursor-pointer" onClick={() => window.open(img, '_blank')} />
+                          ))}
+                        </div>
+                      )}
+                      {msg.message !== 'Sent an attachment' && msg.message}
                     </div>
                   </div>
                 );
@@ -205,21 +273,55 @@ export function LiveChatWidget() {
           </div>
 
           {/* Footer (Input) */}
-          <div className="p-3 bg-white border-t border-gray-100">
-            <form onSubmit={sendMessage} className="flex gap-2">
-              <input
-                type="text"
+          <div className="p-3 bg-white border-t border-gray-100 flex flex-col gap-2">
+            {attachment && (
+              <div className="relative inline-block self-start">
+                <img src={attachment} alt="Upload preview" className="h-16 w-16 object-cover rounded shadow-sm border border-gray-200" />
+                <button 
+                  type="button" 
+                  onClick={() => setAttachment(null)}
+                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow hover:bg-red-600"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            )}
+            <form onSubmit={sendMessage} className="flex gap-2 items-end">
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleFileUpload} 
+                className="hidden" 
+                accept="image/*"
+              />
+              <Button 
+                type="button" 
+                variant="ghost" 
+                size="icon" 
+                className="h-10 w-10 shrink-0 rounded-full text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading || isInitializing}
+              >
+                {isUploading ? <Loader2 size={18} className="animate-spin" /> : <Paperclip size={18} />}
+              </Button>
+              <textarea
                 placeholder="Type your message..."
-                className="flex-1 h-10 px-3 bg-gray-100 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
+                className="flex-1 min-h-[40px] max-h-[100px] p-2 bg-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
                 disabled={isInitializing}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage(e as any);
+                  }
+                }}
               />
               <Button 
                 type="submit" 
                 size="icon" 
                 className="h-10 w-10 rounded-full shrink-0 bg-blue-600 hover:bg-blue-700"
-                disabled={!inputMessage.trim() || isSending || isInitializing}
+                disabled={(!inputMessage.trim() && !attachment) || isSending || isInitializing || isUploading}
               >
                 {isSending ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} className="ml-0.5" />}
               </Button>

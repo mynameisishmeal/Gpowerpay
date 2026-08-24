@@ -4,7 +4,7 @@ import { Package } from 'lucide-react';
 
 interface ProductGridProps {
   products: IProduct[];
-  onAddToCart?: (product: IProduct) => void;
+  onAddToCart?: (product: IProduct, quantity: number) => void;
   emptyMessage?: string;
   loading?: boolean;
   columns?: 2 | 3 | 4;

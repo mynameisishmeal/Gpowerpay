@@ -39,6 +39,15 @@ export async function POST(req: NextRequest) {
     const ticket = new Ticket(ticketData);
     await ticket.save();
 
+    // Notify admins
+    const { NotificationService } = await import('@/lib/services/notificationService');
+    const senderName = session.user.name || 'Customer';
+    await NotificationService.notifyNewTicket(
+      ticket.ticketId,
+      subject,
+      senderName
+    );
+
     return NextResponse.json({ success: true, ticket }, { status: 201 });
   } catch (error: any) {
     console.error('Ticket creation error:', error);

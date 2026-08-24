@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { IProduct } from '@/types';
 import { PriceDisplay } from './PriceDisplay';
 import { StockBadge } from './StockBadge';
+import { QuantitySelector } from './QuantitySelector';
 import { Star, ShoppingCart, Heart, Share2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useWishlistStore } from '@/lib/store/wishlistStore';
@@ -12,7 +13,7 @@ import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: IProduct;
-  onAddToCart?: (product: IProduct) => void;
+  onAddToCart?: (product: IProduct, quantity: number) => void;
   priority?: boolean;
 }
 
@@ -29,6 +30,9 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
   const primaryMarket = product.availableMarkets[0];
   const pricing = product.pricing[primaryMarket];
   const inventory = product.inventory[primaryMarket];
+
+  const [quantity, setQuantity] = useState(pricing.minQuantity || 1);
+  const maxQuantity = inventory.trackInventory ? inventory.stock : pricing.maxQuantity || 999;
 
   const isRider = (session?.user?.role as string) === 'rider';
   const isInStock = !inventory.trackInventory || inventory.stock > 0;
@@ -235,15 +239,28 @@ export function ProductCard({ product, onAddToCart, priority = false }: ProductC
 
         {/* Add to Cart Button - Hidden for riders */}
         {!isRider && onAddToCart && (
-          <Button
-            onClick={() => onAddToCart(product)}
-            disabled={!isInStock}
-            className="w-full btn-modern"
-            size="sm"
-          >
-            <ShoppingCart size={16} className="mr-2" />
-            {isInStock ? 'Add to Cart' : 'Out of Stock'}
-          </Button>
+          <div className="flex flex-col gap-2 mt-2">
+            <QuantitySelector
+              quantity={quantity}
+              onQuantityChange={setQuantity}
+              min={pricing.minQuantity || 1}
+              max={maxQuantity}
+              disabled={!isInStock}
+              size="sm"
+            />
+            <Button
+              onClick={() => {
+                onAddToCart(product, quantity);
+                setQuantity(pricing.minQuantity || 1); // Reset after adding
+              }}
+              disabled={!isInStock}
+              className="w-full btn-modern"
+              size="sm"
+            >
+              <ShoppingCart size={16} className="mr-2" />
+              {isInStock ? 'Add to Cart' : 'Out of Stock'}
+            </Button>
+          </div>
         )}
       </div>
     </div>

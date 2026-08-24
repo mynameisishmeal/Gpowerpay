@@ -57,7 +57,7 @@ export default function Home() {
     }
   };
 
-  const handleAddToCart = (product: IProduct) => {
+  const handleAddToCart = (product: IProduct, quantity: number = 1) => {
     if ((session?.user?.role as string) === 'rider') {
       return;
     }
@@ -74,14 +74,14 @@ export default function Home() {
       productId: String(product._id),
       name: product.name,
       price: pricing.price,
-      quantity: 1,
+      quantity: quantity,
       marketType: primaryMarket,
       image: image?.url,
       maxQuantity: maxQuantity,
       inStock: !inventory.trackInventory || inventory.stock > 0,
     });
 
-    toast.success(`${product.name} added to cart!`, {
+    toast.success(`${quantity} ${product.name} added to cart!`, {
       icon: '🛒',
     });
   };

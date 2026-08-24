@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { Package, TruckIcon, CheckCircle, Trash2, CheckCheck, Bell } from 'lucide-react';
+import { Package, TruckIcon, CheckCircle, Trash2, CheckCheck, Bell, MessageCircle, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -141,6 +141,11 @@ export default function NotificationsPage() {
         return <TruckIcon className="h-6 w-6 text-purple-600" />;
       case 'order_status_changed':
         return <CheckCircle className="h-6 w-6 text-orange-600" />;
+      case 'new_message':
+        return <MessageCircle className="h-6 w-6 text-indigo-600" />;
+      case 'new_ticket':
+      case 'ticket_updated':
+        return <MessageSquare className="h-6 w-6 text-teal-600" />;
       default:
         return <Package className="h-6 w-6 text-gray-600" />;
     }
@@ -159,6 +164,26 @@ export default function NotificationsPage() {
         router.push('/rider/dashboard');
       }
       return;
+    }
+
+    if (notification.type === 'new_message' && notification.data?.sessionId) {
+      if ((session?.user?.role as string) === 'admin' || (session?.user?.role as string) === 'sadmin') {
+         router.push('/admin/live-chat');
+         return;
+      } else {
+         window.dispatchEvent(new CustomEvent('open-chat'));
+         return;
+      }
+    }
+
+    if ((notification.type === 'new_ticket' || notification.type === 'ticket_updated') && notification.data?.ticketId) {
+      if ((session?.user?.role as string) === 'admin' || (session?.user?.role as string) === 'sadmin') {
+         router.push(`/admin/support/${notification.data.ticketId}`);
+         return;
+      } else {
+         router.push(`/profile/support/${notification.data.ticketId}`);
+         return;
+      }
     }
 
     if (notification.data?.orderId) {

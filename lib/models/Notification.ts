@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 export interface INotification extends mongoose.Document {
   userId: mongoose.Types.ObjectId;
-  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required';
+  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required' | 'new_message' | 'new_ticket' | 'ticket_updated';
   title: string;
   message: string;
   data?: {
@@ -36,6 +36,9 @@ const NotificationSchema = new mongoose.Schema<INotification>(
         'payment_success',
         'payment_failed',
         'action_required',
+        'new_message',
+        'new_ticket',
+        'ticket_updated',
       ],
       required: true,
     },
@@ -70,4 +73,9 @@ const NotificationSchema = new mongoose.Schema<INotification>(
 NotificationSchema.index({ userId: 1, read: 1, createdAt: -1 });
 NotificationSchema.index({ userId: 1, createdAt: -1 });
 
-export default mongoose.models.Notification || mongoose.model<INotification>('Notification', NotificationSchema);
+// Delete model if it exists to prevent HMR validation errors in Next.js development
+if (mongoose.models.Notification) {
+  delete mongoose.models.Notification;
+}
+
+export default mongoose.model<INotification>('Notification', NotificationSchema);

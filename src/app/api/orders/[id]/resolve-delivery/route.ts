@@ -3,6 +3,9 @@ import { auth } from '@/auth';
 import connectDB from '@/lib/mongodb';
 import Order from '@/models/Order';
 import Notification from '@/lib/models/Notification';
+import Ticket from '@/models/Ticket';
+import User from '@/models/User';
+import { NotificationService } from '@/lib/services/notificationService';
 
 /**
  * POST /api/orders/[id]/resolve-delivery
@@ -74,6 +77,36 @@ export async function POST(
       });
       // Optionally store in a dedicated field if needed
       order.cancelReason = reason || 'Disputed delivery';
+      
+      // CREATE A SUPPORT TICKET FOR THE DISPUTE
+      const ticket = new Ticket({
+        customer: session.user.id,
+        subject: `Disputed Delivery - Order #${order.orderNumber}`,
+        description: `Customer disputed the delivery.\n\nReason: ${reason || 'No reason provided'}\n\nPlease investigate this order.`,
+        priority: 'high',
+        status: 'open',
+        relatedOrder: order._id,
+        messages: [{
+          sender: session.user.id,
+          message: `I am disputing this delivery. Reason: ${reason || 'No reason provided'}`,
+        }]
+      });
+      await ticket.save();
+
+      // NOTIFY ALL ADMINS AND SADMINS ABOUT THE NEW TICKET
+      const admins = await User.find({ role: { $in: ['sadmin', 'admin', 'support'] } }).select('_id');
+      for (const admin of admins) {
+        await NotificationService.createNotification({
+          userId: admin._id.toString(),
+          title: 'New Dispute Ticket',
+          message: `Order #${order.orderNumber} has been disputed.`,
+          type: 'new_ticket',
+          data: {
+            ticketId: ticket._id.toString(),
+            orderId: order._id.toString()
+          }
+        });
+      }
     }
 
     await order.save();

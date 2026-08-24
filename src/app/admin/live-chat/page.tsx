@@ -6,8 +6,9 @@ import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Loader2, MessageCircle, Send, User, CheckCircle2 } from 'lucide-react';
+import { Loader2, MessageCircle, Send, User, CheckCircle2, Paperclip, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { compressImage } from '@/lib/utils/imageCompression';
 
 export default function AdminLiveChatPage() {
   const router = useRouter();
@@ -17,9 +18,15 @@ export default function AdminLiveChatPage() {
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
   const [inputMessage, setInputMessage] = useState('');
+  const [admins, setAdmins] = useState<any[]>([]);
   
   const [isLoading, setIsLoading] = useState(true);
   const [isSending, setIsSending] = useState(false);
+  const [isReassigning, setIsReassigning] = useState(false);
+  
+  const [attachment, setAttachment] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const pollingInterval = useRef<NodeJS.Timeout | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -29,6 +36,7 @@ export default function AdminLiveChatPage() {
       router.push('/login?callbackUrl=/admin/live-chat');
     } else if (status === 'authenticated') {
       fetchSessions();
+      fetchAdmins();
       
       // Poll for new sessions and messages every 3 seconds
       pollingInterval.current = setInterval(() => {
@@ -63,6 +71,18 @@ export default function AdminLiveChatPage() {
     }
   };
 
+  const fetchAdmins = async () => {
+    try {
+      const res = await fetch('/api/admin/users?role=sadmin,admin,support');
+      const data = await res.json();
+      if (data.success) {
+        setAdmins(data.users);
+      }
+    } catch (err) {
+      console.error('Failed to fetch admins:', err);
+    }
+  };
+
   const selectSession = async (sessionId: string) => {
     setActiveSessionId(sessionId);
     setMessages([]); // Clear old messages immediately for UI snap
@@ -89,19 +109,56 @@ export default function AdminLiveChatPage() {
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const compressedFile = await compressImage(file);
+      const formData = new FormData();
+      formData.append('file', compressedFile);
+      
+      const res = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setAttachment(data.url);
+      } else {
+        alert(data.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.error('Failed to upload image:', err);
+      alert('Upload failed');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const sendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputMessage.trim() || !activeSessionId) return;
+    if ((!inputMessage.trim() && !attachment) || !activeSessionId) return;
 
-    const msgText = inputMessage.trim();
+    const msgText = inputMessage.trim() || 'Sent an attachment';
     setInputMessage('');
+    const currentAttachment = attachment;
+    setAttachment(null);
     setIsSending(true);
 
     try {
+      const payload: any = { sessionId: activeSessionId, message: msgText };
+      if (currentAttachment) {
+        payload.attachments = [currentAttachment];
+      }
+
       const res = await fetch('/api/chat/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId: activeSessionId, message: msgText })
+        body: JSON.stringify(payload)
       });
       const data = await res.json();
       
@@ -110,10 +167,12 @@ export default function AdminLiveChatPage() {
         syncMessages(activeSessionId);
       } else {
         setInputMessage(msgText);
+        setAttachment(currentAttachment);
       }
     } catch (err) {
       console.error('Failed to send message:', err);
       setInputMessage(msgText);
+      setAttachment(currentAttachment);
     } finally {
       setIsSending(false);
     }
@@ -140,6 +199,28 @@ export default function AdminLiveChatPage() {
     }
   };
 
+  const reassignChat = async (adminId: string) => {
+    if (!activeSessionId) return;
+    setIsReassigning(true);
+    try {
+      const res = await fetch(`/api/chat/${activeSessionId}/assign`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ adminId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        fetchSessions(); // Refresh sessions to show updated assignment
+      } else {
+        alert(data.error || 'Failed to reassign');
+      }
+    } catch (err) {
+      console.error('Failed to reassign:', err);
+    } finally {
+      setIsReassigning(false);
+    }
+  };
+
   if (status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -159,6 +240,9 @@ export default function AdminLiveChatPage() {
   }
 
   const activeSessionDetails = sessions.find(s => s._id === activeSessionId);
+  const isAssignedToOther = activeSessionDetails?.assignedTo && activeSessionDetails.assignedTo !== session?.user?.id;
+  const canReply = session?.user?.role === 'sadmin' || !isAssignedToOther;
+  const canReassign = session?.user?.role === 'sadmin' || (!isAssignedToOther && activeSessionDetails?.assignedTo);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4">
@@ -194,8 +278,9 @@ export default function AdminLiveChatPage() {
                     className={`p-4 border-b cursor-pointer transition-colors ${activeSessionId === s._id ? 'bg-blue-50 border-l-4 border-l-blue-600' : 'hover:bg-gray-50 border-l-4 border-l-transparent'}`}
                   >
                     <div className="font-medium text-gray-900 text-sm truncate">{s.customer?.name || 'Unknown User'}</div>
-                    <div className="text-xs text-gray-500 mt-1">
-                      {formatDistanceToNow(new Date(s.lastMessageAt), { addSuffix: true })}
+                    <div className="text-xs text-gray-500 mt-1 flex justify-between">
+                      <span>{formatDistanceToNow(new Date(s.lastMessageAt), { addSuffix: true })}</span>
+                      {s.assignedTo && <span className="text-blue-600">Assigned</span>}
                     </div>
                   </div>
                 ))
@@ -212,19 +297,41 @@ export default function AdminLiveChatPage() {
               </div>
             ) : (
               <>
-                <CardHeader className="bg-white border-b py-3 px-4 flex flex-row items-center justify-between shrink-0">
-                  <div className="flex items-center gap-3">
-                    <div className="bg-blue-100 p-2 rounded-full">
+                <CardHeader className="bg-white border-b py-3 px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <div className="bg-blue-100 p-2 rounded-full shrink-0">
                       <User className="h-5 w-5 text-blue-600" />
                     </div>
                     <div>
                       <CardTitle className="text-base">{activeSessionDetails?.customer?.name}</CardTitle>
-                      <CardDescription className="text-xs">{activeSessionDetails?.customer?.email}</CardDescription>
+                      <CardDescription className="text-xs flex items-center gap-2">
+                        {activeSessionDetails?.customer?.email}
+                        {activeSessionDetails?.assignedTo && (
+                          <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full text-[10px]">
+                            Assigned to: {admins.find(a => a._id === activeSessionDetails.assignedTo)?.name || 'Admin'}
+                          </span>
+                        )}
+                      </CardDescription>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" onClick={closeSession} className="text-red-600 hover:text-red-700 hover:bg-red-50">
-                    <CheckCircle2 className="h-4 w-4 mr-1.5" /> End Chat
-                  </Button>
+                  <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                    {canReassign && (
+                      <select 
+                        className="text-xs border rounded px-2 py-1.5 bg-white outline-none flex-1 sm:flex-none min-w-[120px]"
+                        value={activeSessionDetails?.assignedTo || ''}
+                        onChange={(e) => reassignChat(e.target.value)}
+                        disabled={isReassigning}
+                      >
+                        <option value="" disabled>Reassign...</option>
+                        {admins.map(a => (
+                          <option key={a._id} value={a._id}>{a.name || a.email} ({a.role})</option>
+                        ))}
+                      </select>
+                    )}
+                    <Button variant="outline" size="sm" onClick={closeSession} className="text-red-600 hover:text-red-700 hover:bg-red-50 flex-1 sm:flex-none">
+                      <CheckCircle2 className="h-4 w-4 mr-1.5 shrink-0" /> End Chat
+                    </Button>
+                  </div>
                 </CardHeader>
 
                 <CardContent className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
@@ -237,7 +344,7 @@ export default function AdminLiveChatPage() {
                         <div key={idx} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                           <div className={`flex items-center gap-2 mb-1 ${isMe ? 'flex-row-reverse' : 'flex-row'}`}>
                             <span className="text-[10px] font-medium text-gray-500">
-                              {isMe ? msg.senderId?.name || 'You' : msg.senderId?.name || 'Customer'}
+                              {msg.senderId?.name ? `${msg.senderId.name} (${msg.senderRole})` : (isMe ? 'You' : 'Customer')}
                             </span>
                             <span className="text-[9px] text-gray-400">
                               {formatDistanceToNow(new Date(msg.createdAt), { addSuffix: true })}
@@ -251,7 +358,14 @@ export default function AdminLiveChatPage() {
                                 : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm shadow-sm'
                             }`}
                           >
-                            {msg.message}
+                            {msg.attachments && msg.attachments.length > 0 && (
+                              <div className="mb-2 rounded overflow-hidden">
+                                {msg.attachments.map((img: string, i: number) => (
+                                  <img key={i} src={img} alt="attachment" className="w-full h-auto max-h-48 object-cover rounded cursor-pointer" onClick={() => window.open(img, '_blank')} />
+                                ))}
+                              </div>
+                            )}
+                            {msg.message !== 'Sent an attachment' && msg.message}
                           </div>
                         </div>
                       );
@@ -260,18 +374,49 @@ export default function AdminLiveChatPage() {
                   <div ref={messagesEndRef} />
                 </CardContent>
 
-                <div className="p-4 bg-white border-t">
-                  <form onSubmit={sendMessage} className="flex gap-3">
+                <div className="p-4 bg-white border-t flex flex-col gap-2">
+                  {attachment && (
+                    <div className="relative inline-block self-start">
+                      <img src={attachment} alt="Upload preview" className="h-16 w-16 object-cover rounded shadow-sm border border-gray-200" />
+                      <button 
+                        type="button" 
+                        onClick={() => setAttachment(null)}
+                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow hover:bg-red-600"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  )}
+                  <form onSubmit={sendMessage} className="flex gap-3 items-end">
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      onChange={handleFileUpload} 
+                      className="hidden" 
+                      accept="image/*"
+                      disabled={!canReply}
+                    />
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="icon" 
+                      className="h-11 w-11 shrink-0"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploading || !canReply}
+                    >
+                      {isUploading ? <Loader2 size={18} className="animate-spin" /> : <Paperclip size={18} />}
+                    </Button>
                     <Input
-                      placeholder="Type your reply..."
+                      placeholder={canReply ? "Type your reply..." : "Chat is locked by another admin..."}
                       className="flex-1 h-11"
                       value={inputMessage}
                       onChange={(e) => setInputMessage(e.target.value)}
+                      disabled={!canReply}
                     />
                     <Button 
                       type="submit" 
-                      disabled={isSending || !inputMessage.trim()}
-                      className="h-11 px-6 btn-modern"
+                      disabled={isSending || (!inputMessage.trim() && !attachment) || !canReply || isUploading}
+                      className="h-11 px-6 btn-modern shrink-0"
                     >
                       {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                     </Button>

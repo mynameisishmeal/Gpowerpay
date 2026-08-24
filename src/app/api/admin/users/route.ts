@@ -37,6 +37,12 @@ export async function GET(request: NextRequest) {
       ];
     }
 
+    const role = searchParams.get('role');
+    if (role) {
+      // Allow comma-separated roles like "admin,sadmin"
+      query.role = { $in: role.split(',') };
+    }
+
     const skip = (page - 1) * limit;
 
     const [users, total] = await Promise.all([

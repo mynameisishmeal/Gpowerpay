@@ -5,9 +5,10 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Loader2, ArrowLeft, Send } from 'lucide-react';
+import { Loader2, ArrowLeft, Send, Paperclip, X } from 'lucide-react';
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
+import { compressImage } from '@/lib/utils/imageCompression';
 
 export default function TicketDetailPage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -17,6 +18,9 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
   
   const [replyMessage, setReplyMessage] = useState('');
   const [isReplying, setIsReplying] = useState(false);
+  const [attachment, setAttachment] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,27 +54,68 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
     }
   };
 
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const compressedFile = await compressImage(file);
+      const formData = new FormData();
+      formData.append('file', compressedFile);
+      
+      const res = await fetch('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        setAttachment(data.url);
+      } else {
+        alert(data.error || 'Upload failed');
+      }
+    } catch (err) {
+      console.error('Failed to upload image:', err);
+      alert('Upload failed');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleReply = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!replyMessage.trim()) return;
+    if (!replyMessage.trim() && !attachment) return;
 
     setIsReplying(true);
+    const msgText = replyMessage.trim() || 'Sent an attachment';
+    const currentAttachment = attachment;
+    
     try {
+      const payload: any = { message: msgText };
+      if (currentAttachment) {
+        payload.attachments = [currentAttachment];
+      }
+
       const res = await fetch(`/api/tickets/${params.id}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: replyMessage }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       
       if (data.success) {
         setReplyMessage('');
+        setAttachment(null);
         // Append new message locally
         setTicket((prev: any) => ({
           ...prev,
           messages: [...prev.messages, data.message],
           status: prev.status === 'resolved' || prev.status === 'closed' ? 'open' : prev.status
         }));
+      } else {
+        alert(data.error || 'Failed to send reply');
       }
     } catch (err) {
       console.error('Failed to send reply:', err);
@@ -134,7 +179,9 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
                     <span className="text-xs font-medium text-gray-600">
                       {isMe ? 'You' : msg.sender.name}
                       {msg.sender.role !== 'customer' && !isMe && (
-                        <span className="ml-2 bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px]">STAFF</span>
+                        <span className="ml-2 bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded text-[10px] uppercase">
+                          {msg.sender.role === 'sadmin' ? 'SUPER ADMIN' : msg.sender.role}
+                        </span>
                       )}
                     </span>
                     <span className="text-[10px] text-gray-400">
@@ -149,7 +196,14 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
                         : 'bg-gray-100 text-gray-800 rounded-tl-sm'
                     }`}
                   >
-                    {msg.message}
+                    {msg.attachments && msg.attachments.length > 0 && (
+                      <div className="mb-2 rounded overflow-hidden">
+                        {msg.attachments.map((img: string, i: number) => (
+                          <img key={i} src={img} alt="attachment" className="w-full h-auto max-h-64 object-cover rounded cursor-pointer" onClick={() => window.open(img, '_blank')} />
+                        ))}
+                      </div>
+                    )}
+                    {msg.message !== 'Sent an attachment' && msg.message}
                   </div>
                 </div>
               );
@@ -158,24 +212,53 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
           </CardContent>
 
           {ticket.status !== 'closed' ? (
-            <div className="p-4 bg-gray-50 border-t">
-              <form onSubmit={handleReply} className="flex gap-3">
+            <div className="p-4 bg-gray-50 border-t flex flex-col gap-2">
+              {attachment && (
+                <div className="relative inline-block self-start">
+                  <img src={attachment} alt="Upload preview" className="h-16 w-16 object-cover rounded shadow-sm border border-gray-200" />
+                  <button 
+                    type="button" 
+                    onClick={() => setAttachment(null)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-0.5 shadow hover:bg-red-600"
+                  >
+                    <X size={12} />
+                  </button>
+                </div>
+              )}
+              <form onSubmit={handleReply} className="flex gap-3 items-end">
+                <input 
+                  type="file" 
+                  ref={fileInputRef} 
+                  onChange={handleFileUpload} 
+                  className="hidden" 
+                  accept="image/*"
+                />
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="icon" 
+                  className="h-11 w-11 shrink-0 bg-white"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                >
+                  {isUploading ? <Loader2 size={18} className="animate-spin" /> : <Paperclip size={18} />}
+                </Button>
                 <textarea
-                  className="flex-1 min-h-[60px] max-h-[120px] p-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
+                  className="flex-1 min-h-[44px] max-h-[120px] p-3 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm resize-none"
                   placeholder="Type your reply here..."
                   value={replyMessage}
                   onChange={(e) => setReplyMessage(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.shiftKey) {
                       e.preventDefault();
-                      handleReply(e);
+                      handleReply(e as any);
                     }
                   }}
                 />
                 <Button 
                   type="submit" 
-                  disabled={isReplying || !replyMessage.trim()}
-                  className="btn-modern self-end"
+                  disabled={isReplying || (!replyMessage.trim() && !attachment) || isUploading}
+                  className="btn-modern shrink-0 h-11"
                 >
                   {isReplying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
                 </Button>

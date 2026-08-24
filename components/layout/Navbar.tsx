@@ -7,6 +7,7 @@ import { UserStatus } from './UserStatus';
 import { CartIcon } from '@/components/cart/CartIcon';
 import { CartSlideOver } from '@/components/cart/CartSlideOver';
 import { NotificationBell } from '@/components/notifications/NotificationBell';
+import { LifeBuoy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect, useRef } from 'react';
 import { useSession } from 'next-auth/react';
@@ -183,6 +184,12 @@ export function Navbar() {
                       >
                         Profile
                       </Link>
+                      <Link
+                        href="/profile/support"
+                        className="text-gray-700 hover:text-blue-600 transition-colors font-medium"
+                      >
+                        Support
+                      </Link>
                     </>
                   )}
                 </>
@@ -331,6 +338,14 @@ export function Navbar() {
                         >
                           <UserIcon size={20} />
                           Profile
+                        </Link>
+                        <Link
+                          href="/profile/support"
+                          className="text-gray-700 hover:text-blue-600 font-medium flex items-center gap-2"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <LifeBuoy size={20} />
+                          Support
                         </Link>
                         <Link
                           href="/wishlist"

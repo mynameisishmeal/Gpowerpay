@@ -245,7 +245,7 @@ export default function ProductsPage() {
             ) : (
               <ProductGrid
                 products={products}
-                onAddToCart={(product) => {
+                onAddToCart={(product, quantity = 1) => {
                   const primaryMarket = product.availableMarkets[0] || 'kilo';
                   const pricing = product.pricing[primaryMarket];
                   const inventory = product.inventory[primaryMarket];
@@ -258,7 +258,7 @@ export default function ProductsPage() {
                     productId: product._id.toString(),
                     name: product.name,
                     price: pricing.price,
-                    quantity: 1,
+                    quantity: quantity,
                     marketType,
                     image: product.images?.find((img: any) => img.isPrimary)?.url,
                     maxQuantity: maxQuantity,

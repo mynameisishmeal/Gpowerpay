@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { 
   User, Wallet, Package, MapPin, 
   CreditCard, TrendingUp, Clock, CheckCircle,
-  AlertCircle, Mail
+  AlertCircle, Mail, LifeBuoy
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -392,7 +392,7 @@ export default function DashboardPage() {
             <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
               <Link href="/products">
                 <Button variant="outline" className="w-full h-24 flex flex-col gap-2">
                   <Package size={24} />
@@ -415,6 +415,12 @@ export default function DashboardPage() {
                 <Button variant="outline" className="w-full h-24 flex flex-col gap-2">
                   <Wallet size={24} />
                   <span>Wallet History</span>
+                </Button>
+              </Link>
+              <Link href="/profile/support">
+                <Button variant="outline" className="w-full h-24 flex flex-col gap-2">
+                  <LifeBuoy size={24} />
+                  <span>Support</span>
                 </Button>
               </Link>
             </div>

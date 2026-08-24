@@ -6,7 +6,7 @@ import User from '@/models/User';
 
 export interface CreateNotificationInput {
   userId: string;
-  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required';
+  type: 'order_placed' | 'order_status_changed' | 'delivery_status_changed' | 'rider_assigned' | 'payment_success' | 'payment_failed' | 'action_required' | 'new_message' | 'new_ticket' | 'ticket_updated';
   title: string;
   message: string;
   data?: any;
@@ -306,6 +306,84 @@ export class NotificationService {
       userName: riderName,
       actionPath: `/rider/orders/${orderId}`,
       actionText: 'View Order Details',
+    });
+  }
+
+  /**
+   * Helper: Notify all admins (or specific admins)
+   */
+  static async notifyAdmins(
+    type: CreateNotificationInput['type'],
+    title: string,
+    message: string,
+    data?: any
+  ) {
+    await connectDB();
+    // Support users might also need notifications, but user requested all super admin and admin
+    const admins = await User.find({ role: { $in: ['sadmin', 'admin'] } }).select('_id').lean();
+    
+    const notificationPromises = admins.map(admin => 
+      this.createNotification({
+        userId: admin._id.toString(),
+        type,
+        title,
+        message,
+        data,
+      })
+    );
+
+    await Promise.allSettled(notificationPromises);
+  }
+
+  /**
+   * Helper: Create new chat message notification
+   */
+  static async notifyNewChatMessage(
+    userId: string,
+    senderName: string,
+    sessionId: string,
+    messagePreview: string
+  ) {
+    return this.createNotification({
+      userId,
+      type: 'new_message',
+      title: `New message from ${senderName}`,
+      message: messagePreview.length > 50 ? `${messagePreview.substring(0, 50)}...` : messagePreview,
+      data: { sessionId },
+    });
+  }
+
+  /**
+   * Helper: Create new ticket notification
+   */
+  static async notifyNewTicket(
+    ticketId: string,
+    subject: string,
+    customerName: string
+  ) {
+    return this.notifyAdmins(
+      'new_ticket',
+      'New Support Ticket',
+      `Ticket ${ticketId} created by ${customerName}: ${subject}`,
+      { ticketId }
+    );
+  }
+
+  /**
+   * Helper: Create ticket reply notification
+   */
+  static async notifyTicketReply(
+    userId: string,
+    ticketId: string,
+    subject: string,
+    senderName: string
+  ) {
+    return this.createNotification({
+      userId,
+      type: 'ticket_updated',
+      title: `New reply on ticket ${ticketId}`,
+      message: `${senderName} replied to: ${subject}`,
+      data: { ticketId },
     });
   }
 }
