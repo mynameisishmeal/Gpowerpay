@@ -70,3 +70,79 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+/**
+ * POST /api/admin/users
+ * Create a new user (customer, admin, or sadmin)
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const { session, error } = await requireAdmin();
+    if (error) return error;
+
+    const data = await request.json();
+    const { name, email, phone, password, role, status } = data;
+
+    // Validate required fields
+    if (!name || !email || !password || !role || !status) {
+      return NextResponse.json(
+        { success: false, error: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+
+    // Role security check
+    // Only 'sadmin' can create 'admin' or 'sadmin'
+    const currentUserRole = session?.user?.role;
+    if ((role === 'admin' || role === 'sadmin') && currentUserRole !== 'sadmin') {
+      return NextResponse.json(
+        { success: false, error: 'Only Super Admins can create admin users' },
+        { status: 403 }
+      );
+    }
+
+    await connectDB();
+
+    // Check if user exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, error: 'Email already exists' },
+        { status: 400 }
+      );
+    }
+
+    // Prepare names (GpowerCRM legacy fields)
+    const nameParts = name.trim().split(' ');
+    const firstname = nameParts[0];
+    const lastname = nameParts.slice(1).join(' ');
+
+    const newUser = new User({
+      name,
+      firstname,
+      lastname,
+      email: email.toLowerCase(),
+      password,
+      phonenumber: phone || '',
+      role,
+      isActive: status === 'active',
+      emailVerified: true, // Auto verify since admin created it
+      authProvider: 'local',
+      walletBalance: 0,
+      isBlocked: false,
+    });
+
+    await newUser.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'User created successfully',
+    });
+  } catch (err: any) {
+    console.error('POST /api/admin/users error:', err);
+    return NextResponse.json(
+      { success: false, error: err.message || 'Failed to create user' },
+      { status: 500 }
+    );
+  }
+}

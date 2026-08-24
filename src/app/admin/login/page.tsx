@@ -48,7 +48,7 @@ function AdminLoginForm() {
       });
 
       if (result?.error) {
-        if (result.error === 'Email not verified') {
+        if (result.error === 'EmailNotVerified') {
           setError('Email not verified. A fresh verification link has been sent to your inbox. Please check your mail and spam too');
         } else if (result.error === 'CredentialsSignin') {
           setError('Invalid email or password. Please try again.');

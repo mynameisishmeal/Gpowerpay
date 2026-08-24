@@ -1,7 +1,9 @@
 import NextAuth, { CredentialsSignin } from 'next-auth';
 
-class EmailNotVerifiedError extends CredentialsSignin {
-  code = "Email not verified";
+import { AuthError } from 'next-auth';
+
+class EmailNotVerifiedError extends AuthError {
+  static type = "EmailNotVerified";
 }
 import Credentials from 'next-auth/providers/credentials';
 import Google from 'next-auth/providers/google';

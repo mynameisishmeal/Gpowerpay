@@ -4,9 +4,6 @@ const nextConfig: NextConfig = {
   // Disable cacheComponents to use the older caching model
   cacheComponents: false,
   
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },

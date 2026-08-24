@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { Search, Filter, CheckCircle, XCircle, Mail, Phone, Wallet, Loader2, Users, KeyRound, UserCheck } from 'lucide-react';
+import { Search, Filter, CheckCircle, XCircle, Mail, Phone, Wallet, Loader2, Users, KeyRound, UserCheck, Plus, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,8 @@ interface User {
   walletBalance: number;
   isActive: boolean;
   isBlocked: boolean;
-  createdAt: string;
+  createdAt?: string;
+  regtime?: string;
   lastLogin?: string;
 }
 
@@ -39,6 +40,19 @@ export default function AdminUsersPage() {
   const [newPassword, setNewPassword] = useState('');
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [isActivating, setIsActivating] = useState<string | null>(null);
+
+  // Add User State
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'customer' as 'customer' | 'support' | 'admin' | 'sadmin',
+    status: 'active' as 'active' | 'inactive',
+  });
 
   useEffect(() => {
     if (authStatus === 'unauthenticated') {
@@ -140,6 +154,32 @@ export default function AdminUsersPage() {
     }
   };
 
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || 'Failed to create user');
+      }
+      toast.success('User created successfully');
+      setShowAddModal(false);
+      setFormData({
+        name: '', email: '', phone: '', password: '', role: 'customer', status: 'active'
+      });
+      fetchUsers();
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to create user');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   if (authStatus === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -158,9 +198,15 @@ export default function AdminUsersPage() {
               <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
               <p className="text-gray-600 mt-1">Manage customer accounts</p>
             </div>
-            <Link href="/admin/dashboard">
-              <Button variant="outline">Back to Dashboard</Button>
-            </Link>
+            <div className="flex gap-3">
+              <Button onClick={() => setShowAddModal(true)} className="flex items-center gap-2">
+                <Plus size={20} />
+                Add User
+              </Button>
+              <Link href="/admin/dashboard">
+                <Button variant="outline">Back to Dashboard</Button>
+              </Link>
+            </div>
           </div>
 
           {/* Filters and Search */}
@@ -288,7 +334,11 @@ export default function AdminUsersPage() {
                           </div>
                         </td>
                         <td className="py-4 text-sm text-gray-600">
-                          {new Date(user.createdAt).toLocaleDateString()}
+                          {user.createdAt
+                            ? new Date(user.createdAt).toLocaleDateString()
+                            : user.regtime
+                            ? new Date(user.regtime).toLocaleDateString()
+                            : 'Unknown'}
                         </td>
                         <td className="py-4 text-sm text-gray-600">
                           {user.lastLogin
@@ -388,6 +438,115 @@ export default function AdminUsersPage() {
               </Button>
               <Button type="submit" disabled={isResettingPassword} isLoading={isResettingPassword} loadingText="Resetting...">
                 Reset Password
+              </Button>
+            </div>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add User Dialog */}
+      <Dialog open={showAddModal} onOpenChange={setShowAddModal}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New User</DialogTitle>
+            <DialogDescription>
+              Create a new user account and set their role.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleAddUser} className="space-y-4 pt-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+              <Input
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="e.g., John Doe"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+              <Input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                placeholder="john@example.com"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <Input
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="e.g., 08012345678"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password *</label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? 'text' : 'password'}
+                  required
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Min. 8 characters"
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Role *</label>
+                <select
+                  required
+                  value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value as any })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="customer">Customer</option>
+                  <option value="support">Support</option>
+                  {session?.user?.role === 'sadmin' && (
+                    <>
+                      <option value="admin">Admin</option>
+                      <option value="sadmin">Super Admin</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
+                <select
+                  required
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 pt-4 mt-4 border-t">
+              <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                Create User
               </Button>
             </div>
           </form>

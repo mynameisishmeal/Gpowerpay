@@ -348,12 +348,7 @@ export default function AdminDashboard() {
               >
                 Manage Users
               </Link>
-              <Link
-                href="/admin/transactions"
-                className="block w-full p-2 text-sm text-center bg-white border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition"
-              >
-                View Transactions
-              </Link>
+
             </CardContent>
           </Card>
         </div>

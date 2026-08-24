@@ -29,16 +29,17 @@ export async function PUT(
 
     await connectDB();
 
-    const user = await User.findById(userId);
-    if (!user) {
+    const result = await User.updateOne(
+      { _id: userId },
+      { $set: { emailVerified: true } }
+    );
+
+    if (result.matchedCount === 0) {
       return NextResponse.json(
         { success: false, error: 'User not found' },
         { status: 404 }
       );
     }
-
-    user.emailVerified = true;
-    await user.save();
 
     return NextResponse.json({
       success: true,

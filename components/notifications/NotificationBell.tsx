@@ -26,7 +26,11 @@ export function NotificationBell() {
         setNotifications(data.notifications || []);
         setUnreadCount(data.unreadCount || 0);
       }
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.message === 'Failed to fetch') {
+        // Silently ignore in dev (expected during hot-reload or initial API route compile)
+        return;
+      }
       console.error('Failed to fetch notifications:', error);
     } finally {
       setLoading(false);
