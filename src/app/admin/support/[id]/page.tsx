@@ -335,10 +335,11 @@ export default function AdminTicketDetailPage({ params }: { params: { id: string
                   />
                   <Button 
                     type="submit" 
-                    disabled={isReplying || (!replyMessage.trim() && !attachment) || !canReply || isUploading}
+                    disabled={(!replyMessage.trim() && !attachment) || !canReply || isUploading}
+                    isLoading={isReplying}
                     className="btn-modern self-end shrink-0 h-11"
                   >
-                    {isReplying ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                    {!isReplying && <Send className="h-4 w-4" />}
                   </Button>
                 </form>
               </div>
@@ -389,9 +390,10 @@ export default function AdminTicketDetailPage({ params }: { params: { id: string
                 <Button 
                   className="w-full mt-2" 
                   onClick={handleUpdateMeta}
-                  disabled={isUpdating || (ticketStatus === ticket.status && ticketPriority === ticket.priority)}
+                  disabled={ticketStatus === ticket.status && ticketPriority === ticket.priority}
+                  isLoading={isUpdating}
                 >
-                  {isUpdating ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <Save className="h-4 w-4 mr-2" />}
+                  {!isUpdating && <Save className="h-4 w-4 mr-2" />}
                   Save Changes
                 </Button>
 

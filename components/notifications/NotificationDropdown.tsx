@@ -77,18 +77,45 @@ export function NotificationDropdown({
       await onMarkAsRead(notification._id);
     }
 
-    const isRider = (session?.user?.role as string) === 'rider';
+    const role = session?.user?.role as string;
+    const isRider = role === 'rider';
+    const isAdmin = role === 'admin' || role === 'sadmin' || role === 'support';
 
-    // Navigate to order if orderId exists
     if (notification.data?.orderId) {
       if (isRider) {
         router.push(`/rider/orders/${notification.data.orderId}`);
+      } else if (isAdmin) {
+        router.push(`/admin/orders/${notification.data.orderId}`);
       } else {
         router.push(`/orders/${notification.data.orderId}`);
       }
       onClose();
+    } else if (notification.data?.sessionId) {
+      if (isAdmin) {
+        router.push(`/admin/live-chat?session=${notification.data.sessionId}`);
+      } else {
+        router.push('/help');
+      }
+      onClose();
+    } else if (notification.data?.ticketId) {
+      if (isAdmin) {
+        router.push(`/admin/support/${notification.data.ticketId}`);
+      } else {
+        router.push('/profile');
+      }
+      onClose();
+    } else if (notification.data?.productId) {
+      if (isAdmin) {
+        router.push(`/admin/products/${notification.data.productId}`);
+      } else {
+        router.push(`/products/${notification.data.productId}`);
+      }
+      onClose();
     } else if (isRider) {
       router.push('/rider/dashboard');
+      onClose();
+    } else if (isAdmin) {
+      router.push('/admin/dashboard');
       onClose();
     }
   };

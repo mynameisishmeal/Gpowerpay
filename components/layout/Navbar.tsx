@@ -81,13 +81,20 @@ export function Navbar() {
     { href: '/admin/users', label: 'Users', icon: Users },
   ];
 
+  const getHomeHref = () => {
+    if (isAdmin) return '/admin/dashboard';
+    if (isRider) return '/rider/dashboard';
+    if (isCustomer) return '/dashboard';
+    return '/';
+  };
+
   return (
     <>
       <nav className="bg-white border-b border-gray-200 sticky top-0 z-[100] shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 gap-2">
             {/* Logo */}
-            <Link href={isRider ? '/rider/dashboard' : '/'} className="flex items-center gap-2 flex-shrink-0">
+            <Link href={getHomeHref()} className="flex items-center gap-2 flex-shrink-0">
               <Image 
                 src="/web-app-manifest-512x512.png" 
                 alt="Gpowerpay Logo" 

@@ -244,7 +244,7 @@ export default function AdminUsersPage() {
                   </select>
                 </div>
 
-                <Button onClick={fetchUsers} className="btn-modern">
+                <Button onClick={fetchUsers} className="btn-modern" isLoading={loading}>
                   Apply Filters
                 </Button>
               </div>
@@ -544,7 +544,7 @@ export default function AdminUsersPage() {
               <Button type="button" variant="outline" onClick={() => setShowAddModal(false)}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" isLoading={isSubmitting}>
                 {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                 Create User
               </Button>

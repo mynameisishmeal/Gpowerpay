@@ -160,20 +160,12 @@ function AdminLoginForm() {
             {/* Submit Button */}
             <Button
               type="submit"
-              disabled={isLoading}
+              isLoading={isLoading}
+              loadingText="Verifying..."
               className="w-full h-12 text-base bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Verifying...
-                </>
-              ) : (
-                <>
-                  <Shield className="mr-2 h-5 w-5" />
-                  Sign In to Admin Portal
-                </>
-              )}
+              <Shield className="mr-2 h-5 w-5" />
+              Sign In to Admin Portal
             </Button>
 
             {/* Help Text */}

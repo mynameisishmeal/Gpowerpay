@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,8 @@ import { compressImage } from '@/lib/utils/imageCompression';
 
 export default function AdminLiveChatPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initialSessionId = searchParams.get('session');
   const { data: session, status } = useSession();
   
   const [sessions, setSessions] = useState<any[]>([]);
@@ -35,7 +37,11 @@ export default function AdminLiveChatPage() {
     if (status === 'unauthenticated') {
       router.push('/login?callbackUrl=/admin/live-chat');
     } else if (status === 'authenticated') {
-      fetchSessions();
+      fetchSessions().then((data) => {
+        if (initialSessionId && !activeSessionId) {
+          selectSession(initialSessionId);
+        }
+      });
       fetchAdmins();
       
       // Poll for new sessions and messages every 3 seconds
@@ -50,7 +56,7 @@ export default function AdminLiveChatPage() {
     return () => {
       if (pollingInterval.current) clearInterval(pollingInterval.current);
     };
-  }, [status, router, activeSessionId]); // re-bind interval when activeSessionId changes
+  }, [status, router, activeSessionId, initialSessionId]); // re-bind interval when activeSessionId changes
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -64,6 +70,7 @@ export default function AdminLiveChatPage() {
       if (data.success) {
         setSessions(data.sessions);
       }
+      return data;
     } catch (err) {
       console.error('Failed to fetch sessions:', err);
     } finally {
@@ -415,10 +422,11 @@ export default function AdminLiveChatPage() {
                     />
                     <Button 
                       type="submit" 
-                      disabled={isSending || (!inputMessage.trim() && !attachment) || !canReply || isUploading}
+                      disabled={(!inputMessage.trim() && !attachment) || !canReply || isUploading}
+                      isLoading={isSending}
                       className="h-11 px-6 btn-modern shrink-0"
                     >
-                      {isSending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
+                      {!isSending && <Send className="h-4 w-4" />}
                     </Button>
                   </form>
                 </div>

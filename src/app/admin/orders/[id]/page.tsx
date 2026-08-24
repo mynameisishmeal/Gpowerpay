@@ -54,20 +54,6 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
 
   const { id } = use(params);
 
-  useEffect(() => {
-    if (authStatus === 'unauthenticated') {
-      router.push('/admin/login');
-      return;
-    }
-
-    if (session?.user?.role !== 'sadmin' && session?.user?.role !== 'admin') {
-      router.push('/');
-      return;
-    }
-
-    fetchOrder();
-  }, [authStatus, session, id, router, fetchOrder]);
-
   const fetchOrder = useCallback(async () => {
     try {
       const response = await fetch(`/api/admin/orders/${id}`);
@@ -86,6 +72,20 @@ export default function AdminOrderDetailPage({ params }: { params: Promise<{ id:
       setLoading(false);
     }
   }, [id, router]);
+
+  useEffect(() => {
+    if (authStatus === 'unauthenticated') {
+      router.push('/admin/login');
+      return;
+    }
+
+    if (session?.user?.role !== 'sadmin' && session?.user?.role !== 'admin') {
+      router.push('/');
+      return;
+    }
+
+    fetchOrder();
+  }, [authStatus, session, id, router, fetchOrder]);
 
   const updateDeliveryStatus = async (newStatus: 'in_store' | 'on_the_way' | 'sadmin_delivered') => {
     if (!order) return;
